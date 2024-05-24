@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="primary_text_size">16sp</dimen>
+    <dimen name="primary_title_size">22sp</dimen>
+    <dimen name="top_screen_padding">14dp</dimen>
+    <dimen name="horizontal_screen_padding">16dp</dimen>
+    <dimen name="icon_padding">8dp</dimen>
+    <dimen name="settings_padding">12dp</dimen>
+    <dimen name="buttons_gap">16dp</dimen>
+    <dimen name="small_offset">2dp</dimen>
+    <dimen name="settings_first_margin">24dp</dimen>
+    <dimen name="zero_value">0dp</dimen>
+    <dimen name="min_height_button">61dp</dimen>
+    <dimen name="settings_screen_bottom_padding">28dp</dimen>
+</resources>
