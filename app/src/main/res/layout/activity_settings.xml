@@ -1,113 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:paddingStart="@dimen/horizontal_screen_padding"
-    android:paddingTop="@dimen/top_screen_padding"
-    android:paddingEnd="@dimen/settings_padding"
-    android:paddingBottom="@dimen/settings_screen_bottom_padding">
+    style="@style/TypicalView">
 
     <Button
         android:id="@+id/bt_back"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/settings_first_margin"
-        android:padding="@dimen/zero_value"
-        android:text="@string/settings"
-        android:textAlignment="viewStart"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/primary_title_size"
-        app:icon="@drawable/ic_back_lm"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/settings_first_margin"
-        app:iconTint="@color/black" />
+        style="@style/BackButtonStyle"
+        android:text="@string/settings"/>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="21dp"
-        android:paddingBottom="22dp">
+        android:layout_gravity="center"
+        android:paddingTop="@dimen/settings_switch_top"
+        android:paddingBottom="@dimen/settings_switch_bottom">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/SmallTextStyle"
             android:layout_gravity="start"
-            android:text="@string/dark_theme"
-            android:textAllCaps="false"
-            android:textAppearance="?attr/textAppearanceButton"
-            android:textColor="@color/black"
-            android:textFontWeight="400"
-            android:textSize="@dimen/primary_text_size"
-            android:textStyle="bold" />
+            android:text="@string/dark_theme"/>
 
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="center_vertical|end"
             android:layout_marginVertical="@dimen/cardview_default_elevation"
-            android:checked="false"
-            android:gravity="end"
+            android:checked="?attr/customBoolean"
+            android:gravity="right|center_vertical"
             android:padding="@dimen/zero_value"
-            android:paddingEnd="6dp"
-            android:textColor="@color/black"
+            android:paddingEnd="?attr/switchPadding"
             android:thumb="@drawable/ic_knob"
-            android:thumbTint="@color/dark_grey"
+            android:thumbTint="?attr/thumbColor"
             android:track="@drawable/ic_track"
-            android:trackTint="@color/light_grey" />
+            android:trackTint="?attr/trackColor"/>
 
     </FrameLayout>
 
     <Button
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="0dp"
-        android:padding="@dimen/zero_value"
-        android:text="@string/share_application"
-        android:textAlignment="viewStart"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/primary_text_size"
+        android:id="@+id/bt_share"
+        style="@style/SettingsTransparentButtonStyle"
         app:icon="@drawable/ic_share_lm"
-        app:iconGravity="end"
-        app:iconTint="@color/dark_grey"
-        android:minHeight="@dimen/min_height_button"/>
-
+        android:text="@string/share_application"/>
     <Button
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/zero_value"
-        android:text="@string/tech_support"
-        android:textAlignment="viewStart"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/primary_text_size"
+        android:id="@+id/bt_support"
+        style="@style/SettingsTransparentButtonStyle"
         app:icon="@drawable/ic_tech_support_lm"
-        app:iconGravity="end"
-        app:iconTint="@color/dark_grey"
-        android:minHeight="@dimen/min_height_button"/>
+        android:text="@string/tech_support"/>
 
     <Button
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/min_height_button"
-        android:padding="@dimen/zero_value"
+        android:id="@+id/bt_user_agreement"
+        style="@style/SettingsTransparentButtonStyle"
         android:text="@string/user_agreement"
-        android:textAlignment="viewStart"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/primary_text_size"
-        app:icon="@drawable/ic_more_lm"
-        app:iconGravity="end"
-        app:iconTint="@color/dark_grey" />
+        app:icon="@drawable/ic_more_lm" />
 
 </LinearLayout>
 
