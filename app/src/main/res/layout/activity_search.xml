@@ -27,6 +27,7 @@
             android:maxLength="@integer/search_edit_text_max_symbols"/>
 
         <ImageButton
+            android:contentDescription="@string/clear_search"
             android:visibility="gone"
             android:id="@+id/bt_clear"
             app:tint="?attr/iconTint"
