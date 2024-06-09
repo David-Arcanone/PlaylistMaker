@@ -5,16 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var inputEditText:EditText
-    companion object {
+    private companion object {
         const val EDIT_VALUE = "EDIT_VALUE"
         const val EDIT_DEFAULT = ""
     }
@@ -44,7 +44,7 @@ class SearchActivity : AppCompatActivity() {
                 // пока небыло задания
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                btClear.visibility = clearButtonVisibility(s)
+                btClear.isVisible=!s.isNullOrEmpty()
             }
             override fun afterTextChanged(s: Editable?) {
                 // пока небыло задания
@@ -61,12 +61,5 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         val myText=savedInstanceState.getString(EDIT_VALUE, EDIT_DEFAULT).toString()
         inputEditText.setText(myText)
-    }
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
     }
 }
