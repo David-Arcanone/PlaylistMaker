@@ -9,14 +9,13 @@
         android:text="@string/search"
         android:layout_marginBottom="@dimen/settings_padding"/>
 
-    <androidx.cardview.widget.CardView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/clear_height_button"
         android:layout_gravity="left|center_vertical"
         android:layout_marginRight="@dimen/top_screen_padding"
-        app:cardBackgroundColor="?attr/colorOnContainer"
-        app:cardCornerRadius="@dimen/icon_padding">
+        android:background="@drawable/custom_rounded_shape">
 
         <EditText
             android:id="@+id/edit_text_search"
@@ -39,7 +38,7 @@
             android:padding="@dimen/zero_value"
             android:background="@color/transparent"/>
 
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
 </LinearLayout>
 
