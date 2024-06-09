@@ -2,14 +2,22 @@
 <resources>
     <dimen name="primary_text_size">16sp</dimen>
     <dimen name="primary_title_size">22sp</dimen>
-    <dimen name="top_screen_padding">14dp</dimen>
+    <dimen name="top_screen_padding_title">14dp</dimen>
+    <dimen name="top_screen_padding">4dp</dimen>
     <dimen name="horizontal_screen_padding">16dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
     <dimen name="settings_padding">12dp</dimen>
+    <dimen name="settings_switch_top">21dp</dimen>
+    <dimen name="settings_switch_bottom">22dp</dimen>
     <dimen name="buttons_gap">16dp</dimen>
     <dimen name="small_offset">2dp</dimen>
     <dimen name="settings_first_margin">24dp</dimen>
     <dimen name="zero_value">0dp</dimen>
     <dimen name="min_height_button">61dp</dimen>
+    <dimen name="clear_height_button">36dp</dimen>
+    <dimen name="clear_width_button">40dp</dimen>
     <dimen name="settings_screen_bottom_padding">28dp</dimen>
+    <integer name="search_edit_text_max_line">1</integer>
+    <integer name="search_edit_text_max_symbols">40</integer>
 </resources>

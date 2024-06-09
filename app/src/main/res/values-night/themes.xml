@@ -4,4 +4,17 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+    <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="trackColor">@color/track_blue</item>
+        <item name="thumbColor">@color/blue</item>
+        <item name="colorOnContainer">@color/white</item>
+        <item name="iconTint">@color/black</item>
+        <item name="icon">@color/white</item>
+        <item name="switchPadding">3dp</item>
+        <item name="customBoolean">true</item>
+    </style>
 </resources>
