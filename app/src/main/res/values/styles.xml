@@ -59,6 +59,18 @@
         <item name="android:textAppearance">?attr/textAppearanceButton</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">@integer/search_edit_text_max_line</item>
+    </style>
+    <style name="VerySmallTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/icon</item>
+        <item name="android:textSize">@dimen/description_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">@integer/search_edit_text_max_line</item>
     </style>
     <style name="TypicalView">
         <item name="android:layout_width">match_parent</item>

@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var inputEditText:EditText
@@ -24,6 +25,7 @@ class SearchActivity : AppCompatActivity() {
         val btBack = findViewById<Button>(R.id.bt_back)
         inputEditText = findViewById<EditText>(R.id.edit_text_search)
         val btClear = findViewById<ImageButton>(R.id.bt_clear)
+        val recyclerView=findViewById<RecyclerView>(R.id.rv_tracks)
         if (savedInstanceState != null) {
             val myText=savedInstanceState.getString(EDIT_VALUE, EDIT_DEFAULT).toString()
             inputEditText.setText(myText)
@@ -51,6 +53,8 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputEditText.addTextChangedListener(myTextWatcher)
+        val trackAdapter= TrackAdapter(Utilities.customTrackList)
+        recyclerView.adapter=trackAdapter
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
