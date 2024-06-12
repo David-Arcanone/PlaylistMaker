@@ -12,6 +12,7 @@
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="user_agreement_url" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="share_application">Поделиться приложением</string>
+    <string name="track_info">Подробнее</string>
     <string name="share_application_message" translatable="false">https://practicum.yandex.ru/android-developer/</string>
 </resources>
 
