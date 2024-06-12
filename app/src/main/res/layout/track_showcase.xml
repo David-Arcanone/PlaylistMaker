@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:textAlignment="textStart"
             android:ellipsize="end"
-            tools:text="@string/template_text"/>
+            tools:text="Loading"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
                 style="@style/VerySmallTextStyle"
                 android:textAlignment="textStart"
                 android:ellipsize="end"
-                tools:text="@string/template_text"
+                tools:text="Loading"
                 />
             <ImageView
                 android:layout_width="@dimen/point_size"
@@ -45,7 +45,7 @@
                 style="@style/VerySmallTextStyle"
                 android:textAlignment="textStart"
                 android:ellipsize="end"
-                tools:text="@string/template_text"/>
+                tools:text="Loading"/>
         </LinearLayout>
     </LinearLayout>
 
