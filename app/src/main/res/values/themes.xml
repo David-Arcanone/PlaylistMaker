@@ -17,5 +17,7 @@
         <item name="icon">@color/dark_grey</item>
         <item name="switchPadding">6dp</item>
         <item name="customBoolean">false</item>
+        <item name="altSrc">@drawable/pic_search_error_lm</item>
+        <item name="customReference">@drawable/pic_no_signal_lm</item>
     </style>
 </resources>

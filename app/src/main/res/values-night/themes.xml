@@ -16,5 +16,7 @@
         <item name="icon">@color/white</item>
         <item name="switchPadding">3dp</item>
         <item name="customBoolean">true</item>
+        <item name="altSrc">@drawable/pic_search_error_dm</item>
+        <item name="customReference">@drawable/pic_no_signal_dm</item>
     </style>
 </resources>
