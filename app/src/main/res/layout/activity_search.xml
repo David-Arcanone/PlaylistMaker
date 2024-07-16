@@ -59,15 +59,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/error_margin"
         android:visibility="gone">
         <ImageView
             style="@style/ErrorPicture"
             android:id="@+id/not_found_pic"
-            android:src="?attr/altSrc"/>
+            android:src="@drawable/pic_search_error_lm"/>
         <ImageView
             style="@style/ErrorPicture"
             android:id="@+id/error_pic"
-            android:src="?attr/customReference"/>
+            android:src="@drawable/pic_no_signal_lm"/>
         <TextView
             android:id="@+id/error_text"
             style="@style/ErrorText"
