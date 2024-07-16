@@ -25,7 +25,9 @@
             android:drawableLeft="@drawable/ic_search_small_lm"
             android:hint="@string/search"
             android:lines="@integer/search_edit_text_max_line"
-            android:maxLength="@integer/search_edit_text_max_symbols"/>
+            android:maxLength="@integer/search_edit_text_max_symbols"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageButton
             android:contentDescription="@string/clear_search"
@@ -50,6 +52,34 @@
         android:orientation="vertical"
         tools:listitem="@layout/track_showcase"
         tools:itemCount="@integer/temp_recycler_int"/>
+
+    <LinearLayout
+        android:id="@+id/error_box"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/error_margin"
+        android:visibility="gone">
+        <ImageView
+            style="@style/ErrorPicture"
+            android:id="@+id/not_found_pic"
+            android:src="@drawable/pic_search_error_lm"/>
+        <ImageView
+            style="@style/ErrorPicture"
+            android:id="@+id/error_pic"
+            android:src="@drawable/pic_no_signal_lm"/>
+        <TextView
+            android:id="@+id/error_text"
+            style="@style/ErrorText"
+            tools:text="Loading"/>
+        <Button
+            android:id="@+id/bt_refresh"
+            style="@style/RefreshButtonStyle"
+            android:text="@string/refresh"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    </LinearLayout>
 
 </LinearLayout>
 

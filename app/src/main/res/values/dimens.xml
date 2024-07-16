@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="description_text_size">11sp</dimen>
+    <dimen name="refresh_button">14sp</dimen>
     <dimen name="primary_text_size">16sp</dimen>
+    <dimen name="error_text_size">19sp</dimen>
     <dimen name="primary_title_size">22sp</dimen>
     <dimen name="zero_value">0dp</dimen>
     <dimen name="small_offset">2dp</dimen>
     <dimen name="top_screen_padding">4dp</dimen>
+    <dimen name="small_icon_padding">6dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
     <dimen name="settings_padding">12dp</dimen>
     <dimen name="point_size">13dp</dimen>
@@ -20,7 +23,11 @@
     <dimen name="clear_height_button">36dp</dimen>
     <dimen name="clear_width_button">40dp</dimen>
     <dimen name="track_pic">45dp</dimen>
+    <dimen name="strange_refresh_radius">20dp</dimen>
     <dimen name="min_height_button">61dp</dimen>
+    <dimen name="error_margin">86dp</dimen>
+    <dimen name="min_width_refresh_button">91dp</dimen>
+    <dimen name="error_image">120dp</dimen>
     <integer name="search_edit_text_max_line">1</integer>
     <integer name="temp_recycler_int">12</integer>
     <integer name="search_edit_text_max_symbols">25</integer>
