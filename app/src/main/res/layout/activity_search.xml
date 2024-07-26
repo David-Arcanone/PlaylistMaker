@@ -43,22 +43,46 @@
             android:background="@color/transparent"/>
 
     </FrameLayout>
+    <!--Блок с историей-->
+    <LinearLayout
+        style="@style/PopupGroup"
+        android:id="@+id/history_box"
+        android:layout_width="match_parent">
+            <TextView
+                style="@style/ErrorText"
+                android:text="@string/search_history"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                style="@style/RecyclerViewStyle"
+                android:layout_marginTop="@dimen/margin_top_rv_history"
+                android:visibility="visible"
+                android:id="@+id/rv_history_tracks"
+                tools:itemCount="@integer/temp_recycler_history_int"
+                tools:listitem="@layout/track_showcase"
+                android:layout_height="@dimen/zero_value"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:id="@+id/bt_clear_history"
+                style="@style/RefreshButtonStyle"
+                android:text="@string/clear_history"
+                android:minWidth="@dimen/min_width_clear_history_button"
+                android:layout_gravity="center"/>
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        style="@style/RecyclerViewStyle"
+        android:visibility="visible"
         android:id="@+id/rv_tracks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"
+
         tools:listitem="@layout/track_showcase"
         tools:itemCount="@integer/temp_recycler_int"/>
 
     <LinearLayout
         android:id="@+id/error_box"
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        style="@style/PopupGroup"
         android:layout_marginTop="@dimen/error_margin"
         android:visibility="gone">
         <ImageView

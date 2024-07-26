@@ -132,6 +132,7 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:layout_marginTop">@dimen/horizontal_screen_padding</item>
         <item name="android:textFontWeight">400</item>
+        <item name="android:layout_gravity">center</item>
     </style>
     <style name="ErrorPicture">
         <item name="android:layout_gravity">center</item>
@@ -139,5 +140,30 @@
         <item name="android:layout_height">@dimen/error_image</item>
         <item name="android:visibility">gone</item>
     </style>
+    <style name="SwitchTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textAppearance">?attr/textAppearanceButton</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">@integer/search_edit_text_max_line</item>
+    </style>
+    <style name="PopupGroup">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <style name="RecyclerViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
 
+
+    </style>
 </resources>

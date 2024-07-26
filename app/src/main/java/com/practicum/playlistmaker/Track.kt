@@ -8,7 +8,8 @@ data class Track(
     @SerializedName("trackName") val trackName:String,
     @SerializedName("artistName") val artistName:String,
     @SerializedName("trackTimeMillis") val trackTime:Int,
-    @SerializedName("artworkUrl100") val artWorkUrl100:String
+    @SerializedName("artworkUrl100") val artWorkUrl100:String,
+    @SerializedName("trackId") val trackId:Int
 ){
     fun showTrackTime():String{
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
