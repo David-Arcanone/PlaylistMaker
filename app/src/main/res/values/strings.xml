@@ -17,6 +17,8 @@
     <string name="search_error_connection">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="share_application_message" translatable="false">https://practicum.yandex.ru/android-developer/</string>
     <string name="refresh">Обновить</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="search_history">Вы искали</string>
 </resources>
 
 

@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +36,13 @@ class SettingsActivity : AppCompatActivity() {
         btUserAgreement.setOnClickListener {
             val userAgreementIntent = Intent(Intent.ACTION_VIEW,Uri.parse(getString(R.string.user_agreement_url)))
             startActivity(userAgreementIntent)
+        }
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        val myPref=getSharedPreferences(Utilities.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
+        val savedNightTheme =SharedPreferenceManager.getSavedNightTheme(myPref)
+        themeSwitcher.isChecked=savedNightTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
         }
     }
 }

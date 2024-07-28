@@ -8,34 +8,21 @@
         style="@style/BackButtonStyle"
         android:text="@string/settings"/>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:paddingTop="@dimen/settings_switch_top"
-        android:paddingBottom="@dimen/settings_switch_bottom">
-
-        <TextView
-            style="@style/SmallTextStyle"
-            android:layout_gravity="start"
-            android:text="@string/dark_theme"/>
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginVertical="@dimen/cardview_default_elevation"
-            android:checked="?attr/customBoolean"
-            android:gravity="right|center_vertical"
-            android:padding="@dimen/zero_value"
-            android:paddingEnd="?attr/switchPadding"
-            android:thumb="@drawable/ic_knob"
-            android:thumbTint="?attr/thumbColor"
-            android:track="@drawable/ic_track"
-            android:trackTint="?attr/trackColor"/>
-
-    </FrameLayout>
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        style="@style/SwitchTextStyle"
+        android:id="@+id/themeSwitcher"
+        android:layout_marginHorizontal="@dimen/zero_value"
+        android:text="@string/dark_theme"
+        android:paddingEnd="@dimen/right_switch_offset"
+        android:thumb="@drawable/ic_knob"
+        app:track="@drawable/ic_track"
+        app:thumbTint="?attr/thumbColor"
+        app:trackTint="?attr/trackColor"
+        android:layout_gravity="start"
+        android:checked="true"
+        android:enabled="true"
+        android:minHeight="@dimen/min_height_button"
+        />
 
     <Button
         android:id="@+id/bt_share"
