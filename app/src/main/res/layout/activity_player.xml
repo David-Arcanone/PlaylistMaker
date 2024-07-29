@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="@dimen/horizontal_screen_padding" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rightBorder"
         android:layout_width="wrap_content"
@@ -55,17 +54,14 @@
         style="@style/PlayerTitleNameStyle"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toTopOf="@id/horizontalTitleBorder"
-        tools:text="Loading Title"
-        />
-
+        tools:text="Loading Title"/>
     <TextView
         android:id="@+id/title_author"
         style="@style/PlayerTitleAuthorStyle"
         android:layout_marginTop="@dimen/settings_padding"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/title_name"
-        tools:text="Loading author"
-        />
+        tools:text="Loading author"/>
     <ImageView
         android:id="@+id/bt_play"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
@@ -79,8 +75,7 @@
         app:layout_constraintDimensionRatio="1:1"
         android:backgroundTint="@color/transparent"
         android:src="@drawable/bt_play_lm"
-        android:contentDescription="@string/player_play_pause"
-        />
+        android:contentDescription="@string/player_play_pause"/>
     <ImageView
         android:id="@+id/bt_add_to_playlist"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
@@ -94,8 +89,7 @@
         android:backgroundTint="@color/transparent"
         android:src="@drawable/bt_library_lm"
         app:layout_constraintHorizontal_bias="0"
-        android:contentDescription="@string/player_add_to_playlist"
-        />
+        android:contentDescription="@string/player_add_to_playlist"/>
     <ImageView
         android:id="@+id/bt_like"
         app:layout_constraintStart_toEndOf="@id/bt_play"
@@ -110,9 +104,6 @@
         android:src="@drawable/bt_like_lm"
         app:layout_constraintHorizontal_bias="1"
         android:contentDescription="@string/player_like"/>
-
-    <!-- это время 00:30 плейсхолдер тк плеер еще не реализовывали,
-    смысла добавлять его в strings не вижу тк этот показатель будет меняться-->
     <TextView
         android:id="@+id/title_time"
         style="@style/PlayerTitleAuthorStyle"
@@ -120,7 +111,7 @@
         app:layout_constraintTop_toBottomOf="@id/bt_play"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         android:layout_marginTop="@dimen/top_screen_padding"
-        android:text="0:30"/>
+        android:text="@string/current_time_template"/>
 
     <!--   В примере где мы брали плейсхолдер дискрипшн песни не влезал полность в 1 экран,
     поэтому делаю аналогично примеру с помощью ScrollView, хотя это повышает нагрузку
@@ -134,11 +125,10 @@
         app:layout_constraintTop_toBottomOf="@id/title_time"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="@dimen/player_margin_before_description"
-        app:layout_constraintVertical_bias="0"
-        >
+        app:layout_constraintVertical_bias="0">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/description_duration"
                 style="@style/PlayerDescriptionTableStyle"
