@@ -7,102 +7,106 @@
     <Button
         android:id="@+id/bt_back"
         style="@style/BackButtonStyle"
-        android:text="@string/search"
-        android:layout_marginBottom="@dimen/settings_padding"/>
+        android:layout_marginBottom="@dimen/settings_padding"
+        android:text="@string/search" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/clear_height_button"
         android:layout_gravity="left|center_vertical"
         android:layout_marginRight="@dimen/top_screen_padding"
         android:layout_marginBottom="@dimen/icon_size"
-        android:background="@drawable/custom_rounded_shape">
+        android:background="@drawable/custom_rounded_shape"
+        android:minHeight="@dimen/clear_height_button">
 
         <EditText
             android:id="@+id/edit_text_search"
             style="@style/EditText"
             android:drawableLeft="@drawable/ic_search_small_lm"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:lines="@integer/search_edit_text_max_line"
             android:maxLength="@integer/search_edit_text_max_symbols"
-            android:imeOptions="actionDone"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <ImageButton
-            android:contentDescription="@string/clear_search"
-            android:visibility="gone"
             android:id="@+id/bt_clear"
-            app:tint="?attr/iconTint"
-            android:layout_gravity="center_vertical|end"
             android:layout_width="@dimen/clear_width_button"
             android:layout_height="@dimen/clear_height_button"
-            android:src="@drawable/ic_clear_search_lm"
+            android:layout_gravity="center_vertical|end"
             android:layout_margin="@dimen/zero_value"
+            android:background="@color/transparent"
+            android:contentDescription="@string/clear_search"
             android:padding="@dimen/zero_value"
-            android:background="@color/transparent"/>
+            android:src="@drawable/ic_clear_search_lm"
+            android:visibility="gone"
+            app:tint="?attr/iconTint" />
 
     </FrameLayout>
     <!--Блок с историей-->
     <LinearLayout
-        style="@style/PopupGroup"
         android:id="@+id/history_box"
+        style="@style/PopupGroup"
         android:layout_width="match_parent">
-            <TextView
-                style="@style/ErrorText"
-                android:text="@string/search_history"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                style="@style/RecyclerViewStyle"
-                android:layout_marginTop="@dimen/margin_top_rv_history"
-                android:visibility="visible"
-                android:id="@+id/rv_history_tracks"
-                tools:itemCount="@integer/temp_recycler_history_int"
-                tools:listitem="@layout/track_showcase"
-                android:layout_height="@dimen/zero_value"
-                android:layout_weight="1"
-                />
+        <TextView
+            style="@style/ErrorText"
+            android:text="@string/search_history" />
 
-            <Button
-                android:id="@+id/bt_clear_history"
-                style="@style/RefreshButtonStyle"
-                android:text="@string/clear_history"
-                android:minWidth="@dimen/min_width_clear_history_button"
-                android:layout_gravity="center"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_history_tracks"
+            style="@style/RecyclerViewStyle"
+            android:layout_height="@dimen/zero_value"
+            android:layout_marginTop="@dimen/margin_top_rv_history"
+            android:layout_weight="1"
+            android:visibility="visible"
+            tools:itemCount="@integer/temp_recycler_history_int"
+            tools:listitem="@layout/track_showcase" />
+
+        <Button
+            android:id="@+id/bt_clear_history"
+            style="@style/RefreshButtonStyle"
+            android:layout_gravity="center"
+            android:minWidth="@dimen/min_width_clear_history_button"
+            android:text="@string/clear_history" />
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tracks"
         style="@style/RecyclerViewStyle"
         android:visibility="visible"
-        android:id="@+id/rv_tracks"
 
-        tools:listitem="@layout/track_showcase"
-        tools:itemCount="@integer/temp_recycler_int"/>
+        tools:itemCount="@integer/temp_recycler_int"
+        tools:listitem="@layout/track_showcase" />
 
     <LinearLayout
         android:id="@+id/error_box"
         style="@style/PopupGroup"
         android:layout_marginTop="@dimen/error_margin"
         android:visibility="gone">
+
         <ImageView
-            style="@style/ErrorPicture"
             android:id="@+id/not_found_pic"
-            android:src="@drawable/pic_search_error_lm"/>
-        <ImageView
             style="@style/ErrorPicture"
+            android:src="@drawable/pic_search_error_lm" />
+
+        <ImageView
             android:id="@+id/error_pic"
-            android:src="@drawable/pic_no_signal_lm"/>
+            style="@style/ErrorPicture"
+            android:src="@drawable/pic_no_signal_lm" />
+
         <TextView
             android:id="@+id/error_text"
             style="@style/ErrorText"
-            tools:text="Loading"/>
+            tools:text="Loading" />
+
         <Button
             android:id="@+id/bt_refresh"
             style="@style/RefreshButtonStyle"
-            android:text="@string/refresh"
             android:layout_gravity="center"
-            android:visibility="gone"/>
+            android:text="@string/refresh"
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>

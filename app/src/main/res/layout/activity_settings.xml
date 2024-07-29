@@ -6,34 +6,34 @@
     <Button
         android:id="@+id/bt_back"
         style="@style/BackButtonStyle"
-        android:text="@string/settings"/>
+        android:text="@string/settings" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        style="@style/SwitchTextStyle"
         android:id="@+id/themeSwitcher"
-        android:layout_marginHorizontal="@dimen/zero_value"
-        android:text="@string/dark_theme"
-        android:paddingEnd="@dimen/right_switch_offset"
-        android:thumb="@drawable/ic_knob"
-        app:track="@drawable/ic_track"
-        app:thumbTint="?attr/thumbColor"
-        app:trackTint="?attr/trackColor"
+        style="@style/SwitchTextStyle"
         android:layout_gravity="start"
+        android:layout_marginHorizontal="@dimen/zero_value"
         android:checked="true"
         android:enabled="true"
         android:minHeight="@dimen/min_height_button"
-        />
+        android:paddingEnd="@dimen/right_switch_offset"
+        android:text="@string/dark_theme"
+        android:thumb="@drawable/ic_knob"
+        app:thumbTint="?attr/thumbColor"
+        app:track="@drawable/ic_track"
+        app:trackTint="?attr/trackColor" />
 
     <Button
         android:id="@+id/bt_share"
         style="@style/SettingsTransparentButtonStyle"
-        app:icon="@drawable/ic_share_lm"
-        android:text="@string/share_application"/>
+        android:text="@string/share_application"
+        app:icon="@drawable/ic_share_lm" />
+
     <Button
         android:id="@+id/bt_support"
         style="@style/SettingsTransparentButtonStyle"
-        app:icon="@drawable/ic_tech_support_lm"
-        android:text="@string/tech_support"/>
+        android:text="@string/tech_support"
+        app:icon="@drawable/ic_tech_support_lm" />
 
     <Button
         android:id="@+id/bt_user_agreement"

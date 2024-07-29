@@ -32,33 +32,35 @@ class PlayerActivity : AppCompatActivity() {
         val trackCountry = findViewById<TextView>(R.id.track_country)
         val trackYear = findViewById<TextView>(R.id.track_year)
         //загрузка текущего трека
-        val myPref=getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
-        val currentTrack= SharedPreferenceManager.getSavedTrack(myPref)
+        val myPref =
+            getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
+        val currentTrack = SharedPreferenceManager.getSavedTrack(myPref)
         //записываем показания трека в окно
-        if(currentTrack!=null) {
+        if (currentTrack != null) {
             //постер
             Glide.with(this.applicationContext)
-                .load(currentTrack?.getCoverImg())
+                .load(currentTrack.getCoverImg())
                 .placeholder(R.drawable.placeholder)
                 .fitCenter()
                 .transform(RoundedCorners(Utilities.dpToPx(8f, this)))
                 .into(ivPoster)
             //текст
-            titleName.setText(currentTrack?.trackName)
-            titleAuthor.setText(currentTrack?.artistName)
-            trackDuration.setText(currentTrack?.showTrackTime())
-            trackCountry.setText(currentTrack?.country)
+            titleName.setText(currentTrack.trackName)
+            titleAuthor.setText(currentTrack.artistName)
+            trackDuration.setText(currentTrack.showTrackTime())
+            trackCountry.setText(currentTrack.country)
             trackGenre.setText(currentTrack.primaryGenreName)
             trackYear.setText(currentTrack.releaseDate.take(4))//год это первые 4 цифры
             //по условию альбома может и не быть у песни
-            if(currentTrack.collectionName?.isNotEmpty()==true){
-                trackAlbumGroup.isVisible=true
-                trackAlbum.setText(currentTrack?.collectionName)
-            } else {trackAlbumGroup.isVisible=false}
-        }
-        else{
+            if (currentTrack.collectionName?.isNotEmpty() == true) {
+                trackAlbumGroup.isVisible = true
+                trackAlbum.setText(currentTrack.collectionName)
+            } else {
+                trackAlbumGroup.isVisible = false
+            }
+        } else {
             //на случай ошибки
-            Toast.makeText(this,"ошибка записи трека", Toast.LENGTH_SHORT)
+            finish()
         }
         //активность кнопок кроме назад пока не нужна
         btBack.setOnClickListener {
