@@ -38,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(userAgreementIntent)
         }
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
-        val myPref=getSharedPreferences(Utilities.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
+        val myPref=getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
         val savedNightTheme =SharedPreferenceManager.getSavedNightTheme(myPref)
         themeSwitcher.isChecked=savedNightTheme
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->

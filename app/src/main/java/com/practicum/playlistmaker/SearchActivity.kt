@@ -37,7 +37,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        val myPref=getSharedPreferences(Utilities.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
+        val myPref=getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
         val btBack = findViewById<Button>(R.id.bt_back)
         inputEditText = findViewById<EditText>(R.id.edit_text_search)
         val btClear = findViewById<ImageButton>(R.id.bt_clear)
@@ -181,7 +181,11 @@ class SearchActivity : AppCompatActivity() {
             else if(myHistoryTracks.size>=10){myHistoryTracks.removeAt(9)}
             myHistoryTracks.add(0,track)
             SharedPreferenceManager.saveTrackHistory(myPref,myHistoryTracks)
-            historyTrackAdapter.notifyDataSetChanged()}
+            SharedPreferenceManager.saveCurrentTrack(myPref,track)
+            historyTrackAdapter.notifyDataSetChanged()
+            val playerIntent = Intent(this, PlayerActivity::class.java)
+            startActivity(playerIntent)
+        }
 
         //RecyclerView для результатов поиска
         recyclerView.adapter=trackAdapter
@@ -208,7 +212,7 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         val myText=savedInstanceState.getString(EDIT_VALUE, EDIT_DEFAULT).toString()
         inputEditText.setText(myText)
-        val myPref=getSharedPreferences(Utilities.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
+        val myPref=getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
         myHistoryTracks.clear()
         myHistoryTracks.addAll(SharedPreferenceManager.getSavedTrackHistory(myPref))
     }

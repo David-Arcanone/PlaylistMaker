@@ -163,7 +163,33 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
         <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
-
-
+    </style>
+    <style name="PlayerTitleNameStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:maxLines">@integer/search_edit_text_max_line</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/primary_title_size</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+    <style name="PlayerTitleAuthorStyle" parent="PlayerTitleNameStyle">
+        <item name="android:textSize">@dimen/refresh_button</item>
+    </style>
+    <style name="PlayerDescriptionTableStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/description_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/icon_padding</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/player_description_text_size</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/dark_grey</item>
+    </style>
+    <style name="PlayerDescriptionValueStyle" parent="PlayerDescriptionTableStyle">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:maxLines">@integer/search_edit_text_max_line</item>
+        <item name="android:ellipsize">end</item>
     </style>
 </resources>

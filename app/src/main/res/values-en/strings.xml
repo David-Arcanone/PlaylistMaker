@@ -14,4 +14,14 @@
     <string name="refresh">Refresh</string>
     <string name="clear_history">Clear history</string>
     <string name="search_history">Search hisitory</string>
+    <string name="album">Album</string>
+    <string name="genre">Genre</string>
+    <string name="duration">Duration</string>
+    <string name="year">Released</string>
+    <string name="country">Country</string>
+    <string name="player_play_pause">Play or Pause</string>
+    <string name="player_like">Like</string>
+    <string name="player_add_to_playlist">Add to playlist</string>
+    <string name="back">Back</string>
+    <string name="track_img">Track image</string>
 </resources>
