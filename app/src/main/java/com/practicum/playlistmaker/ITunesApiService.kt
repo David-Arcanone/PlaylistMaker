@@ -8,5 +8,5 @@ interface ITunesApiService {
     @GET("/search")
     fun search(
         @Query("term", encoded = false) text: String
-    ):Call<iTunesSearchResponse>
+    ): Call<iTunesSearchResponse>
 }

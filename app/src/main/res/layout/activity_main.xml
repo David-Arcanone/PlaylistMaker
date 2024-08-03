@@ -25,15 +25,15 @@
 
     <Button
         android:id="@+id/bt_media"
+        style="@style/TitleButtonStyle"
         android:text="@string/media"
-        app:icon="@drawable/ic_media_lm"
-        style="@style/TitleButtonStyle"/>
+        app:icon="@drawable/ic_media_lm" />
 
     <Button
         android:id="@+id/bt_settings"
+        style="@style/TitleButtonStyle"
         android:text="@string/settings"
-        app:icon="@drawable/ic_settings_lm"
-        style="@style/TitleButtonStyle"/>
+        app:icon="@drawable/ic_settings_lm" />
 
 </LinearLayout>
 

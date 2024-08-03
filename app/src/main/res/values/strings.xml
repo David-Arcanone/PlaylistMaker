@@ -19,6 +19,17 @@
     <string name="refresh">Обновить</string>
     <string name="clear_history">Очистить историю</string>
     <string name="search_history">Вы искали</string>
+    <string name="duration">Длительность</string>
+    <string name="year">Год</string>
+    <string name="album">Альбом</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+    <string name="current_time_template" translatable="false">00:30</string>
+    <string name="player_play_pause">Запустить или Пауза</string>
+    <string name="player_like">Лайк</string>
+    <string name="player_add_to_playlist">Добавить в Плейлист</string>
+    <string name="back">Назад</string>
+    <string name="track_img">Плакат трека</string>
 </resources>
 
 
