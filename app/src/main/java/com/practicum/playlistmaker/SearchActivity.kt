@@ -29,15 +29,16 @@ import retrofit2.create
 class SearchActivity : AppCompatActivity() {
     private lateinit var inputEditText: EditText
     private var mainThreadHandler: Handler? = null
+
     private companion object {
         const val EDIT_VALUE = "EDIT_VALUE"
         const val EDIT_DEFAULT = ""
         const val SEARCH_DEBOUNCE_DELAY = 2000L
-        const val CLEAR_WINDOW =0
-        const val ERROR_CONNECTION =2
-        const val ERROR_NO_MATCHES =1
-        const val LOADING_SEARCH=3
-        const val FINISHED_LOAD=4
+        const val CLEAR_WINDOW = 0
+        const val ERROR_CONNECTION = 2
+        const val ERROR_NO_MATCHES = 1
+        const val LOADING_SEARCH = 3
+        const val FINISHED_LOAD = 4
     }
 
     private val trackAdapter = TrackAdapter()
@@ -51,7 +52,8 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        val myPref = getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
+        val myPref =
+            getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
         val btBack = findViewById<Button>(R.id.bt_back)
         inputEditText = findViewById<EditText>(R.id.edit_text_search)
         val btClear = findViewById<ImageButton>(R.id.bt_clear)
@@ -90,8 +92,8 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 ERROR_NO_MATCHES -> {//нет сопадений
-                    mainThreadHandler?.post{
-                        progressBarDownloadMusic.isVisible=false
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = false
                         searchErrorBox.isVisible = true
                         historyBox.isVisible = false
                         btRefresh.isVisible = false
@@ -103,8 +105,8 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 ERROR_CONNECTION -> {//ошибка связи
-                    mainThreadHandler?.post{
-                        progressBarDownloadMusic.isVisible=false
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = false
                         searchErrorBox.isVisible = true
                         historyBox.isVisible = false
                         btRefresh.isVisible = true
@@ -117,25 +119,28 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 LOADING_SEARCH -> {//загрузка поиска
-                    mainThreadHandler?.post{
-                        progressBarDownloadMusic.isVisible=true
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = true
                     }
                 }
-                FINISHED_LOAD ->{
-                    mainThreadHandler?.post{
-                        progressBarDownloadMusic.isVisible=false
+
+                FINISHED_LOAD -> {
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = false
                     }
                 }
             }
         }
+
         // makeSearch запуск поисковых запросов
         fun makeSearch(text: String) {
             //очищаем поисковый список
-            synchronized(myTracks){myTracks.clear()}
-            mainThreadHandler?.post{
+            synchronized(myTracks) { myTracks.clear() }
+            mainThreadHandler?.post {
                 popupManager(CLEAR_WINDOW)
-                popupManager(LOADING_SEARCH)}
-            val newThread = Thread{
+                popupManager(LOADING_SEARCH)
+            }
+            val newThread = Thread {
                 //делаем запрос
                 iTunesApiService
                     .search(text)
@@ -144,45 +149,46 @@ class SearchActivity : AppCompatActivity() {
                             call: Call<iTunesSearchResponse>,
                             response: Response<iTunesSearchResponse>
                         ) {
-                            mainThreadHandler?.post{popupManager(FINISHED_LOAD)}
+                            mainThreadHandler?.post { popupManager(FINISHED_LOAD) }
                             if (response.code() == 200) {
                                 //добавляю синхронизацию в запись
-                                synchronized(myTracks){
+                                synchronized(myTracks) {
                                     myTracks.clear()
                                 }
                                 if (response.body()?.results?.isNotEmpty() == true) {
                                     //записаны данные и они не null
-                                    synchronized(myTracks){
+                                    synchronized(myTracks) {
                                         myTracks.addAll(response.body()?.results!!)
                                     }
                                     trackAdapter.notifyDataSetChanged()
                                 }
                                 if (myTracks.isEmpty()) {//нет совпадений
-                                    mainThreadHandler?.post{popupManager(ERROR_NO_MATCHES)}
+                                    mainThreadHandler?.post { popupManager(ERROR_NO_MATCHES) }
                                 } else {//есть совпадения ничего менять не надо
                                 }
                             } else {//произошла ошибка
-                                mainThreadHandler?.post{popupManager(ERROR_CONNECTION)}
+                                mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
                             }
                         }
 
                         override fun onFailure(call: Call<iTunesSearchResponse>, t: Throwable) {
                             //произошла ошибка
-                            synchronized(myTracks){
+                            synchronized(myTracks) {
                                 myTracks.clear()
                             }
-                            mainThreadHandler?.post{popupManager(ERROR_CONNECTION)}
+                            mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
                         }
                     })
             }
             newThread.start()
 
         }
-        val mySearchRunnable=Runnable{
+
+        val mySearchRunnable = Runnable {
             if (inputEditText.text.isNotEmpty()) makeSearch(inputEditText.text.toString())
         }
 
-        fun clickDebounce() : Boolean { //
+        fun clickDebounce(): Boolean { //
             val current = isSearchAllowed
             if (isSearchAllowed) {
                 isSearchAllowed = false
@@ -210,7 +216,7 @@ class SearchActivity : AppCompatActivity() {
                 inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
             }
             inputEditText.clearFocus()
-            synchronized(myTracks){myTracks.clear()}
+            synchronized(myTracks) { myTracks.clear() }
             trackAdapter.notifyDataSetChanged()
         }
         //кнопка обновить запрос (в случае если проблемы с загрузкой)
@@ -230,7 +236,7 @@ class SearchActivity : AppCompatActivity() {
                 btClear.isVisible = !s.isNullOrEmpty()
                 //2 sec задержка перед запуском поиска
                 mainThreadHandler?.removeCallbacks(mySearchRunnable)
-                mainThreadHandler?.postDelayed(mySearchRunnable,SEARCH_DEBOUNCE_DELAY)
+                mainThreadHandler?.postDelayed(mySearchRunnable, SEARCH_DEBOUNCE_DELAY)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -253,7 +259,7 @@ class SearchActivity : AppCompatActivity() {
         }
         // обработчик для клика по треку
         val mytrackClicker = { track: Track ->
-            if(clickDebounce()){ //проверяем debounce
+            if (clickDebounce()) { //проверяем debounce
                 val positionOfDublicateInHistory =
                     myHistoryTracks.indexOfFirst({ it.trackId == track.trackId })
                 if (positionOfDublicateInHistory != -1) {

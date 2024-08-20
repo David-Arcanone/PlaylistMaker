@@ -124,7 +124,6 @@ class PlayerActivity : AppCompatActivity() {
                     object : Runnable {
                         override fun run() {
                             updateTimeTitle()//обновляю таймер
-
                             // И снова планируем то же действие через 0,5 секунд
                             mainThreadHandler?.postDelayed(
                                 this,
