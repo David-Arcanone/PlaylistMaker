@@ -43,6 +43,15 @@
             app:tint="?attr/iconTint" />
 
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/progress_bar"
+        android:layout_height="@dimen/progress_bar"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/progress_margin_top"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone" />
     <!--Блок с историей-->
     <LinearLayout
         android:id="@+id/history_box"

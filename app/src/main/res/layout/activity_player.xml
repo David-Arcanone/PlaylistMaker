@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/title_name"
         tools:text="Loading author" />
-
+<!--
     <ImageView
         android:id="@+id/bt_play"
         android:layout_width="@dimen/player_button"
@@ -79,8 +79,25 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/title_author" />
+        app:layout_constraintTop_toBottomOf="@id/title_author" /> -->
+    <ImageButton
+        android:id="@+id/bt_play"
+        android:enabled="false"
+        android:layout_width="@dimen/round_play_button"
+        android:layout_height="@dimen/round_play_button"
+        android:layout_marginTop="@dimen/play_button_top_margin"
+        android:layout_marginBottom="@dimen/settings_padding"
+        android:background="@drawable/circular_button_grey"
+        android:contentDescription="@string/player_play_pause"
+        android:src="@drawable/bt_play_lm"
+        app:layout_constraintBottom_toTopOf="@id/title_time"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/title_author"
+        />
 
+    <!--
     <ImageView
         android:id="@+id/bt_add_to_playlist"
         android:layout_width="@dimen/player_like_button"
@@ -95,8 +112,23 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
         app:layout_constraintTop_toTopOf="@id/bt_play" />
+        -->
+    <ImageButton
+        android:id="@+id/bt_add_to_playlist"
+        android:background="@drawable/circular_button_grey"
+        android:layout_marginStart="@dimen/icon_padding"
+        android:src="@drawable/bt_library_lm"
+        android:layout_width="@dimen/player_like_button"
+        android:layout_height="@dimen/player_like_button"
+        app:layout_constraintBottom_toBottomOf="@id/bt_play"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/bt_play"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintTop_toTopOf="@id/bt_play"
+        />
 
-    <ImageView
+<!--    <ImageView
         android:id="@+id/bt_like"
         android:layout_width="@dimen/player_like_button"
         android:layout_height="@dimen/player_like_button"
@@ -109,7 +141,21 @@
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/bt_play"
-        app:layout_constraintTop_toTopOf="@id/bt_play" />
+        app:layout_constraintTop_toTopOf="@id/bt_play" />-->
+    <ImageButton
+        android:id="@+id/bt_like"
+        android:background="@drawable/circular_button_grey"
+        android:layout_marginEnd="@dimen/icon_padding"
+        android:src="@drawable/bt_like_lm"
+        android:layout_width="@dimen/player_like_button"
+        android:layout_height="@dimen/player_like_button"
+        app:layout_constraintBottom_toBottomOf="@id/bt_play"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/bt_play"
+        app:layout_constraintTop_toTopOf="@id/bt_play"
+        />
 
     <TextView
         android:id="@+id/title_time"

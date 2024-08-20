@@ -13,7 +13,8 @@ data class Track(
     @SerializedName("country") val country: String,
     @SerializedName("primaryGenreName") val primaryGenreName: String,
     @SerializedName("collectionName") val collectionName: String?,
-    @SerializedName("releaseDate") val releaseDate: String
+    @SerializedName("releaseDate") val releaseDate: String,
+    @SerializedName("previewUrl") val previewUrl: String?
 ) {
     fun showTrackTime(): String {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
