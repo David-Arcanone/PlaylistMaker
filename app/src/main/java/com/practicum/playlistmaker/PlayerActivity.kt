@@ -149,6 +149,8 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             btPlay.setImageResource(R.drawable.bt_play_lm)
             playerState = STATE_PREPARED
+            mainThreadHandler?.removeCallbacksAndMessages(null)
+            titleTime.setText("00:00")
         }
     }
 

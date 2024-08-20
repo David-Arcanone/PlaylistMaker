@@ -135,53 +135,49 @@ class SearchActivity : AppCompatActivity() {
         // makeSearch запуск поисковых запросов
         fun makeSearch(text: String) {
             //очищаем поисковый список
-            synchronized(myTracks) { myTracks.clear() }
-            mainThreadHandler?.post {
-                popupManager(CLEAR_WINDOW)
-                popupManager(LOADING_SEARCH)
-            }
-            val newThread = Thread {
-                //делаем запрос
-                iTunesApiService
-                    .search(text)
-                    .enqueue(object : Callback<iTunesSearchResponse> {
-                        override fun onResponse(
-                            call: Call<iTunesSearchResponse>,
-                            response: Response<iTunesSearchResponse>
-                        ) {
-                            mainThreadHandler?.post { popupManager(FINISHED_LOAD) }
-                            if (response.code() == 200) {
-                                //добавляю синхронизацию в запись
-                                synchronized(myTracks) {
+            synchronized(myTracks) {
+                myTracks.clear()
+                mainThreadHandler?.post {
+                    popupManager(CLEAR_WINDOW)
+                    popupManager(LOADING_SEARCH)
+                }
+                val newThread = Thread {
+                    //делаем запрос
+                    iTunesApiService
+                        .search(text)
+                        .enqueue(object : Callback<iTunesSearchResponse> {
+                            override fun onResponse(
+                                call: Call<iTunesSearchResponse>,
+                                response: Response<iTunesSearchResponse>
+                            ) {
+                                mainThreadHandler?.post { popupManager(FINISHED_LOAD) }
+                                if (response.code() == 200) {
                                     myTracks.clear()
-                                }
-                                if (response.body()?.results?.isNotEmpty() == true) {
-                                    //записаны данные и они не null
-                                    synchronized(myTracks) {
+
+                                    if (response.body()?.results?.isNotEmpty() == true) {
+                                        //записаны данные и они не null
                                         myTracks.addAll(response.body()?.results!!)
+                                        trackAdapter.notifyDataSetChanged()
                                     }
-                                    trackAdapter.notifyDataSetChanged()
+                                    if (myTracks.isEmpty()) {//нет совпадений
+                                        mainThreadHandler?.post { popupManager(ERROR_NO_MATCHES) }
+                                    } else {//есть совпадения ничего менять не надо
+                                    }
+                                } else {//произошла ошибка
+                                    mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
                                 }
-                                if (myTracks.isEmpty()) {//нет совпадений
-                                    mainThreadHandler?.post { popupManager(ERROR_NO_MATCHES) }
-                                } else {//есть совпадения ничего менять не надо
-                                }
-                            } else {//произошла ошибка
+                            }
+
+                            override fun onFailure(call: Call<iTunesSearchResponse>, t: Throwable) {
+                                //произошла ошибка
+                                myTracks.clear()
                                 mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
                             }
-                        }
+                        })
+                }
+                newThread.start()
 
-                        override fun onFailure(call: Call<iTunesSearchResponse>, t: Throwable) {
-                            //произошла ошибка
-                            synchronized(myTracks) {
-                                myTracks.clear()
-                            }
-                            mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
-                        }
-                    })
             }
-            newThread.start()
-
         }
 
         val mySearchRunnable = Runnable {
@@ -259,7 +255,7 @@ class SearchActivity : AppCompatActivity() {
         }
         // обработчик для клика по треку
         val mytrackClicker = { track: Track ->
-            if (clickDebounce()) { //проверяем debounce
+            if (clickDebounce()) { //проверяем debounce чтобы случайно не открыть подряд два плеера
                 val positionOfDublicateInHistory =
                     myHistoryTracks.indexOfFirst({ it.trackId == track.trackId })
                 if (positionOfDublicateInHistory != -1) {
