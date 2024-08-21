@@ -135,7 +135,7 @@ class SearchActivity : AppCompatActivity() {
         // makeSearch запуск поисковых запросов
         fun makeSearch(text: String) {
             //очищаем поисковый список
-            synchronized(myTracks) {
+
                 myTracks.clear()
                 mainThreadHandler?.post {
                     popupManager(CLEAR_WINDOW)
@@ -177,7 +177,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 newThread.start()
 
-            }
+
         }
 
         val mySearchRunnable = Runnable {
@@ -212,7 +212,7 @@ class SearchActivity : AppCompatActivity() {
                 inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
             }
             inputEditText.clearFocus()
-            synchronized(myTracks) { myTracks.clear() }
+            myTracks.clear()
             trackAdapter.notifyDataSetChanged()
         }
         //кнопка обновить запрос (в случае если проблемы с загрузкой)
