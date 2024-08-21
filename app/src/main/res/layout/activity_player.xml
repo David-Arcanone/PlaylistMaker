@@ -66,14 +66,15 @@
         app:layout_constraintTop_toBottomOf="@id/title_name"
         tools:text="Loading author" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/bt_play"
-        android:layout_width="@dimen/player_button"
-        android:layout_height="@dimen/player_button"
-        android:layout_marginTop="@dimen/player_button_margins"
-        android:layout_marginBottom="@dimen/top_screen_padding"
-        android:backgroundTint="@color/transparent"
+        android:layout_width="@dimen/round_play_button"
+        android:layout_height="@dimen/round_play_button"
+        android:layout_marginTop="@dimen/play_button_top_margin"
+        android:layout_marginBottom="@dimen/settings_padding"
+        android:background="@drawable/circular_button_grey"
         android:contentDescription="@string/player_play_pause"
+        android:enabled="false"
         android:src="@drawable/bt_play_lm"
         app:layout_constraintBottom_toTopOf="@id/title_time"
         app:layout_constraintDimensionRatio="1:1"
@@ -81,13 +82,12 @@
         app:layout_constraintStart_toEndOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/title_author" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/bt_add_to_playlist"
         android:layout_width="@dimen/player_like_button"
         android:layout_height="@dimen/player_like_button"
         android:layout_marginStart="@dimen/icon_padding"
-        android:backgroundTint="@color/transparent"
-        android:contentDescription="@string/player_add_to_playlist"
+        android:background="@drawable/circular_button_grey"
         android:src="@drawable/bt_library_lm"
         app:layout_constraintBottom_toBottomOf="@id/bt_play"
         app:layout_constraintDimensionRatio="1:1"
@@ -96,13 +96,12 @@
         app:layout_constraintStart_toEndOf="@id/leftBorder"
         app:layout_constraintTop_toTopOf="@id/bt_play" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/bt_like"
         android:layout_width="@dimen/player_like_button"
         android:layout_height="@dimen/player_like_button"
         android:layout_marginEnd="@dimen/icon_padding"
-        android:backgroundTint="@color/transparent"
-        android:contentDescription="@string/player_like"
+        android:background="@drawable/circular_button_grey"
         android:src="@drawable/bt_like_lm"
         app:layout_constraintBottom_toBottomOf="@id/bt_play"
         app:layout_constraintDimensionRatio="1:1"
@@ -213,10 +212,10 @@
             <TextView
                 android:id="@+id/description_country"
                 style="@style/PlayerDescriptionTableStyle"
+                android:paddingBottom="@dimen/icon_padding"
                 android:text="@string/country"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description_genre"
-                android:paddingBottom="@dimen/icon_padding"/>
+                app:layout_constraintTop_toBottomOf="@id/description_genre" />
 
             <TextView
                 android:id="@+id/track_country"

@@ -30,6 +30,7 @@
     <string name="player_add_to_playlist">Добавить в Плейлист</string>
     <string name="back">Назад</string>
     <string name="track_img">Плакат трека</string>
+    <string name="not_track_error">Вы открыли не трек, отсутсвует превью аудио</string>
 </resources>
 
 

@@ -3,6 +3,8 @@ package com.practicum.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
@@ -12,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -25,10 +28,17 @@ import retrofit2.create
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var inputEditText: EditText
+    private var mainThreadHandler: Handler? = null
 
     private companion object {
         const val EDIT_VALUE = "EDIT_VALUE"
         const val EDIT_DEFAULT = ""
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val CLEAR_WINDOW = 0
+        const val ERROR_CONNECTION = 2
+        const val ERROR_NO_MATCHES = 1
+        const val LOADING_SEARCH = 3
+        const val FINISHED_LOAD = 4
     }
 
     private val trackAdapter = TrackAdapter()
@@ -36,6 +46,8 @@ class SearchActivity : AppCompatActivity() {
     private val myTracks = ArrayList<Track>()
     private val myHistoryTracks = ArrayList<Track>()
     private var lastRequest = ""
+    private var isSearchAllowed = true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,10 +64,12 @@ class SearchActivity : AppCompatActivity() {
         val searchNotFoundPic = findViewById<ImageView>(R.id.not_found_pic)
         val searchErrorText = findViewById<TextView>(R.id.error_text)
 
+        val progressBarDownloadMusic = findViewById<ProgressBar>(R.id.progressBar)
         val historyBox = findViewById<LinearLayout>(R.id.history_box)
         val historyRecyclerView = findViewById<RecyclerView>(R.id.rv_history_tracks)
         val btHistoryClear = findViewById<Button>(R.id.bt_clear_history)
         myHistoryTracks.addAll(SharedPreferenceManager.getSavedTrackHistory(myPref))
+        mainThreadHandler = Handler(Looper.getMainLooper())
 
         val retrofit = Retrofit.Builder()
             .baseUrl(Utilities.iTunesBaseUrl)
@@ -64,76 +78,119 @@ class SearchActivity : AppCompatActivity() {
         val iTunesApiService = retrofit.create<ITunesApiService>()
         trackAdapter.tracks = myTracks
         historyTrackAdapter.tracks = myHistoryTracks
-        //2 вспомогательные функции:
         // popupManager помогает с работой заглушек
-        // makeSearch запуск поисковых запросов
         fun popupManager(currentMod: Int) {
             ///режимы: 0-очистка, 1-заглушка "нет совпадений", 2-заглушка "ошибка",
             when (currentMod) {
-                0 -> {//чистый экран
-                    searchErrorBox.isVisible = false
-                    historyBox.isVisible = false
+                CLEAR_WINDOW -> {//чистый экран
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = false
+                        searchErrorBox.isVisible = false
+                        historyBox.isVisible = false
+                    }
                     trackAdapter.notifyDataSetChanged()
                 }
 
-                1 -> {//нет сопадений
-                    searchErrorBox.isVisible = true
-                    historyBox.isVisible = false
-                    btRefresh.isVisible = false
-                    searchErrorPic.isVisible = false
-                    searchNotFoundPic.isVisible = true
-                    searchErrorText.setText(R.string.search_error_not_found)
+                ERROR_NO_MATCHES -> {//нет сопадений
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = false
+                        searchErrorBox.isVisible = true
+                        historyBox.isVisible = false
+                        btRefresh.isVisible = false
+                        searchErrorPic.isVisible = false
+                        searchNotFoundPic.isVisible = true
+                        searchErrorText.setText(R.string.search_error_not_found)
+                    }
                     trackAdapter.notifyDataSetChanged()
                 }
 
-                2 -> {//ошибка связи
-                    searchErrorBox.isVisible = true
-                    historyBox.isVisible = false
-                    btRefresh.isVisible = true
-                    searchErrorPic.isVisible = true
-                    searchNotFoundPic.isVisible = false
-                    searchErrorText.setText(R.string.search_error_connection)
+                ERROR_CONNECTION -> {//ошибка связи
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = false
+                        searchErrorBox.isVisible = true
+                        historyBox.isVisible = false
+                        btRefresh.isVisible = true
+                        searchErrorPic.isVisible = true
+                        searchNotFoundPic.isVisible = false
+                        searchErrorText.setText(R.string.search_error_connection)
+                    }
                     lastRequest = inputEditText.text.toString()
                     trackAdapter.notifyDataSetChanged()
+                }
+
+                LOADING_SEARCH -> {//загрузка поиска
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = true
+                    }
+                }
+
+                FINISHED_LOAD -> {
+                    mainThreadHandler?.post {
+                        progressBarDownloadMusic.isVisible = false
+                    }
                 }
             }
         }
 
+        // makeSearch запуск поисковых запросов
         fun makeSearch(text: String) {
             //очищаем поисковый список
-            myTracks.clear()
-            popupManager(0)
-            //делаем запрос
-            iTunesApiService
-                .search(text)
-                .enqueue(object : Callback<iTunesSearchResponse> {
-                    override fun onResponse(
-                        call: Call<iTunesSearchResponse>,
-                        response: Response<iTunesSearchResponse>
-                    ) {
-                        if (response.code() == 200) {
-                            myTracks.clear()
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                //записаны данные и они не null
-                                myTracks.addAll(response.body()?.results!!)
-                                trackAdapter.notifyDataSetChanged()
-                            }
-                            if (myTracks.isEmpty()) {//нет совпадений
-                                popupManager(1)
-                            } else {//есть совпадения ничего менять не надо
-                                //popupManager(0)
-                            }
-                        } else {//произошла ошибка
-                            popupManager(2)
-                        }
-                    }
 
-                    override fun onFailure(call: Call<iTunesSearchResponse>, t: Throwable) {
-                        //произошла ошибка
-                        myTracks.clear()
-                        popupManager(2)
-                    }
-                })
+                myTracks.clear()
+                mainThreadHandler?.post {
+                    popupManager(CLEAR_WINDOW)
+                    popupManager(LOADING_SEARCH)
+                }
+                val newThread = Thread {
+                    //делаем запрос
+                    iTunesApiService
+                        .search(text)
+                        .enqueue(object : Callback<iTunesSearchResponse> {
+                            override fun onResponse(
+                                call: Call<iTunesSearchResponse>,
+                                response: Response<iTunesSearchResponse>
+                            ) {
+                                mainThreadHandler?.post { popupManager(FINISHED_LOAD) }
+                                if (response.code() == 200) {
+                                    myTracks.clear()
+
+                                    if (response.body()?.results?.isNotEmpty() == true) {
+                                        //записаны данные и они не null
+                                        myTracks.addAll(response.body()?.results!!)
+                                        trackAdapter.notifyDataSetChanged()
+                                    }
+                                    if (myTracks.isEmpty()) {//нет совпадений
+                                        mainThreadHandler?.post { popupManager(ERROR_NO_MATCHES) }
+                                    } else {//есть совпадения ничего менять не надо
+                                    }
+                                } else {//произошла ошибка
+                                    mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<iTunesSearchResponse>, t: Throwable) {
+                                //произошла ошибка
+                                myTracks.clear()
+                                mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
+                            }
+                        })
+                }
+                newThread.start()
+
+
+        }
+
+        val mySearchRunnable = Runnable {
+            if (inputEditText.text.isNotEmpty()) makeSearch(inputEditText.text.toString())
+        }
+
+        fun clickDebounce(): Boolean { //
+            val current = isSearchAllowed
+            if (isSearchAllowed) {
+                isSearchAllowed = false
+                mainThreadHandler?.postDelayed({ isSearchAllowed = true }, SEARCH_DEBOUNCE_DELAY)
+            }
+            return current
         }
 
         if (savedInstanceState != null) {
@@ -173,6 +230,9 @@ class SearchActivity : AppCompatActivity() {
                 historyBox.isVisible =
                     (inputEditText.hasFocus() && s?.isEmpty() == true && !myHistoryTracks.isEmpty())
                 btClear.isVisible = !s.isNullOrEmpty()
+                //2 sec задержка перед запуском поиска
+                mainThreadHandler?.removeCallbacks(mySearchRunnable)
+                mainThreadHandler?.postDelayed(mySearchRunnable, SEARCH_DEBOUNCE_DELAY)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -183,7 +243,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(myTextWatcher)
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                //Запуск Поискового Запроса
+                //Запуск Поискового Запроса сразу
                 if (inputEditText.text.isNotEmpty()) makeSearch(inputEditText.text.toString())
                 true
             }
@@ -195,19 +255,21 @@ class SearchActivity : AppCompatActivity() {
         }
         // обработчик для клика по треку
         val mytrackClicker = { track: Track ->
-            val positionOfDublicateInHistory =
-                myHistoryTracks.indexOfFirst({ it.trackId == track.trackId })
-            if (positionOfDublicateInHistory != -1) {
-                myHistoryTracks.removeAt(positionOfDublicateInHistory)
-            } else if (myHistoryTracks.size >= 10) {
-                myHistoryTracks.removeAt(9)
+            if (clickDebounce()) { //проверяем debounce чтобы случайно не открыть подряд два плеера
+                val positionOfDublicateInHistory =
+                    myHistoryTracks.indexOfFirst({ it.trackId == track.trackId })
+                if (positionOfDublicateInHistory != -1) {
+                    myHistoryTracks.removeAt(positionOfDublicateInHistory)
+                } else if (myHistoryTracks.size >= 10) {
+                    myHistoryTracks.removeAt(9)
+                }
+                myHistoryTracks.add(0, track)
+                SharedPreferenceManager.saveTrackHistory(myPref, myHistoryTracks)
+                SharedPreferenceManager.saveCurrentTrack(myPref, track)
+                historyTrackAdapter.notifyDataSetChanged()
+                val playerIntent = Intent(this, PlayerActivity::class.java)
+                startActivity(playerIntent)
             }
-            myHistoryTracks.add(0, track)
-            SharedPreferenceManager.saveTrackHistory(myPref, myHistoryTracks)
-            SharedPreferenceManager.saveCurrentTrack(myPref, track)
-            historyTrackAdapter.notifyDataSetChanged()
-            val playerIntent = Intent(this, PlayerActivity::class.java)
-            startActivity(playerIntent)
         }
 
         //RecyclerView для результатов поиска
@@ -244,4 +306,6 @@ class SearchActivity : AppCompatActivity() {
         myHistoryTracks.clear()
         myHistoryTracks.addAll(SharedPreferenceManager.getSavedTrackHistory(myPref))
     }
+
+
 }
