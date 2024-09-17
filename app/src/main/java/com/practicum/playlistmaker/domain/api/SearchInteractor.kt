@@ -13,4 +13,5 @@ interface SearchInteractor {
     fun getSavedTrack(): Track?
     fun saveCurrentTrack(newValue: Track)
     fun getSavedInstanceEditTextValue(savedInstanceState: Bundle?): String
+    fun saveInstanceEditTextValue(outState: Bundle, myText: String)
 }

@@ -44,4 +44,7 @@ class SearchInteractorImpl(private val repository: SearchRepository) : SearchInt
         return repository.getSavedInstanceEditTextValue(savedInstanceState)
     }
 
+    override fun saveInstanceEditTextValue(outState: Bundle, myText: String) {
+        repository.saveInstanceEditTextValue(outState,myText)
+    }
 }

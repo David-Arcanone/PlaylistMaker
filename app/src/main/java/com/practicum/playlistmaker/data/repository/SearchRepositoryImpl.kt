@@ -11,6 +11,7 @@ import com.practicum.playlistmaker.data.network.NetworkClient
 import com.practicum.playlistmaker.domain.api.SearchRepository
 import com.practicum.playlistmaker.domain.models.SearchedTracks
 import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.presentation.search.SearchActivity
 
 class SearchRepositoryImpl (private val networkClient: NetworkClient, private val sharedPref: SharedPreferences):SearchRepository{
     companion object{
@@ -82,5 +83,9 @@ class SearchRepositoryImpl (private val networkClient: NetworkClient, private va
 
     override fun getSavedInstanceEditTextValue(savedInstanceState: Bundle?): String {
         return savedInstanceState?.getString(EDIT_VALUE, EDIT_DEFAULT).toString()
+    }
+
+    override fun saveInstanceEditTextValue(outState: Bundle, myText: String) {
+        outState.putString(EDIT_VALUE, myText)
     }
 }
