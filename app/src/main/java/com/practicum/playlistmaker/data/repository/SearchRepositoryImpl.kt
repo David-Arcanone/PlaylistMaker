@@ -11,7 +11,6 @@ import com.practicum.playlistmaker.data.network.NetworkClient
 import com.practicum.playlistmaker.domain.api.SearchRepository
 import com.practicum.playlistmaker.domain.models.SearchedTracks
 import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.presentation.search.SearchActivity
 
 class SearchRepositoryImpl (private val networkClient: NetworkClient, private val sharedPref: SharedPreferences):SearchRepository{
     companion object{
