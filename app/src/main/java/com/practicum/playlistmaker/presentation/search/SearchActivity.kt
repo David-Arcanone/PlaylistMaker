@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.search
 
 import android.content.Context
 import android.content.Intent
@@ -19,16 +19,28 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.presentation.main.MainActivity
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.api.SearchInteractor
+import com.practicum.playlistmaker.domain.consumer.TracksConsumer
+import com.practicum.playlistmaker.domain.models.SearchedTracks
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.presentation.player.PlayerActivity
+import com.practicum.playlistmaker.utils.Utilities
 
 class SearchActivity : AppCompatActivity() {
+    //инициализация необходимых переменных
+    private lateinit var myITunesInteractorImpl: SearchInteractor
     private lateinit var inputEditText: EditText
     private var mainThreadHandler: Handler? = null
+    private val trackAdapter = TrackAdapter()
+    private val historyTrackAdapter = TrackAdapter()
+    private val myTracks = ArrayList<Track>()
+    private val myHistoryTracks = ArrayList<Track>()
+    private var lastRequest = ""
+    private var isSearchAllowed = true
+    private val applicationContext = this
 
     private companion object {
         const val EDIT_VALUE = "EDIT_VALUE"
@@ -41,19 +53,15 @@ class SearchActivity : AppCompatActivity() {
         const val FINISHED_LOAD = 4
     }
 
-    private val trackAdapter = TrackAdapter()
-    private val historyTrackAdapter = TrackAdapter()
-    private val myTracks = ArrayList<Track>()
-    private val myHistoryTracks = ArrayList<Track>()
-    private var lastRequest = ""
-    private var isSearchAllowed = true
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        val myPref =
-            getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
+        myITunesInteractorImpl = Creator.provideGetSearchInteractor(
+            applicationContext.getSharedPreferences(
+                Utilities.PLAYLIST_SAVED_PREFERENCES,
+                Context.MODE_PRIVATE
+            )
+        )
         val btBack = findViewById<Button>(R.id.bt_back)
         inputEditText = findViewById<EditText>(R.id.edit_text_search)
         val btClear = findViewById<ImageButton>(R.id.bt_clear)
@@ -68,17 +76,12 @@ class SearchActivity : AppCompatActivity() {
         val historyBox = findViewById<LinearLayout>(R.id.history_box)
         val historyRecyclerView = findViewById<RecyclerView>(R.id.rv_history_tracks)
         val btHistoryClear = findViewById<Button>(R.id.bt_clear_history)
-        myHistoryTracks.addAll(SharedPreferenceManager.getSavedTrackHistory(myPref))
-        mainThreadHandler = Handler(Looper.getMainLooper())
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(Utilities.iTunesBaseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val iTunesApiService = retrofit.create<ITunesApiService>()
+        myHistoryTracks.addAll(myITunesInteractorImpl.getSavedTrackHistory())
+        mainThreadHandler = Handler(Looper.getMainLooper())
         trackAdapter.tracks = myTracks
         historyTrackAdapter.tracks = myHistoryTracks
-        // popupManager помогает с работой заглушек
+
         fun popupManager(currentMod: Int) {
             ///режимы: 0-очистка, 1-заглушка "нет совпадений", 2-заглушка "ошибка",
             when (currentMod) {
@@ -135,49 +138,27 @@ class SearchActivity : AppCompatActivity() {
         // makeSearch запуск поисковых запросов
         fun makeSearch(text: String) {
             //очищаем поисковый список
-
-                myTracks.clear()
-                mainThreadHandler?.post {
-                    popupManager(CLEAR_WINDOW)
-                    popupManager(LOADING_SEARCH)
-                }
-                val newThread = Thread {
-                    //делаем запрос
-                    iTunesApiService
-                        .search(text)
-                        .enqueue(object : Callback<iTunesSearchResponse> {
-                            override fun onResponse(
-                                call: Call<iTunesSearchResponse>,
-                                response: Response<iTunesSearchResponse>
-                            ) {
-                                mainThreadHandler?.post { popupManager(FINISHED_LOAD) }
-                                if (response.code() == 200) {
-                                    myTracks.clear()
-
-                                    if (response.body()?.results?.isNotEmpty() == true) {
-                                        //записаны данные и они не null
-                                        myTracks.addAll(response.body()?.results!!)
-                                        trackAdapter.notifyDataSetChanged()
-                                    }
-                                    if (myTracks.isEmpty()) {//нет совпадений
-                                        mainThreadHandler?.post { popupManager(ERROR_NO_MATCHES) }
-                                    } else {//есть совпадения ничего менять не надо
-                                    }
-                                } else {//произошла ошибка
-                                    mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
-                                }
+            myTracks.clear()
+            popupManager(CLEAR_WINDOW)
+            popupManager(LOADING_SEARCH)
+            //mainThreadHandler?.post {}
+            myITunesInteractorImpl.searchTracks(text,
+                consumer = object : TracksConsumer<SearchedTracks> {
+                    override fun consume(foundTracks: SearchedTracks) {
+                        mainThreadHandler?.post {
+                            if (!foundTracks.isSucceded) {//неудачный ответ от сервера
+                                popupManager(ERROR_CONNECTION)
+                            } else if (foundTracks.tracks.isNotEmpty()) {//удачное соединение и есть треки
+                                popupManager(FINISHED_LOAD)
+                                myTracks.addAll(foundTracks.tracks)
+                                trackAdapter.notifyDataSetChanged()
+                            } else {//удачное соединение но нет совпадений
+                                popupManager(ERROR_NO_MATCHES)
                             }
 
-                            override fun onFailure(call: Call<iTunesSearchResponse>, t: Throwable) {
-                                //произошла ошибка
-                                myTracks.clear()
-                                mainThreadHandler?.post { popupManager(ERROR_CONNECTION) }
-                            }
-                        })
-                }
-                newThread.start()
-
-
+                        }
+                    }
+                })
         }
 
         val mySearchRunnable = Runnable {
@@ -192,9 +173,8 @@ class SearchActivity : AppCompatActivity() {
             }
             return current
         }
-
         if (savedInstanceState != null) {
-            val myText = savedInstanceState.getString(EDIT_VALUE, EDIT_DEFAULT).toString()
+            val myText = myITunesInteractorImpl.getSavedInstanceEditTextValue(savedInstanceState)
             inputEditText.setText(myText)
         }
         //Кнопка назад
@@ -239,7 +219,6 @@ class SearchActivity : AppCompatActivity() {
                 // пока небыло задания
             }
         }
-
         inputEditText.addTextChangedListener(myTextWatcher)
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -264,8 +243,8 @@ class SearchActivity : AppCompatActivity() {
                     myHistoryTracks.removeAt(9)
                 }
                 myHistoryTracks.add(0, track)
-                SharedPreferenceManager.saveTrackHistory(myPref, myHistoryTracks)
-                SharedPreferenceManager.saveCurrentTrack(myPref, track)
+                myITunesInteractorImpl.saveTrackHistory(myHistoryTracks)
+                myITunesInteractorImpl.saveCurrentTrack(track)
                 historyTrackAdapter.notifyDataSetChanged()
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 startActivity(playerIntent)
@@ -283,7 +262,7 @@ class SearchActivity : AppCompatActivity() {
         //кнопка очистки трека
         btHistoryClear.setOnClickListener {
             myHistoryTracks.clear()
-            SharedPreferenceManager.saveTrackHistory(myPref, myHistoryTracks)
+            myITunesInteractorImpl.saveTrackHistory(myHistoryTracks)
             historyTrackAdapter.notifyDataSetChanged()
             historyBox.isVisible = false
         }
@@ -299,13 +278,18 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val myText = savedInstanceState.getString(EDIT_VALUE, EDIT_DEFAULT).toString()
+        //проверю что интерактор инициализирован
+        if (myITunesInteractorImpl == null) myITunesInteractorImpl =
+            Creator.provideGetSearchInteractor(
+                applicationContext.getSharedPreferences(
+                    Utilities.PLAYLIST_SAVED_PREFERENCES,
+                    Context.MODE_PRIVATE
+                )
+            )
+        val myText = myITunesInteractorImpl.getSavedInstanceEditTextValue(savedInstanceState)
         inputEditText.setText(myText)
-        val myPref =
-            getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
         myHistoryTracks.clear()
-        myHistoryTracks.addAll(SharedPreferenceManager.getSavedTrackHistory(myPref))
+        myHistoryTracks.addAll(myITunesInteractorImpl.getSavedTrackHistory())
     }
-
 
 }

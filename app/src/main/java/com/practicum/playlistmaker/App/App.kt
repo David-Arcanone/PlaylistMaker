@@ -1,7 +1,8 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.App
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.utils.Utilities
 
 class App : Application() {
     //мой индикатор темы
@@ -9,17 +10,16 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val sharedPrefs =
-            getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
-        darkTheme = SharedPreferenceManager.getSavedNightTheme(sharedPrefs)
+        val darkTheme =
+            getSharedPreferences(Utilities.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE).getBoolean(
+                Utilities.NIGHT_THEME_KEY, false)
         switchTheme(darkTheme)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
-        val sharedPrefs =
-            getSharedPreferences(SharedPreferenceManager.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE)
-        SharedPreferenceManager.saveNightTheme(sharedPrefs, darkTheme)
+        getSharedPreferences(Utilities.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE).edit()
+                .putBoolean(Utilities.NIGHT_THEME_KEY, darkThemeEnabled)
+                .apply()
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES

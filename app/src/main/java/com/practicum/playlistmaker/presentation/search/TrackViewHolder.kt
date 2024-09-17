@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.search
 
 import android.view.View
 import android.widget.ImageView
@@ -6,6 +6,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.utils.Utilities
+import com.practicum.playlistmaker.domain.models.Track
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val vhAuthor: TextView = itemView.findViewById(R.id.track_author)
@@ -16,7 +19,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(item: Track) {
         val trackName = item.trackName
         val artistName = item.artistName
-        val trackTime = item.showTrackTime()
+        val trackTime = item.trackLengthText
         val imageUrl = item.artWorkUrl100
         vhAuthor.text = artistName
         vhName.text = trackName
