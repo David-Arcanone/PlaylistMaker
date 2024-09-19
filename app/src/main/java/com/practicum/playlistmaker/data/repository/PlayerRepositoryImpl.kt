@@ -11,10 +11,6 @@ class PlayerRepositoryImpl(
     private val sharedPref: SharedPreferences,
     private val mediaPlayer: MediaPlayer
 ) : PlayerRepository {
-    companion object {
-        private const val PLAYLIST_CURRENT_TRACK = "playlist_current_track"
-    }
-
     override fun getSavedTrack(): Track? {
         val trackType = object : TypeToken<Track>() {}
         val json = sharedPref.getString(PLAYLIST_CURRENT_TRACK, null) ?: return null
@@ -46,5 +42,9 @@ class PlayerRepositoryImpl(
         mediaPlayer.release()
     }
 
-    override fun getCurrentPosition(): Int = mediaPlayer.currentPosition ?: 0
+    override fun getCurrentPosition(): Int = mediaPlayer.currentPosition
+
+    companion object {
+        private const val PLAYLIST_CURRENT_TRACK = "playlist_current_track"
+    }
 }

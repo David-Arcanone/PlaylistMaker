@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.domain.impl
 
 
-import android.os.Bundle
 import com.practicum.playlistmaker.domain.api.SearchInteractor
 import com.practicum.playlistmaker.domain.api.SearchRepository
 import com.practicum.playlistmaker.domain.consumer.TracksConsumer
@@ -38,13 +37,5 @@ class SearchInteractorImpl(private val repository: SearchRepository) : SearchInt
 
     override fun saveCurrentTrack(newValue: Track) {
         repository.saveCurrentTrack(newValue)
-    }
-
-    override fun getSavedInstanceEditTextValue(savedInstanceState: Bundle?): String {
-        return repository.getSavedInstanceEditTextValue(savedInstanceState)
-    }
-
-    override fun saveInstanceEditTextValue(outState: Bundle, myText: String) {
-        repository.saveInstanceEditTextValue(outState,myText)
     }
 }

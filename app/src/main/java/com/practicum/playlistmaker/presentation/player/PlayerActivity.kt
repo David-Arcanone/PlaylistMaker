@@ -18,19 +18,12 @@ import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.consumer.TracksConsumer
 import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.utils.AndroidUtilities
 import com.practicum.playlistmaker.utils.Utilities
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val REFRESH_TIMER_DELAY_MILLIS = 500L //2 раза в секунду обновление таймера
-    }
-
     private var playerState = STATE_DEFAULT
     private lateinit var btPlay: ImageButton
     private lateinit var titleTime: TextView
@@ -71,7 +64,7 @@ class PlayerActivity : AppCompatActivity() {
                     .load(foundTrack.coverImg)
                     .placeholder(R.drawable.placeholder)
                     .fitCenter()
-                    .transform(RoundedCorners(Utilities.dpToPx(8f, activityContext)))
+                    .transform(RoundedCorners(AndroidUtilities.dpToPx(8f, activityContext)))
                     .into(ivPoster)
                 //текст
                 titleName.setText(foundTrack.trackName)
@@ -178,5 +171,12 @@ class PlayerActivity : AppCompatActivity() {
                 Locale.getDefault()
             ).format(myPlayerInteractor.getCurrentMediaPosition())
         )
+    }
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val REFRESH_TIMER_DELAY_MILLIS = 500L //2 раза в секунду обновление таймера
     }
 }

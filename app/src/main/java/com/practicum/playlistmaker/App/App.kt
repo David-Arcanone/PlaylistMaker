@@ -2,14 +2,13 @@ package com.practicum.playlistmaker.App
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.utils.Utilities
 
 class App : Application() {
-    //мой индикатор темы
-    private var darkTheme = false
-
     override fun onCreate() {
         super.onCreate()
+        Creator.setContext(this.applicationContext)//или getApplicationContext()
         val darkTheme =
             getSharedPreferences(Utilities.PLAYLIST_SAVED_PREFERENCES, MODE_PRIVATE).getBoolean(
                 Utilities.NIGHT_THEME_KEY, false)

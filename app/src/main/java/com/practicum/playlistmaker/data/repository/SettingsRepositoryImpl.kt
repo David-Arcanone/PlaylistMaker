@@ -2,15 +2,16 @@ package com.practicum.playlistmaker.data.repository
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.api.SettingsRepository
 import com.practicum.playlistmaker.utils.Utilities
 
 class SettingsRepositoryImpl (private val context: Context): SettingsRepository {
-    private val sharedPref=context.getSharedPreferences(Utilities.PLAYLIST_SAVED_PREFERENCES,AppCompatActivity.MODE_PRIVATE)
+    private val sharedPref=context.getSharedPreferences(
+        Utilities.PLAYLIST_SAVED_PREFERENCES,
+        Context.MODE_PRIVATE
+    )
     companion object{
         private const val NIGHT_THEME_KEY = "key_for_night_theme"
     }
@@ -28,6 +29,7 @@ class SettingsRepositoryImpl (private val context: Context): SettingsRepository 
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
         shareIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_application_message))
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)//без этого выскакивала ошибка
         context.startActivity(shareIntent)
     }
 
@@ -46,12 +48,14 @@ class SettingsRepositoryImpl (private val context: Context): SettingsRepository 
             Intent.EXTRA_TEXT,
             context.getString(R.string.tech_support_email_message)
         )
+        techSupportIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(techSupportIntent)
     }
 
     override fun openUserAgreement() {
         val userAgreementIntent =
             Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.user_agreement_url)))
+        userAgreementIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(userAgreementIntent)
     }
 }

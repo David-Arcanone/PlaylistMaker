@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.utils.Utilities
+import com.practicum.playlistmaker.utils.AndroidUtilities
 import com.practicum.playlistmaker.domain.models.Track
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,7 +30,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .transform(
                 RoundedCorners(
-                    Utilities.dpToPx(
+                    AndroidUtilities.dpToPx(
                         2f,
                         this.itemView.context
                     )
