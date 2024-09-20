@@ -16,23 +16,29 @@ import com.practicum.playlistmaker.domain.api.SettingsRepository
 import com.practicum.playlistmaker.domain.impl.SearchInteractorImpl
 import com.practicum.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.impl.SettingsInteractorImpl
+import com.practicum.playlistmaker.utils.Utilities
 
 object Creator {
     private var contextIsNotSet = true
-    private lateinit var context: Context //если реализация подходит уберу sharedPref со всех функций внизу
+    private lateinit var context: Context
+    private lateinit var sharedPref:SharedPreferences
     fun setContext(newContext: Context) {
         if (contextIsNotSet) {//возможно лишнее
             contextIsNotSet = false
             context = newContext
+            sharedPref= context.getSharedPreferences(
+                Utilities.PLAYLIST_SAVED_PREFERENCES,
+                Context.MODE_PRIVATE
+            )
         }
     }
 
-    private fun provideGetSearchRepository(sharedPref: SharedPreferences): SearchRepository {
+    private fun provideGetSearchRepository(): SearchRepository {
         return SearchRepositoryImpl(RetrofitNetworkClient(), sharedPref)
     }
 
-    fun provideGetSearchInteractor(sharedPref: SharedPreferences): SearchInteractor {
-        return SearchInteractorImpl(provideGetSearchRepository(sharedPref))
+    fun provideGetSearchInteractor(): SearchInteractor {
+        return SearchInteractorImpl(provideGetSearchRepository())
     }
 
     private fun provideGetSettingsRepository(): SettingsRepository {
@@ -44,14 +50,13 @@ object Creator {
     }
 
     private fun provideGetPlayerRepository(
-        sharedPref: SharedPreferences,
         mediaPlayer: MediaPlayer
     ): PlayerRepository {
         return PlayerRepositoryImpl(sharedPref, mediaPlayer)
     }
 
-    fun provideGetPlayerInteractor(sharedPref: SharedPreferences): PlayerInteractor {
-        return PlayerInteractorImpl(provideGetPlayerRepository(sharedPref, MediaPlayer()))
+    fun provideGetPlayerInteractor(): PlayerInteractor {
+        return PlayerInteractorImpl(provideGetPlayerRepository(MediaPlayer()))
     }
 }
 

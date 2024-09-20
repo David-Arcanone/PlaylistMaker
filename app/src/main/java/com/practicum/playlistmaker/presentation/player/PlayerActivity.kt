@@ -33,12 +33,7 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
         mainThreadHandler = Handler(Looper.getMainLooper())
-        myPlayerInteractor = Creator.provideGetPlayerInteractor(
-            this.getSharedPreferences(
-                Utilities.PLAYLIST_SAVED_PREFERENCES,
-                Context.MODE_PRIVATE
-            )
-        )
+        myPlayerInteractor = Creator.provideGetPlayerInteractor()
         //кнопки и текст
         val btBack = findViewById<Button>(R.id.bt_back)
         val ivPoster = findViewById<ImageView>(R.id.imageViewAlbum)

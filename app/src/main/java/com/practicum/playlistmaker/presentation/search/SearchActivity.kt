@@ -39,17 +39,11 @@ class SearchActivity : AppCompatActivity() {
     private val myHistoryTracks = ArrayList<Track>()
     private var lastRequest = ""
     private var isSearchAllowed = true
-    private val applicationContext = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        myITunesInteractor = Creator.provideGetSearchInteractor(
-            applicationContext.getSharedPreferences(
-                Utilities.PLAYLIST_SAVED_PREFERENCES,
-                Context.MODE_PRIVATE
-            )
-        )
+        myITunesInteractor = Creator.provideGetSearchInteractor()
         val btBack = findViewById<Button>(R.id.bt_back)
         inputEditText = findViewById<EditText>(R.id.edit_text_search)
         val btClear = findViewById<ImageButton>(R.id.bt_clear)
@@ -276,13 +270,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         //проверю что интерактор инициализирован
-        if (myITunesInteractor == null) myITunesInteractor =
-            Creator.provideGetSearchInteractor(
-                applicationContext.getSharedPreferences(
-                    Utilities.PLAYLIST_SAVED_PREFERENCES,
-                    Context.MODE_PRIVATE
-                )
-            )
+        if (myITunesInteractor == null) myITunesInteractor =Creator.provideGetSearchInteractor()
         val myText = savedInstanceState.getString(EDIT_VALUE,EDIT_DEFAULT).toString()
         inputEditText.setText(myText)
         myHistoryTracks.clear()
