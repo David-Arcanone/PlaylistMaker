@@ -1,10 +1,12 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.Track
 
-class TrackAdapter() : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     var tracks = ArrayList<Track>()
     private var onClick: (Track) -> Unit = {}
     fun setOnClickListener(currentClickListener: (Track) -> Unit) {
