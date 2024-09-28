@@ -24,7 +24,7 @@
     <string name="album">Альбом</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
-    <string name="current_time_template" translatable="false">00:30</string>
+    <string name="current_time_template" translatable="false">00:00</string>
     <string name="player_play_pause">Запустить или Пауза</string>
     <string name="player_like">Лайк</string>
     <string name="player_add_to_playlist">Добавить в Плейлист</string>
