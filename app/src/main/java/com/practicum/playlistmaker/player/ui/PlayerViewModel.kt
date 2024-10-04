@@ -6,10 +6,6 @@ import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.utils.Creator
 import com.practicum.playlistmaker.player.domain.models.PlayerInitializationState
 import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
 import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
@@ -61,10 +57,10 @@ class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewMo
     private fun preparePlayer(urlSong: String) {//получены данные трека, готовим медиа
         myPlayerInteractor.preparePlayer(urlSong,
             {
-                playerMediaLiveData.postValue(PlayerMediaState.Prepared("00:00"))
+                playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
             },
             {
-                playerMediaLiveData.postValue(PlayerMediaState.Prepared("00:00"))
+                playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
                 mainThreadHandler.removeCallbacksAndMessages(myPlayingTimeUpdateRunnable)
             })
     }
@@ -116,12 +112,6 @@ class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewMo
     companion object {
         private const val REFRESH_TIMER_DELAY_MILLIS = 500L //2 раза в секунду обновление таймера
         private const val ZERO_TIME = "0:00"
-        fun getPlayerViewModel(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(
-                    Creator.provideGetPlayerInteractor()
-                )
-            }
-        }
+
     }
 }

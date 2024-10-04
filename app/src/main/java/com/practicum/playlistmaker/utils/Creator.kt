@@ -20,7 +20,7 @@ import com.practicum.playlistmaker.sharing.data.repository.SharingRepositoryImpl
 import com.practicum.playlistmaker.sharing.domain.api.SharingInteractor
 import com.practicum.playlistmaker.sharing.domain.api.SharingRepository
 import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
-
+/*
 object Creator {
     private var contextIsNotSet = true
     private lateinit var context: Context
@@ -69,4 +69,4 @@ object Creator {
     }
 }
 
-
+*/
