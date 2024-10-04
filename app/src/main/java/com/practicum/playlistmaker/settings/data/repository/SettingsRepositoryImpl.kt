@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.practicum.playlistmaker.App.App
 import com.practicum.playlistmaker.settings.domain.api.SettingsRepository
-import com.practicum.playlistmaker.utils.Utilities
 
 class SettingsRepositoryImpl(
     private val context: Context,

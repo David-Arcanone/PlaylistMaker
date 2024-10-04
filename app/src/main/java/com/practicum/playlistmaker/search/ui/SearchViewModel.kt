@@ -105,7 +105,7 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
                     searchLiveData.postValue(SearchState.ReadyAndHistory(mySearchInteractor.getSavedTrackHistory()))
                 }
 
-                else -> {//уже в стейте история, вероятно баг, делать ничего не надо
+                else -> {
                     Unit
                 }
             }

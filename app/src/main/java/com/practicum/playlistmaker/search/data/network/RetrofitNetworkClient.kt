@@ -2,9 +2,6 @@ package com.practicum.playlistmaker.search.data.network
 
 import com.practicum.playlistmaker.search.data.dto.ITunesSearchRequest
 import com.practicum.playlistmaker.search.data.dto.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 class RetrofitNetworkClient(private val iTunesApiService:ITunesApiService): NetworkClient {
         override fun doRequest(dto: Any): Response {
