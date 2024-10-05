@@ -6,13 +6,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.domain.models.SearchState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     //инициализация необходимых переменных
@@ -21,7 +21,7 @@ class SearchActivity : AppCompatActivity() {
     private val myTracks = mutableListOf<Track>()
     private val myHistoryTracks = mutableListOf<Track>()
     private lateinit var myBinding: ActivitySearchBinding
-    private val myViewModel by viewModels<SearchViewModel> { SearchViewModel.getSearchViewModel() }
+    private val myViewModel by viewModel<SearchViewModel> ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

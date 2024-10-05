@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.search.data.repository
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.player.ui.PlayerActivity
@@ -11,20 +12,19 @@ import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.domain.api.SearchRepository
 import com.practicum.playlistmaker.search.domain.models.SearchedTracks
 import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.utils.Utilities
 
 
-class SearchRepositoryImpl(private val networkClient: NetworkClient, private val context: Context) :
+class SearchRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val context: Context,
+    private val sharedPref: SharedPreferences,
+    private val myGson: Gson
+) :
     SearchRepository {
     companion object {
         private const val PLAYLIST_CURRENT_TRACK = "playlist_current_track"
         private const val SEARCH_HISTORY_KEY = "key_for_search_history"
     }
-
-    private val sharedPref = context.getSharedPreferences(
-        Utilities.PLAYLIST_SAVED_PREFERENCES,
-        Context.MODE_PRIVATE
-    )
 
     override fun searchTracks(expression: String): SearchedTracks {
         try {
@@ -67,7 +67,7 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient, private val
     }
 
     override fun saveTrackHistory(newValue: List<Track>) {
-        val json = Gson().toJson(newValue)
+        val json = myGson.toJson(newValue)
         sharedPref.edit()
             .putString(SEARCH_HISTORY_KEY, json)
             .apply()
@@ -76,17 +76,17 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient, private val
     override fun getSavedTrackHistory(): List<Track> {
         val trackType = object : TypeToken<List<Track>>() {}
         val json = sharedPref.getString(SEARCH_HISTORY_KEY, null) ?: return emptyList()
-        return Gson().fromJson(json, trackType)
+        return myGson.fromJson(json, trackType)
     }
 
     override fun getSavedTrack(): Track? {
         val trackType = object : TypeToken<Track>() {}
         val json = sharedPref.getString(PLAYLIST_CURRENT_TRACK, null) ?: return null
-        return Gson().fromJson(json, trackType)
+        return myGson.fromJson(json, trackType)
     }
 
     override fun saveCurrentTrack(newValue: Track) {
-        val json = Gson().toJson(newValue)
+        val json = myGson.toJson(newValue)
         sharedPref.edit()
             .putString(PLAYLIST_CURRENT_TRACK, json)
             .apply()

@@ -1,16 +1,14 @@
 package com.practicum.playlistmaker.settings.data.repository
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.practicum.playlistmaker.App.App
 import com.practicum.playlistmaker.settings.domain.api.SettingsRepository
-import com.practicum.playlistmaker.utils.Utilities
 
-class SettingsRepositoryImpl(private val context: Context) : SettingsRepository {
-    private val sharedPref = context.getSharedPreferences(
-        Utilities.PLAYLIST_SAVED_PREFERENCES,
-        Context.MODE_PRIVATE
-    )
-
+class SettingsRepositoryImpl(
+    private val context: Context,
+    private val sharedPref: SharedPreferences
+) : SettingsRepository {
     override fun getSavedNightTheme() =
         sharedPref.getBoolean(NIGHT_THEME_KEY, false)
 

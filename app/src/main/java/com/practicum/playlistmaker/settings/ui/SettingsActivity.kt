@@ -1,13 +1,13 @@
 package com.practicum.playlistmaker.settings.ui
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import androidx.appcompat.app.AppCompatActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var myBinding: ActivitySettingsBinding
-    private val myViewModel by viewModels<SettingsViewModel> { SettingsViewModel.getSettingViewModel() }
+    private val myViewModel by viewModel<SettingsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         myBinding = ActivitySettingsBinding.inflate(layoutInflater)
