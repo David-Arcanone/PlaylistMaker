@@ -17,7 +17,10 @@ class SettingsActivity : AppCompatActivity() {
                 myBinding.themeSwitcher.isChecked=nightState
         }
         //кнопка назад
-        myBinding.btBack.setOnClickListener { finish() }
+        myBinding.btBack.setOnClickListener { finish()
+            /*val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                this.startActivity(intent)*/}
         //кнопка поделиться
         myBinding.btShare.setOnClickListener { myViewModel.share() }
         //кнопка поддержка

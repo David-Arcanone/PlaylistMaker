@@ -21,7 +21,7 @@ class SearchActivity : AppCompatActivity() {
     private val myTracks = mutableListOf<Track>()
     private val myHistoryTracks = mutableListOf<Track>()
     private lateinit var myBinding: ActivitySearchBinding
-    private val myViewModel by viewModel<SearchViewModel> ()
+    private val myViewModel by viewModel<SearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +68,9 @@ class SearchActivity : AppCompatActivity() {
         //Кнопка назад
         myBinding.btBack.setOnClickListener {
             finish()//возвращаемся назад в меню
+            /*val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            this.startActivity(intent)*/
         }
         //Кнопка очистка поля ввода
         myBinding.btClear.setOnClickListener {

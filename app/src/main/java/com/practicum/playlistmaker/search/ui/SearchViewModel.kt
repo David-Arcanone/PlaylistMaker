@@ -83,8 +83,7 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
 
     fun showClickOnTrack(newTrack: Track) {
         if (clickDebounce()) {
-            val newArchive = mySearchInteractor.updateHistoryWithNewTrack(newTrack)
-            searchLiveData.postValue(SearchState.ReadyAndHistory(newArchive))
+            mySearchInteractor.updateHistoryWithNewTrack(newTrack)
             mySearchInteractor.startPlayerIntent()
         }
     }

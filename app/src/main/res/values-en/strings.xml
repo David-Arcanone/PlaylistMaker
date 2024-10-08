@@ -25,4 +25,9 @@
     <string name="back">Back</string>
     <string name="track_img">Track image</string>
     <string name="not_track_error">This file is not track, it has no preview to listen</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="no_playlists_found">You havent created\nany playlist</string>
+    <string name="empty_media">Your media library\nis empty</string>
+    <string name="playlists">Playlists</string>
+    <string name="favorite_tracks">Favorite tracks</string>
 </resources>
