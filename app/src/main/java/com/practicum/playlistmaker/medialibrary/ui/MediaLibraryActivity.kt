@@ -18,12 +18,13 @@ class MediaLibraryActivity : AppCompatActivity() {
         myBinding.mediaViewPager.adapter = MediaViewPagerAdapter(supportFragmentManager, lifecycle)
         myTabMediator =
             TabLayoutMediator(myBinding.tabLayout, myBinding.mediaViewPager) { tab, position ->
-                when(position) {
+                when (position) {
                     0 -> tab.text = getResources().getString(R.string.favorite_tracks)
                     1 -> tab.text = getResources().getString(R.string.playlists)
                 }
             }
         myTabMediator.attach()
+
     }
 
     override fun onDestroy() {

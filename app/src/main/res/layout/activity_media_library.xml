@@ -22,6 +22,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="@dimen/horizontal_screen_padding" />
 
+
     <Button
         android:id="@+id/bt_back"
         style="@style/BackButtonStyle"
@@ -35,13 +36,13 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        style="@style/TabStyle"
         android:layout_width="@dimen/zero_value"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/top_screen_padding"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/bt_back"
-        android:paddingTop="@dimen/top_screen_padding"
-        style="@style/TabStyle"/>
+        app:layout_constraintTop_toBottomOf="@id/bt_back" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/mediaViewPager"

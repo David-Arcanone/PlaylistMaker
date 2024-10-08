@@ -13,17 +13,17 @@ val viewModelModule = module {
         PlayerViewModel(myPlayerInteractor = get())
     }
 
-    viewModel{
+    viewModel {
         SearchViewModel(mySearchInteractor = get())
     }
 
     viewModel {
         SettingsViewModel(mySettingsInteractor = get(), mySharingInteractor = get())
     }
-    viewModel{(emptyFlag:Boolean)->
+    viewModel { (emptyFlag: Boolean) ->
         MediaPlaylistsFragmentViewModel(emptyFlag)
     }
-    viewModel{(emptyFlag:Boolean)->
+    viewModel { (emptyFlag: Boolean) ->
         MediaFavoritesFragmentViewModel(emptyFlag)
     }
 }

@@ -21,7 +21,7 @@ class SearchActivity : AppCompatActivity() {
     private val myTracks = mutableListOf<Track>()
     private val myHistoryTracks = mutableListOf<Track>()
     private lateinit var myBinding: ActivitySearchBinding
-    private val myViewModel by viewModel<SearchViewModel> ()
+    private val myViewModel by viewModel<SearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
