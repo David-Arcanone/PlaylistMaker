@@ -1,18 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_grey"
-    android:orientation="vertical"
-    android:paddingHorizontal="@dimen/horizontal_screen_padding"
-    android:paddingTop="@dimen/top_screen_padding"
-    android:paddingBottom="@dimen/settings_screen_bottom_padding">
+    android:background="?attr/colorPrimary">
 
-    <TextView
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftBorder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/media"
-        android:textColor="@color/blue"
-        android:textSize="@dimen/primary_title_size" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/horizontal_screen_padding" />
 
-</LinearLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/horizontal_screen_padding" />
+
+    <Button
+        android:id="@+id/bt_back"
+        style="@style/BackButtonStyle"
+        android:layout_width="@dimen/zero_value"
+        android:layout_marginTop="@dimen/top_screen_padding"
+        android:contentDescription="@string/back"
+        android:text="@string/media"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="@dimen/zero_value"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/bt_back"
+        android:paddingTop="@dimen/top_screen_padding"
+        style="@style/TabStyle"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/mediaViewPager"
+        android:layout_width="@dimen/zero_value"
+        android:layout_height="@dimen/zero_value"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

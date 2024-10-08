@@ -32,6 +32,7 @@
     <dimen name="clear_width_button">40dp</dimen>
     <dimen name="progress_bar">44dp</dimen>
     <dimen name="track_pic">45dp</dimen>
+    <dimen name="_46dp">46dp</dimen>
     <dimen name="player_like_button">51dp</dimen>
     <dimen name="strange_refresh_radius">54dp</dimen>
     <dimen name="clear_history_button_radius">54dp</dimen>
@@ -40,6 +41,7 @@
     <dimen name="error_margin">86dp</dimen>
     <dimen name="min_width_refresh_button">91dp</dimen>
     <dimen name="player_button">100dp</dimen>
+    <dimen name="_106dp">106dp</dimen>
     <dimen name="min_width_clear_history_button">148dp</dimen>
     <dimen name="error_image">120dp</dimen>
     <dimen name="progress_margin_top">124dp</dimen>

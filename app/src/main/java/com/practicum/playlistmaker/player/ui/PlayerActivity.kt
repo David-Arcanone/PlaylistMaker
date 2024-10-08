@@ -58,6 +58,9 @@ class PlayerActivity : AppCompatActivity() {
         //активность кнопок
         myBinding.btBack.setOnClickListener {
             finish()
+            /*val intent = Intent(this, SearchActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            this.startActivity(intent)*/
         }
 
         myBinding.btPlay.setOnClickListener {
