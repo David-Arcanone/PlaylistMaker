@@ -1,19 +1,20 @@
 package com.practicum.playlistmaker.utils.outdated
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
+import com.practicum.playlistmaker.databinding.FragmentMainBinding
+/*import androidx.fragment.app.commit
 import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.medialibrary.ui.MediaLibraryFragment
-import com.practicum.playlistmaker.databinding.FragmentMainBinding
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.settings.ui.SettingsFragment
-import com.practicum.playlistmaker.search.ui.SearchFragment
+import com.practicum.playlistmaker.search.ui.SearchFragment*/
 
 class MainFragment : Fragment() {
     private lateinit var myBinding: FragmentMainBinding
