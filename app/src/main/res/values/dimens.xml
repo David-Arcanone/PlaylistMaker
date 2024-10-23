@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="description_text_size">11sp</dimen>
+    <dimen name="_12sp_text">12sp</dimen>
     <dimen name="player_description_text_size">13sp</dimen>
     <dimen name="refresh_button">14sp</dimen>
     <dimen name="primary_text_size">16sp</dimen>
     <dimen name="error_text_size">19sp</dimen>
     <dimen name="primary_title_size">22sp</dimen>
     <dimen name="zero_value">0dp</dimen>
+    <dimen name="_1dp">1dp</dimen>
     <dimen name="small_offset">2dp</dimen>
     <dimen name="right_switch_offset">3dp</dimen>
     <dimen name="top_screen_padding">4dp</dimen>

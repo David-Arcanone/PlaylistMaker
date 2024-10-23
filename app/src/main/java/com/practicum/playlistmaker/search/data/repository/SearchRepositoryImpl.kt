@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.player.ui.PlayerActivity
+import com.practicum.playlistmaker.player.ui.PlayerFragment
 import com.practicum.playlistmaker.search.data.dto.ITunesSearchRequest
 import com.practicum.playlistmaker.search.data.dto.ITunesSearchResponse
 import com.practicum.playlistmaker.search.data.network.NetworkClient
@@ -95,7 +95,7 @@ class SearchRepositoryImpl(
     override fun startPlayerActivity() {
         val playerIntent = Intent(
             context,
-            PlayerActivity::class.java
+            PlayerFragment::class.java
         ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)//без этого выскакивала ошибка
         context.startActivity(playerIntent)
     }

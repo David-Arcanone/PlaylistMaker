@@ -1,70 +1,81 @@
 package com.practicum.playlistmaker.player.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.player.domain.models.PlayerInitializationState
 import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.AndroidUtilities
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerActivity : AppCompatActivity() {
-    private lateinit var myBinding:ActivityPlayerBinding
+class PlayerFragment : Fragment() {
+    private lateinit var myBinding: FragmentPlayerBinding
     private val myViewModel by viewModel<PlayerViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        myBinding= ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(myBinding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        myBinding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return myBinding.root
+    }
 
-        myViewModel.getInitStateLiveData().observe(this){initState->
-            when(initState){
-                is PlayerInitializationState.DoneInitState ->{
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        myViewModel.getInitStateLiveData().observe(viewLifecycleOwner) { initState ->
+            when (initState) {
+                is PlayerInitializationState.DoneInitState -> {
                     renderTrackInfo(initState.currentTrack)
                 }
-                is PlayerInitializationState.NoSaveFound ->{
-                    finish()
+
+                is PlayerInitializationState.NoSaveFound -> {
+                    findNavController().navigateUp()
                 }
-                is PlayerInitializationState.NotInitState ->{//состояние по умолчанию делать ничего не надо ждем инициализацию в ViewModel, который переведет его в DoneInitState
+
+                is PlayerInitializationState.NotInitState -> {//состояние по умолчанию делать ничего не надо ждем инициализацию в ViewModel, который переведет его в DoneInitState
                     Unit
                 }
             }
         }
-        myViewModel.getMediaStateLiveData().observe(this){mediaState->
-            when(mediaState){
-                is PlayerMediaState.Prepared->{
+        myViewModel.getMediaStateLiveData().observe(viewLifecycleOwner) { mediaState ->
+            when (mediaState) {
+                is PlayerMediaState.Prepared -> {
                     myBinding.btPlay.isEnabled = true//чтоб при первом prepared разлочил кнопку
                     renderTime(mediaState.timeValue)
                     myBinding.btPlay.setImageResource(R.drawable.bt_play_lm)
                 }
-                is PlayerMediaState.Paused->{
+
+                is PlayerMediaState.Paused -> {
                     renderTime(mediaState.timeValue)
                     myBinding.btPlay.setImageResource(R.drawable.bt_play_lm)
                 }
-                is PlayerMediaState.Playing->{
+
+                is PlayerMediaState.Playing -> {
                     renderTime(mediaState.timeValue)
                     myBinding.btPlay.setImageResource(R.drawable.bt_pause_lm)
                 }
-                else->{//статус Default, ждем инициализации трека
+
+                else -> {//статус Default, ждем инициализации трека
                     Unit
                 }
             }
         }
-
         //активность кнопок
-        myBinding.btBack.setOnClickListener {
-            finish()
-            /*val intent = Intent(this, SearchActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            this.startActivity(intent)*/
-        }
 
         myBinding.btPlay.setOnClickListener {
             myViewModel.playbackControl()
+        }
+        myBinding.btBack.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 
@@ -77,14 +88,15 @@ class PlayerActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun renderTrackInfo(foundTrack:Track){
+    private fun renderTrackInfo(foundTrack: Track) {
         //постер
-        Glide.with(applicationContext)
+        Glide.with(this.requireContext())
             .load(foundTrack.coverImg)
             .placeholder(R.drawable.placeholder)
             .fitCenter()
-            .transform(RoundedCorners(AndroidUtilities.dpToPx(8f, this)))
+            .transform(RoundedCorners(AndroidUtilities.dpToPx(8f, this.requireContext())))
             .into(myBinding.imageViewAlbum)
+
         //текст
         myBinding.titleName.setText(foundTrack.trackName)
         myBinding.titleAuthor.setText(foundTrack.artistName)
@@ -100,5 +112,9 @@ class PlayerActivity : AppCompatActivity() {
             myBinding.albumGroup.isVisible = false
         }
     }
-    private fun renderTime(newTime:String){myBinding.titleTime.setText(newTime)}
+
+    private fun renderTime(newTime: String) {
+        myBinding.titleTime.setText(newTime)
+    }
+
 }

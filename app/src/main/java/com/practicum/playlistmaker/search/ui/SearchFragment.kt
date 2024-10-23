@@ -4,31 +4,41 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.domain.models.SearchState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
     //инициализация необходимых переменных
     private val trackAdapter = TrackAdapter()
     private val historyTrackAdapter = TrackAdapter()
     private val myTracks = mutableListOf<Track>()
     private val myHistoryTracks = mutableListOf<Track>()
-    private lateinit var myBinding: ActivitySearchBinding
+    private lateinit var myBinding: FragmentSearchBinding
     private val myViewModel by viewModel<SearchViewModel>()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        myBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        return myBinding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        myBinding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(myBinding.root)
-
-        myViewModel.getSearchLiveData().observe(this) { searchState ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //аргументов нет но если добавлю, буду сдесь доставать
+        myViewModel.getSearchLiveData().observe(viewLifecycleOwner) { searchState ->
             when (searchState) {
                 is SearchState.Default -> {
                     renderDefault()
@@ -55,30 +65,16 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         }
-
         trackAdapter.tracks = myTracks
         historyTrackAdapter.tracks = myHistoryTracks
 
-        if (savedInstanceState != null) {
-            val myText = savedInstanceState.getString(EDIT_VALUE, EDIT_DEFAULT).toString()
-            myBinding.editTextSearch.setText(myText)
-            myViewModel.showInputTextChange(myText)
-        }
-
-        //Кнопка назад
-        myBinding.btBack.setOnClickListener {
-            finish()//возвращаемся назад в меню
-            /*val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            this.startActivity(intent)*/
-        }
         //Кнопка очистка поля ввода
         myBinding.btClear.setOnClickListener {
             myBinding.editTextSearch.setText("")
             myViewModel.showInputTextChange("")
-            val view = this.currentFocus
-            val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val view = activity?.currentFocus
+            val inputMethodManager = this.requireContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             if (view != null) {
                 inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
             }
@@ -119,7 +115,10 @@ class SearchActivity : AppCompatActivity() {
         }
         // обработчик для клика по треку
         val mytrackClicker = { track: Track ->
-            myViewModel.showClickOnTrack(track)//добавление в архив
+            myViewModel.showClickOnTrack(newTrack = track,//добавление в архив
+                fragmentOpener = {
+                    findNavController().navigate(R.id.action_searchFragment_to_playerFragment)
+                })
         }
         //RecyclerView для результатов поиска
         myBinding.rvTracks.adapter = trackAdapter
@@ -134,20 +133,7 @@ class SearchActivity : AppCompatActivity() {
             myViewModel.showClearHistory()
         }
         myBinding.editTextSearch.requestFocus()
-    }
 
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val myText = myBinding.editTextSearch.text.toString()
-        outState.putString(EDIT_VALUE, myText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        val myText = savedInstanceState.getString(EDIT_VALUE, EDIT_DEFAULT).toString()
-        myBinding.editTextSearch.setText(myText)
-        myViewModel.showInputTextChange(myText)
     }
 
     private fun renderLoading() {
@@ -212,9 +198,8 @@ class SearchActivity : AppCompatActivity() {
         myBinding.rvTracks.isVisible = false
     }
 
-    private companion object {
+    companion object {
         const val EDIT_VALUE = "EDIT_VALUE"
         const val EDIT_DEFAULT = ""
-
     }
 }

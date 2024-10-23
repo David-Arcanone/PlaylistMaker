@@ -7,14 +7,14 @@ import com.practicum.playlistmaker.databinding.TrackShowcaseBinding
 import com.practicum.playlistmaker.search.domain.models.Track
 
 class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
-    var tracks = mutableListOf<Track>()//TODO
+    var tracks = mutableListOf<Track>()
     private var onClick: (Track) -> Unit = {}
     fun setOnClickListener(currentClickListener: (Track) -> Unit) {
         onClick = currentClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val viewBiding =TrackShowcaseBinding.inflate(LayoutInflater.from(parent.context),parent,false)//TODO LayoutInflater.from(parent.context).inflate(R.layout.track_showcase, parent, false)
+        val viewBiding =TrackShowcaseBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return TrackViewHolder(viewBiding)
     }
 
