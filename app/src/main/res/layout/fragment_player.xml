@@ -4,14 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary">
-    <!-- копия кнопки с других лэйаутов  -->
+    android:background="?attr/colorPrimary"
+    tools:context=".player.ui.PlayerFragment">
+
     <Button
         android:id="@+id/bt_back"
         style="@style/BackButtonStyle"
         android:layout_marginStart="@dimen/horizontal_screen_padding"
         android:layout_marginTop="@dimen/top_screen_padding"
         android:contentDescription="@string/back"
+        app:icon="@drawable/ic_back_lm"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/settings_first_margin"
+        app:iconTint="?attr/colorOnPrimary"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

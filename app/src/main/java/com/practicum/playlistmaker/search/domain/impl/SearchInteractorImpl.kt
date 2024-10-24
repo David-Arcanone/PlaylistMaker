@@ -40,10 +40,10 @@ class SearchInteractorImpl(private val repository: SearchRepository) : SearchInt
     }
 
     override fun updateHistoryWithNewTrack(newAddedTrack: Track): List<Track> {
-        val oldHistoryTracks=mutableListOf<Track>()
+        val oldHistoryTracks = mutableListOf<Track>()
         oldHistoryTracks.addAll(getSavedTrackHistory())
         val positionOfDublicateInHistory =
-            oldHistoryTracks.indexOfFirst{ it.trackId == newAddedTrack.trackId }
+            oldHistoryTracks.indexOfFirst { it.trackId == newAddedTrack.trackId }
 
         if (positionOfDublicateInHistory != -1) {
             oldHistoryTracks.removeAt(positionOfDublicateInHistory)
@@ -54,9 +54,5 @@ class SearchInteractorImpl(private val repository: SearchRepository) : SearchInt
         saveTrackHistory(oldHistoryTracks)
         saveCurrentTrack(newAddedTrack)
         return oldHistoryTracks
-    }
-
-    override fun startPlayerIntent() {
-        repository.startPlayerActivity()
     }
 }

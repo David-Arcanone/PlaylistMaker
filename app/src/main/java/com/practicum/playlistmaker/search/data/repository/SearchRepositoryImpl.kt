@@ -1,11 +1,8 @@
 package com.practicum.playlistmaker.search.data.repository
 
-import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.search.data.dto.ITunesSearchRequest
 import com.practicum.playlistmaker.search.data.dto.ITunesSearchResponse
 import com.practicum.playlistmaker.search.data.network.NetworkClient
@@ -16,7 +13,6 @@ import com.practicum.playlistmaker.search.domain.models.Track
 
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val context: Context,
     private val sharedPref: SharedPreferences,
     private val myGson: Gson
 ) :
@@ -90,13 +86,5 @@ class SearchRepositoryImpl(
         sharedPref.edit()
             .putString(PLAYLIST_CURRENT_TRACK, json)
             .apply()
-    }
-
-    override fun startPlayerActivity() {
-        val playerIntent = Intent(
-            context,
-            PlayerActivity::class.java
-        ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)//без этого выскакивала ошибка
-        context.startActivity(playerIntent)
     }
 }

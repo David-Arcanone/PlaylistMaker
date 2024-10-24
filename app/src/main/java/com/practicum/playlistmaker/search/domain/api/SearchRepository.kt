@@ -9,6 +9,5 @@ interface SearchRepository {
     fun saveTrackHistory(newValue: List<Track>)
     fun getSavedTrack(): Track?
     fun saveCurrentTrack(newValue: Track)
-    fun startPlayerActivity()
 
 }
