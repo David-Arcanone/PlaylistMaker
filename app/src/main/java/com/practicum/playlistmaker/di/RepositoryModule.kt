@@ -24,7 +24,6 @@ val repositoryModule = module {
     single<SearchRepository> {
         SearchRepositoryImpl(
             networkClient = get(),
-            context = get(),
             sharedPref = get(),
             myGson = get()
         )

@@ -12,5 +12,4 @@ interface SearchInteractor {
     fun getSavedTrack(): Track?
     fun saveCurrentTrack(newValue: Track)
     fun updateHistoryWithNewTrack(newAddedTrack: Track):List<Track>
-    fun startPlayerIntent()
 }
