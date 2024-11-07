@@ -54,10 +54,6 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
         }
     }
 
-    fun processSearchResults(tracks: List<Track>, isSucceded: Boolean) {
-
-    }
-
     fun showHistory() {
         val currentHistoryTracks = mySearchInteractor.getSavedTrackHistory()
         searchLiveData.postValue(SearchState.ReadyAndHistory(currentHistoryTracks))
