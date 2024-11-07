@@ -1,20 +1,15 @@
 package com.practicum.playlistmaker.search.domain.impl
 
-
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker.search.domain.api.SearchRepository
-import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
-import com.practicum.playlistmaker.search.domain.models.SearchedTracks
 import com.practicum.playlistmaker.search.domain.models.Track
-import java.util.concurrent.Executors
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class SearchInteractorImpl(private val repository: SearchRepository) : SearchInteractor {
-    private val executor = Executors.newCachedThreadPool()//для запуска нового потока
-
-    override fun searchTracks(expression: String, consumer: TracksConsumer<SearchedTracks>) {
-        executor.execute {//новый поток
-            //вызываю обработку поиска через репозиторий, а результат в консьюмер
-            consumer.consume(repository.searchTracks(expression))
+    override fun searchTracks(expression: String): Flow<Pair<List<Track>, Boolean>> {
+        return repository.searchTracks(expression).map { results ->
+            Pair(results.tracks, results.isSucceded)
         }
     }
 

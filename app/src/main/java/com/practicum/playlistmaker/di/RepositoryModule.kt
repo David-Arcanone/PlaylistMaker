@@ -14,7 +14,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     single<PlayerRepository> {
-        PlayerRepositoryImpl(sharedPref = get(), mediaPlayer = get(), myGson = get())
+        PlayerRepositoryImpl(sharedPref = get(), myGson = get())
     }
 
     single <MediaPlayer> {

@@ -10,26 +10,4 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
         val currentTrack = repository.getSavedTrack()
         if (currentTrack != null) consumer.consume(currentTrack) else doIfNoMatch()
     }
-
-    override fun pausePlayer() {
-        repository.pausePlayer()
-    }
-
-    override fun startPlayer() {
-        repository.startPlayer()
-    }
-
-    override fun preparePlayer(
-        songUrl: String,
-        onPlayerPreparedFunction: () -> Unit,
-        onPlayerCompletedFunction: () -> Unit
-    ) {
-        repository.preparePlayer(songUrl, onPlayerPreparedFunction, onPlayerCompletedFunction)
-    }
-
-    override fun finishPlayer() {
-        repository.finishPlayer()
-    }
-
-    override fun getCurrentMediaPosition(): Int = repository.getCurrentPosition()
 }
