@@ -13,11 +13,11 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    single<PlayerRepository> {
-        PlayerRepositoryImpl(sharedPref = get(), myGson = get())
+    factory<PlayerRepository> {
+        PlayerRepositoryImpl(sharedPref = get(), mediaPlayer = get (), myGson = get())
     }
 
-    single <MediaPlayer> {
+    factory <MediaPlayer> {
         MediaPlayer()
     }
 

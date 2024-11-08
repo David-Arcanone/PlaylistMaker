@@ -38,6 +38,7 @@
     <dimen name="player_like_button">51dp</dimen>
     <dimen name="strange_refresh_radius">54dp</dimen>
     <dimen name="clear_history_button_radius">54dp</dimen>
+    <dimen name="_56dp_nav_menu_min_height">56dp</dimen>
     <dimen name="min_height_button">61dp</dimen>
     <dimen name="round_play_button">84dp</dimen>
     <dimen name="error_margin">86dp</dimen>

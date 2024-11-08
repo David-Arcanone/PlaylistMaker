@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.player.ui
 
-import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import androidx.lifecycle.LiveData
@@ -17,7 +16,6 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewModel() {
     private var timerUpdateJob: Job? = null
-    private var myMediaPlayer: MediaPlayer = MediaPlayer()
 
     //трек на экране
     private var playerInitLiveData =
@@ -39,6 +37,7 @@ class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewMo
             },
             doIfNoMatch = fun() { playerInitLiveData.postValue(PlayerInitializationState.NoSaveFound) })
     }
+
     fun getInitStateLiveData(): LiveData<PlayerInitializationState> = playerInitLiveData
     fun getMediaStateLiveData(): LiveData<PlayerMediaState> = playerMediaLiveData
     override fun onCleared() {
@@ -62,48 +61,56 @@ class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewMo
 
     fun pausePlayer() {
         if (playerMediaLiveData.value is PlayerMediaState.Playing) {//его могут вызвать с onPause Activity, надо убедиться что актуально
-            myMediaPlayer.pause()
+            myPlayerInteractor.pausePlayer()
             timerUpdateJob?.cancel()//снимаю корутину
             playerMediaLiveData.postValue(PlayerMediaState.Paused(getTimerValue()))
         }
     }
 
     private fun startPlayer() {
-        myMediaPlayer.start()
+        myPlayerInteractor.startPlayer()
         playerMediaLiveData.postValue(PlayerMediaState.Playing(getTimerValue()))
         startTimer()
     }
 
     private fun releasePlayer() {
-        myMediaPlayer.stop()
-        myMediaPlayer.release()
+        myPlayerInteractor.finishPlayer()
         playerMediaLiveData.postValue(PlayerMediaState.Default)
         playerInitLiveData.postValue(PlayerInitializationState.NotInitState)
     }
 
     private fun initPlayer(foundSavedTrack: Track) {
-        myMediaPlayer.setDataSource(foundSavedTrack.previewUrl)
-        myMediaPlayer.prepareAsync()
-        myMediaPlayer.setOnPreparedListener {
-            playerInitLiveData.postValue(
-                PlayerInitializationState.DoneInitState(foundSavedTrack)
-            )
-            playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
-        }
-        myMediaPlayer.setOnCompletionListener {
-            playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
-        }
+        val myUrl = foundSavedTrack.previewUrl ?: "" //проверка наличия url перед вызовом была
+        myPlayerInteractor.preparePlayer(myUrl,
+            onPlayerPreparedFunction = {
+                playerInitLiveData.postValue(
+                    PlayerInitializationState.DoneInitState(foundSavedTrack)
+                )
+                playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
+            },
+            onPlayerCompletedFunction = {
+                playerMediaLiveData.postValue(
+                    PlayerMediaState.Prepared(
+                        ZERO_TIME
+                    )
+                )
+            })
     }
 
     private fun getTimerValue(): String {
-        return AndroidUtilities.getTimeTransformedToString(myMediaPlayer.currentPosition)
+        return AndroidUtilities.getTimeTransformedToString(myPlayerInteractor.getCurrentMediaPosition())
     }
 
     private fun startTimer() {
         timerUpdateJob = viewModelScope.launch {
-            while (myMediaPlayer.isPlaying) {
+            delay(REFRESH_TIMER_DELAY_MILLIS)
+            while (playerMediaLiveData.value is PlayerMediaState.Playing) {
+                playerMediaLiveData.postValue(
+                    PlayerMediaState.Playing(
+                        getTimerValue()
+                    )
+                )
                 delay(REFRESH_TIMER_DELAY_MILLIS)
-                if(myMediaPlayer.isPlaying)playerMediaLiveData.postValue(PlayerMediaState.Playing(getTimerValue()))
             }
         }
     }
