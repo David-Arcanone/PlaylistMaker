@@ -1,28 +1,24 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
-import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
 import com.practicum.playlistmaker.search.domain.models.SearchState
-import com.practicum.playlistmaker.search.domain.models.SearchedTracks
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
     private var searchLiveData =
         MutableLiveData<SearchState>(SearchState.Default)
     private var inputTextData = ""
     private var lastRequest = ""
-    private var isSearchAllowed = true
-    val mySearchRunnable = Runnable {
-        if (inputTextData.isNotEmpty()) {
-            makeSearch(inputTextData)
-        }
-    }
+    private var isClickOnTrackAllowed = true
+    private var searchJob: Job? = null
+    private var clickDebounceJob: Job? = null
 
     init {
         val history = mySearchInteractor.getSavedTrackHistory()
@@ -34,16 +30,15 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
             inputTextData = searchText
             lastRequest = searchText
             searchLiveData.postValue(SearchState.Loading)
-            mySearchInteractor.searchTracks(
-                searchText,
-                consumer = object : TracksConsumer<SearchedTracks> {
-                    override fun consume(foundTracks: SearchedTracks) {
-                        //mainThreadHandler.post {
+            viewModelScope.launch {
+                mySearchInteractor
+                    .searchTracks(searchText)
+                    .collect { pair ->
                         if (searchText == inputTextData) {//проверим что к моменту завершения поиска актуальность запроса не пропала
-                            if (!foundTracks.isSucceded) {//неудачный ответ от сервера
+                            if (!pair.second) {//неудачный ответ от сервера
                                 showErrorConnection()
-                            } else if (foundTracks.tracks.isNotEmpty()) {//удачное соединение и есть треки
-                                searchLiveData.postValue(SearchState.FinishedSearch(foundTracks.tracks))
+                            } else if (pair.first.isNotEmpty()) {//удачное соединение и есть треки
+                                searchLiveData.postValue(SearchState.FinishedSearch(pair.first))
                             } else {//удачное соединение но нет совпадений
                                 showNoMatch()
                             }
@@ -55,20 +50,8 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
                             }
                         }
                     }
-                })
+            }
         }
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isSearchAllowed
-        if (isSearchAllowed) {
-            isSearchAllowed = false
-            mainThreadHandler.postDelayed(
-                { isSearchAllowed = true },
-                SEARCH_DEBOUNCE_DELAY
-            )
-        }
-        return current
     }
 
     fun showHistory() {
@@ -81,8 +64,14 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
         searchLiveData.postValue(SearchState.ReadyAndHistory(emptyList()))
     }
 
-    fun showClickOnTrack(newTrack: Track, fragmentOpener:()->Unit) {
-        if (clickDebounce()) {
+    fun showClickOnTrack(newTrack: Track, fragmentOpener: () -> Unit) {
+        if (isClickOnTrackAllowed) {//клик разрешен
+            isClickOnTrackAllowed = false
+            //по условиям запрет на активацию по первому нажатию на трек и отменять старый Job не нужно
+            clickDebounceJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                isClickOnTrackAllowed = true
+            }
             mySearchInteractor.updateHistoryWithNewTrack(newTrack)
             fragmentOpener()
         }
@@ -97,7 +86,7 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
     }
 
     fun showInputTextChange(newText: String) {
-        mainThreadHandler.removeCallbacks(mySearchRunnable)//убираем коллбаэк поиска
+        searchJob?.cancel()//убираем старую корутину поиска
         if (newText.isNullOrEmpty()) {
             when (searchLiveData.value) {//удалили строку запроса
                 is SearchState.Default, is SearchState.NoConnection, is SearchState.Loading, is SearchState.NoMatch, is SearchState.FinishedSearch -> {
@@ -112,10 +101,11 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
             if (searchLiveData.value is SearchState.ReadyAndHistory) searchLiveData.postValue(
                 SearchState.Default
             )
-            mainThreadHandler.postDelayed(
-                mySearchRunnable,
-                SEARCH_DEBOUNCE_DELAY
-            )//запуск коллбаэк поиска с задержкой
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                makeSearch(inputTextData)
+            }
+            //запуск корутину поиска с задержкой
         }
         inputTextData = newText
     }
@@ -123,7 +113,6 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
     fun showRefreshSearch() {
         makeSearch(lastRequest)
     }
-
 
     fun getSearchLiveData(): LiveData<SearchState> = searchLiveData
 

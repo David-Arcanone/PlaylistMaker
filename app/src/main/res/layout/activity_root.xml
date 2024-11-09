@@ -19,24 +19,36 @@
         app:navGraph="@navigation/navigation_graph"
         tools:layout="@layout/fragment_media_library" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        style="@style/myBottomMenuStyle"
-        android:layout_width="@dimen/zero_value"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/navBorder"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/playlist_app_navigation_menu" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.93" />
+    <!-- 744/800 = 93% -->
 
     <View
+        android:id="@+id/navSeparator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1dp"
         android:background="@color/light_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/bottomNavigationView" />
+        app:layout_constraintTop_toTopOf="@id/navBorder" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        style="@style/myBottomMenuStyle"
+        android:layout_width="@dimen/zero_value"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/_56dp_nav_menu_min_height"
+        app:itemPaddingBottom="@dimen/icon_padding"
+        app:itemPaddingTop="@dimen/icon_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/navSeparator"
+        app:menu="@menu/playlist_app_navigation_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

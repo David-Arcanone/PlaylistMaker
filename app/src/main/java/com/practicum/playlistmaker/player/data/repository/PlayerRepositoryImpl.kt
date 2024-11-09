@@ -9,8 +9,8 @@ import com.practicum.playlistmaker.search.domain.models.Track
 
 class PlayerRepositoryImpl(
     private val sharedPref: SharedPreferences,
-    private val mediaPlayer: MediaPlayer,
-    private val myGson: Gson
+    private val myGson: Gson,
+    private val mediaPlayer: MediaPlayer
 ) : PlayerRepository {
     override fun getSavedTrack(): Track? {
         val trackType = object : TypeToken<Track>() {}
@@ -18,20 +18,12 @@ class PlayerRepositoryImpl(
         return myGson.fromJson(json, trackType)
     }
 
-    override fun startPlayer() {
-        mediaPlayer.start()
-    }
-
-    override fun pausePlayer() {
-        mediaPlayer.pause()
-    }
-
     override fun preparePlayer(
         urlSong: String,
         onPlayerPreparedFunction: () -> Unit,
         onPlayerCompletedFunction: () -> Unit
     ) {
-        mediaPlayer.reset()
+        //mediaPlayer.reset()
         mediaPlayer.setDataSource(urlSong)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener { onPlayerPreparedFunction() }
@@ -40,7 +32,15 @@ class PlayerRepositoryImpl(
 
     override fun finishPlayer() {
         mediaPlayer.stop()
-        mediaPlayer.reset() //теперь у нас MediaPlayer reusable
+        mediaPlayer.release()
+    }
+
+    override fun startPlayer() {
+        mediaPlayer.start()
+    }
+
+    override fun pausePlayer() {
+        mediaPlayer.pause()
     }
 
     override fun getCurrentPosition(): Int = mediaPlayer.currentPosition ?: 0

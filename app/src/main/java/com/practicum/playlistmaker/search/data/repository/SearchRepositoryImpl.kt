@@ -9,6 +9,8 @@ import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.domain.api.SearchRepository
 import com.practicum.playlistmaker.search.domain.models.SearchedTracks
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 
 class SearchRepositoryImpl(
@@ -22,43 +24,35 @@ class SearchRepositoryImpl(
         private const val SEARCH_HISTORY_KEY = "key_for_search_history"
     }
 
-    override fun searchTracks(expression: String): SearchedTracks {
-        try {
-            val response = networkClient.doRequest(ITunesSearchRequest(expression))
-
-            when (response.resultCode) {
-                in 200..299 -> {//успешный запрос
-                    val foundTracks = (response as ITunesSearchResponse).results
-                    if (foundTracks.isNotEmpty()) {//есть совпадения
-                        return SearchedTracks(foundTracks.map {
-                            Track(
-                                trackName = it.trackName,
-                                artistName = it.artistName,
-                                trackTime = it.trackTime,
-                                artWorkUrl100 = it.artWorkUrl100,
-                                trackId = it.trackId,
-                                country = it.country,
-                                primaryGenreName = it.primaryGenreName,
-                                collectionName = it.collectionName,
-                                previewUrl = it.previewUrl,
-                                coverImg = it.getCoverImg(),
-                                releaseYear = it.getReleaseYear(),
-                                trackLengthText = it.showTrackTime()
-                            )
-                        }, isSucceded = true)
-                    } else {//нет совпадений
-                        return SearchedTracks(emptyList(), isSucceded = true)
-                    }
-                }
-
-                else -> {//ошибка
-                    //Log.d("error-type",response.resultCode.toString())
-                    return SearchedTracks(emptyList(), isSucceded = false)
+    override fun searchTracks(expression: String): Flow<SearchedTracks> = flow{
+        val response = networkClient.doRequest(ITunesSearchRequest(expression))
+        when(response.resultCode){
+            in 200..299 ->{
+                val foundTracks = (response as ITunesSearchResponse).results
+                if (foundTracks.isNotEmpty()) {//есть совпадения
+                    emit(SearchedTracks(foundTracks.map {
+                        Track(
+                            trackName = it.trackName,
+                            artistName = it.artistName,
+                            trackTime = it.trackTime,
+                            artWorkUrl100 = it.artWorkUrl100,
+                            trackId = it.trackId,
+                            country = it.country,
+                            primaryGenreName = it.primaryGenreName,
+                            collectionName = it.collectionName,
+                            previewUrl = it.previewUrl,
+                            coverImg = it.getCoverImg(),
+                            releaseYear = it.getReleaseYear(),
+                            trackLengthText = it.showTrackTime()
+                        )
+                    }, isSucceded = true))
+                } else {//нет совпадений
+                    emit(SearchedTracks(emptyList(), isSucceded = true))
                 }
             }
-        } catch (e: Exception) {//неуспешный запрос
-            //Log.d("error-type","exception")
-            return SearchedTracks(emptyList(), isSucceded = false)
+            else -> {
+                emit(SearchedTracks(emptyList(), isSucceded = false))
+            }
         }
     }
 

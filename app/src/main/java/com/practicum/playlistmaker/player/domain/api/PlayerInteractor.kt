@@ -5,9 +5,13 @@ import com.practicum.playlistmaker.search.domain.models.Track
 
 interface PlayerInteractor {
     fun getSavedTrack(consumer: TracksConsumer<Track>, doIfNoMatch:()->Unit)
-    fun startPlayer()
     fun pausePlayer()
-    fun preparePlayer(songUrl:String,onPlayerPreparedFunction:()->Unit,onPlayerCompletedFunction:()->Unit)
+    fun startPlayer()
+    fun preparePlayer(
+        songUrl: String,
+        onPlayerPreparedFunction: () -> Unit,
+        onPlayerCompletedFunction: () -> Unit
+    )
     fun finishPlayer()
-    fun getCurrentMediaPosition():Int
+    fun getCurrentMediaPosition(): Int
 }

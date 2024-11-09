@@ -13,7 +13,8 @@ object AndroidUtilities {
             context.resources.displayMetrics
         ).toInt()
     }
-    fun getTimeTransformedToString(valueInt:Int):String{
+
+    fun getTimeTransformedToString(valueInt: Int): String {
         return SimpleDateFormat(
             "mm:ss",
             Locale.getDefault()
