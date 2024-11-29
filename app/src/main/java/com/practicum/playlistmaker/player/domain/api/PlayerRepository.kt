@@ -13,4 +13,6 @@ interface PlayerRepository {
     fun getCurrentPosition(): Int
     fun startPlayer()
     fun pausePlayer()
+    fun addLike()
+    fun deleteLike()
 }

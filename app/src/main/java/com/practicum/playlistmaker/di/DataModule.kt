@@ -1,7 +1,9 @@
 package com.practicum.playlistmaker.di
 
 import android.content.Context
+import androidx.room.Room
 import com.google.gson.Gson
+import com.practicum.playlistmaker.medialibrary.data.db.AppPlaylistMakerDatabase
 import com.practicum.playlistmaker.search.data.network.ITunesApiService
 import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -36,5 +38,12 @@ val dataModule = module {
 
     factory { Gson() }//для Gson в записи на sharedPreferences
 
-
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppPlaylistMakerDatabase::class.java,
+            "playlistMakerDatabase.db"
+        )
+            .build()
+    }
 }
