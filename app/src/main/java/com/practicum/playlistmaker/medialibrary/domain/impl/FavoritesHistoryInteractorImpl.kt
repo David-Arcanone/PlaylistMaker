@@ -10,4 +10,15 @@ class FavoritesHistoryInteractorImpl(private val myRepository: FavoritesHistoryR
     override fun getSavedFavorites(): Flow<List<Track>> {
         return myRepository.getSavedFavorites()
     }
+    override suspend fun getListOfLikedId(): Flow<List<Int>> {
+        return myRepository.getListOfLikedId()
+    }
+
+    override suspend fun addLike(newFavTrack: Track) {
+        myRepository.addLike(newFavTrack)
+    }
+
+    override suspend fun deleteLike(badMusic:Track) {
+        myRepository.deleteLike(badMusic)
+    }
 }

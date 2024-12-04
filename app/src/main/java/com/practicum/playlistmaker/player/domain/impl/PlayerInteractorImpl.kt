@@ -1,7 +1,5 @@
 package com.practicum.playlistmaker.player.domain.impl
 
-import com.practicum.playlistmaker.medialibrary.data.converters.MusicFavoriteDbConvertor
-import com.practicum.playlistmaker.medialibrary.data.db.AppPlaylistMakerDatabase
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.api.PlayerRepository
 import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer

@@ -4,8 +4,6 @@ import android.content.SharedPreferences
 import android.media.MediaPlayer
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.practicum.playlistmaker.medialibrary.data.converters.MusicFavoriteDbConvertor
-import com.practicum.playlistmaker.medialibrary.data.db.AppPlaylistMakerDatabase
 import com.practicum.playlistmaker.player.domain.api.PlayerRepository
 import com.practicum.playlistmaker.search.domain.models.Track
 
@@ -13,8 +11,6 @@ class PlayerRepositoryImpl(
     private val sharedPref: SharedPreferences,
     private val myGson: Gson,
     private val mediaPlayer: MediaPlayer,
-    private val myDatabase: AppPlaylistMakerDatabase,
-    private val myMusicDbConvertor: MusicFavoriteDbConvertor
 ) : PlayerRepository {
     override fun getSavedTrack(): Track? {
         val trackType = object : TypeToken<Track>() {}

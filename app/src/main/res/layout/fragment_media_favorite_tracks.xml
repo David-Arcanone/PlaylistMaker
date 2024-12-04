@@ -35,5 +35,20 @@
         app:layout_constraintTop_toTopOf="parent"
         android:indeterminateTint="@color/blue"
         android:visibility="gone" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_history_tracks"
+        style="@style/RecyclerViewStyle"
+        android:layout_height="@dimen/zero_value"
+        android:layout_weight="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingEnd="@dimen/settings_padding"
+        android:paddingStart="@dimen/horizontal_screen_padding"
+        android:paddingTop="@dimen/horizontal_screen_padding"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        tools:itemCount="@integer/temp_recycler_history_int"
+        tools:listitem="@layout/track_showcase" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

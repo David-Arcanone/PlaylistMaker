@@ -21,8 +21,8 @@ val repositoryModule = module {
             sharedPref = get(),
             mediaPlayer = get(),
             myGson = get(),
-            myDatabase = get(),
-            myMusicDbConvertor = get()
+            //myDatabase = get(),
+            //myMusicDbConvertor = get()
         )
     }
 
@@ -42,5 +42,5 @@ val repositoryModule = module {
 
     single<SharingRepository> { SharingRepositoryImpl(context = get()) }
     factory { MusicFavoriteDbConvertor() }
-    single<FavoritesHistoryRepository> { FavoritesHistoryRepositoryImpl(get(), get()) }
+    single<FavoritesHistoryRepository> { FavoritesHistoryRepositoryImpl(get(), get(),get()) }
 }

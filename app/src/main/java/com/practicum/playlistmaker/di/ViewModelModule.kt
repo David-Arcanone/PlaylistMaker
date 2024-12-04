@@ -10,7 +10,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
-        PlayerViewModel(myPlayerInteractor = get())
+        PlayerViewModel(myPlayerInteractor = get(),get())
     }
 
     viewModel {
@@ -24,6 +24,6 @@ val viewModelModule = module {
         MediaPlaylistsFragmentViewModel(emptyFlag)
     }
     viewModel { (emptyFlag: Boolean) ->
-        MediaFavoritesFragmentViewModel(emptyFlag)
+        MediaFavoritesFragmentViewModel(get(),get())
     }
 }

@@ -1,8 +1,8 @@
 package com.practicum.playlistmaker.player.domain.models
 
-sealed class PlayerMediaState {
-    object Default:PlayerMediaState()
-    class Paused(val timeValue:String):PlayerMediaState()
-    class Playing(val timeValue:String):PlayerMediaState()
-    class Prepared(val timeValue:String):PlayerMediaState()
+sealed class PlayerMediaState(val isLikedFlag: Boolean) {
+    object Default:PlayerMediaState(isLikedFlag = false)
+    class Paused(val timeValue:String, val isLiked:Boolean):PlayerMediaState(isLiked)
+    class Playing(val timeValue:String, val isLiked:Boolean):PlayerMediaState(isLiked)
+    class Prepared(val timeValue:String, val isLiked:Boolean):PlayerMediaState(isLiked)
 }

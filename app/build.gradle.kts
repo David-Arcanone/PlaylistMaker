@@ -56,14 +56,15 @@ dependencies {
     implementation ("androidx.activity:activity-ktx:1.6.1")
     implementation ("io.insert-koin:koin-android:3.3.0")
     implementation ("com.google.android.material:material:1.8.0")
-    val fragment_version = "1.5.5"
-    implementation ("androidx.fragment:fragment-ktx:$fragment_version")
+    val fragmentVersion = "1.5.5"
+    implementation ("androidx.fragment:fragment-ktx:$fragmentVersion")
     implementation ("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation ("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation ("androidx.fragment:fragment-ktx:1.5.6")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
-    val room_version = "2.5.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    annotationProcessor ("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
 }

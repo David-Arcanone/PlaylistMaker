@@ -13,6 +13,7 @@ interface PlayerRepository {
     fun getCurrentPosition(): Int
     fun startPlayer()
     fun pausePlayer()
-    fun addLike()
-    fun deleteLike()
+    /*fun getListOfLikedId(): Flow<List<Int>>
+    suspend fun addLike(newFavTrack:Track)
+    suspend fun deleteLike(badMusic:Track)*/
 }
