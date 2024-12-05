@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteMusicDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = MusicEntity::class)
     suspend fun insertMusicToFavorite(track: MusicEntity)
 
-    @Delete
+    @Delete(entity = MusicEntity::class)
     suspend fun deleteFromFavorites(track:MusicEntity)//для удаления трека из таблицы избранных треков;
 
     @Query("SELECT * FROM favoritesTable ORDER BY whenAdded DESC")

@@ -7,6 +7,12 @@ import kotlinx.coroutines.flow.Flow
 
 class FavoritesHistoryInteractorImpl(private val myRepository: FavoritesHistoryRepository) :
     FavoritesHistoryInteractor {
+    override suspend fun addLike(newFavTrack: Track){
+        myRepository.addLike(newFavTrack)
+    }
+    override suspend fun deleteLike(badMusic:Track) {
+        myRepository.deleteLike(badMusic)
+    }
     override fun getSavedFavorites(): Flow<List<Track>> {
         return myRepository.getSavedFavorites()
     }
@@ -14,11 +20,5 @@ class FavoritesHistoryInteractorImpl(private val myRepository: FavoritesHistoryR
         return myRepository.getListOfLikedId()
     }
 
-    override suspend fun addLike(newFavTrack: Track) {
-        myRepository.addLike(newFavTrack)
-    }
 
-    override suspend fun deleteLike(badMusic:Track) {
-        myRepository.deleteLike(badMusic)
-    }
 }

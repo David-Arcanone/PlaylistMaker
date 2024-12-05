@@ -35,6 +35,11 @@ class PlayerFragment : Fragment() {
             when (initState) {
                 is PlayerInitializationState.DoneInitState -> {
                     renderTrackInfo(initState.currentTrack)
+                    myBinding.btLike.setImageResource(R.drawable.bt_like_lm)
+                }
+                is PlayerInitializationState.DoneInitStateLiked ->{
+                    renderTrackInfo(initState.currentTrack)
+                    myBinding.btLike.setImageResource(R.drawable.bt_like_ok_lm)
                 }
 
                 is PlayerInitializationState.NoSaveFound -> {
@@ -70,11 +75,6 @@ class PlayerFragment : Fragment() {
                 else -> {//статус Default, ждем инициализации трека
                     Unit
                 }
-            }
-            if (mediaState.isLikedFlag) {
-                myBinding.btLike.setImageResource(R.drawable.bt_like_ok_lm)
-            } else {
-                myBinding.btLike.setImageResource(R.drawable.bt_like_lm)
             }
         }
         //активность кнопок

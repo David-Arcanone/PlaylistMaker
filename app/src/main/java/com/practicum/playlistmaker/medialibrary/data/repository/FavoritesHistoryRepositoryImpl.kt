@@ -13,6 +13,14 @@ class FavoritesHistoryRepositoryImpl(
     private val musicDbConvertor: MusicFavoriteDbConvertor,
     private val myMusicDbConvertor: MusicFavoriteDbConvertor
 ) : FavoritesHistoryRepository {
+    override suspend fun addLike(newFavTrack: Track) {
+        val trackConvertedToMusicEntity=myMusicDbConvertor.map(newFavTrack)
+        myDatabase.favoritesMusicDao().insertMusicToFavorite(trackConvertedToMusicEntity)
+    }
+    override suspend fun deleteLike(badMusic: Track) {
+        val trackConvertedToMusicEntity=myMusicDbConvertor.map(badMusic)
+        myDatabase.favoritesMusicDao().deleteFromFavorites(trackConvertedToMusicEntity)
+    }
     override fun getSavedFavorites(): Flow<List<Track>> =
         myDatabase.favoritesMusicDao().getFavorites().map {
             convertFromMusicEntity(it)
@@ -24,14 +32,6 @@ class FavoritesHistoryRepositoryImpl(
     override fun getListOfLikedId(): Flow<List<Int>> =
         myDatabase.favoritesMusicDao().getFavoritesId()
 
-    override suspend fun addLike(newFavTrack: Track) {
-        val trackConvertedToMusicEntity=myMusicDbConvertor.map(newFavTrack)
-        myDatabase.favoritesMusicDao().insertMusicToFavorite(trackConvertedToMusicEntity)
-    }
 
-    override suspend fun deleteLike(badMusic: Track) {
-        val trackConvertedToMusicEntity=myMusicDbConvertor.map(badMusic)
-        myDatabase.favoritesMusicDao().deleteFromFavorites(trackConvertedToMusicEntity)
-    }
 
 }

@@ -41,6 +41,8 @@ val repositoryModule = module {
     single<SettingsRepository> { SettingsRepositoryImpl(context = get(), sharedPref = get()) }
 
     single<SharingRepository> { SharingRepositoryImpl(context = get()) }
+
     factory { MusicFavoriteDbConvertor() }
-    single<FavoritesHistoryRepository> { FavoritesHistoryRepositoryImpl(get(), get(),get()) }
+
+    single<FavoritesHistoryRepository> { FavoritesHistoryRepositoryImpl(get(), get(), get()) }
 }

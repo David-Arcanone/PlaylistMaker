@@ -23,6 +23,7 @@ class PlayerRepositoryImpl(
         onPlayerPreparedFunction: () -> Unit,
         onPlayerCompletedFunction: () -> Unit
     ) {
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(urlSong)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener { onPlayerPreparedFunction() }

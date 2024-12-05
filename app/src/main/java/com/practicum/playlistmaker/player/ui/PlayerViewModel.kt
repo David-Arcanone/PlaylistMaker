@@ -25,7 +25,6 @@ class PlayerViewModel(
     private var playerInitLiveData =
         MutableLiveData<PlayerInitializationState>(PlayerInitializationState.NotInitState)
     private var playerMediaLiveData = MutableLiveData<PlayerMediaState>(PlayerMediaState.Default)
-    private var isLiked = false
     private lateinit var currentTrack: Track
 
     init {
@@ -70,13 +69,13 @@ class PlayerViewModel(
         if (playerMediaLiveData.value is PlayerMediaState.Playing) {//его могут вызвать с onPause Activity, надо убедиться что актуально
             myPlayerInteractor.pausePlayer()
             timerUpdateJob?.cancel()//снимаю корутину
-            playerMediaLiveData.postValue(PlayerMediaState.Paused(getTimerValue(), isLiked))
+            playerMediaLiveData.postValue(PlayerMediaState.Paused(getTimerValue()))
         }
     }
 
     private fun startPlayer() {
         myPlayerInteractor.startPlayer()
-        playerMediaLiveData.postValue(PlayerMediaState.Playing(getTimerValue(), isLiked))
+        playerMediaLiveData.postValue(PlayerMediaState.Playing(getTimerValue()))
         startTimer()
     }
 
@@ -89,8 +88,7 @@ class PlayerViewModel(
     private fun startInit(foundSavedTrack: Track) {
         viewModelScope.launch {
             myFavoritesHistoryInteractor.getListOfLikedId().collect { foundLikedId ->
-                isLiked = checkIfLiked(foundLikedId, foundSavedTrack.trackId)
-                processInit(isLiked, foundSavedTrack)
+                processMediaInit(foundLikedId, foundSavedTrack)
             }
         }
     }
@@ -101,20 +99,26 @@ class PlayerViewModel(
         return likedFlag
     }
 
-    private fun processInit(likedFlag: Boolean, foundSavedTrack: Track) {
+    private fun processMediaInit(foundLikedId:List<Int>,foundSavedTrack: Track) {
         val myUrl = foundSavedTrack.previewUrl ?: ""
-        if(myUrl.isNotEmpty()){
+        if (myUrl.isNotEmpty()) {
             myPlayerInteractor.preparePlayer(myUrl,
                 onPlayerPreparedFunction = {
-                    playerInitLiveData.postValue(
-                        PlayerInitializationState.DoneInitState(foundSavedTrack)
-                    )
-                    playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME, likedFlag))
+                    if(checkIfLiked(foundLikedId,foundSavedTrack.trackId)){
+                        playerInitLiveData.postValue(
+                            PlayerInitializationState.DoneInitStateLiked(foundSavedTrack)
+                        )
+                    }else{
+                        playerInitLiveData.postValue(
+                            PlayerInitializationState.DoneInitState(foundSavedTrack)
+                        )
+                    }
+                    playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
                 },
                 onPlayerCompletedFunction = {
                     playerMediaLiveData.postValue(
                         PlayerMediaState.Prepared(
-                            ZERO_TIME, likedFlag
+                            ZERO_TIME
                         )
                     )
                 })
@@ -131,7 +135,7 @@ class PlayerViewModel(
             while (playerMediaLiveData.value is PlayerMediaState.Playing) {
                 playerMediaLiveData.postValue(
                     PlayerMediaState.Playing(
-                        getTimerValue(), isLiked
+                        getTimerValue()
                     )
                 )
                 delay(REFRESH_TIMER_DELAY_MILLIS)
@@ -140,48 +144,25 @@ class PlayerViewModel(
     }
 
     fun likeClick() {
-        if (playerInitLiveData.value is PlayerInitializationState.DoneInitState) {//проверяем, что есть данные трека
+        if (playerInitLiveData.value is PlayerInitializationState.DoneInitState || playerInitLiveData.value is PlayerInitializationState.DoneInitStateLiked) {//проверяем, что есть данные трека
             viewModelScope.launch {
-                if (!isLiked) {
-                    myFavoritesHistoryInteractor.addLike(currentTrack)
-                } else {
+                if (playerInitLiveData.value is PlayerInitializationState.DoneInitStateLiked) {
                     myFavoritesHistoryInteractor.deleteLike(currentTrack)
+
+                } else {
+                    myFavoritesHistoryInteractor.addLike(currentTrack)
                 }
             }
-            isLiked = !isLiked
-            processLike(isLiked)
-
+            processLike()
         }
     }
 
-    private fun processLike(isLikedFlag: Boolean) {
-        when (playerMediaLiveData.value) {
-            is PlayerMediaState.Playing -> {
-                playerMediaLiveData.postValue(
-                    PlayerMediaState.Playing(
-                        getTimerValue(),
-                        isLikedFlag
-                    )
-                )
-            }
-
-            is PlayerMediaState.Paused -> {
-                playerMediaLiveData.postValue(PlayerMediaState.Paused(getTimerValue(), isLiked))
-            }
-
-            is PlayerMediaState.Prepared -> {
-                playerMediaLiveData.postValue(
-                    PlayerMediaState.Prepared(
-                        ZERO_TIME, isLikedFlag
-                    )
-                )
-            }
-
-            is PlayerMediaState.Default -> {
-                playerMediaLiveData.postValue(PlayerMediaState.Default)
-            }
-
-            else -> {}
+    private fun processLike() {
+        val previousValue=playerInitLiveData.value
+        if (previousValue is PlayerInitializationState.DoneInitStateLiked) {
+            playerInitLiveData.postValue(PlayerInitializationState.DoneInitState(previousValue.currentTrack))
+        } else  {
+            playerInitLiveData.postValue(PlayerInitializationState.DoneInitStateLiked((previousValue as PlayerInitializationState.DoneInitState).currentTrack))
         }
     }
 

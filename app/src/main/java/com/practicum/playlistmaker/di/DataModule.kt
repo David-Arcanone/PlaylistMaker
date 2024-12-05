@@ -38,7 +38,7 @@ val dataModule = module {
 
     factory { Gson() }//для Gson в записи на sharedPreferences
 
-    single {
+    single {//для базы данных
         Room.databaseBuilder(
             androidContext(),
             AppPlaylistMakerDatabase::class.java,
