@@ -35,6 +35,11 @@ class PlayerFragment : Fragment() {
             when (initState) {
                 is PlayerInitializationState.DoneInitState -> {
                     renderTrackInfo(initState.currentTrack)
+                    myBinding.btLike.setImageResource(R.drawable.bt_like_lm)
+                }
+                is PlayerInitializationState.DoneInitStateLiked ->{
+                    renderTrackInfo(initState.currentTrack)
+                    myBinding.btLike.setImageResource(R.drawable.bt_like_ok_lm)
                 }
 
                 is PlayerInitializationState.NoSaveFound -> {
@@ -50,8 +55,11 @@ class PlayerFragment : Fragment() {
             when (mediaState) {
                 is PlayerMediaState.Prepared -> {
                     myBinding.btPlay.isEnabled = true//чтоб при первом prepared разлочил кнопку
+                    myBinding.btLike.isEnabled = true
+                    myBinding.btAddToPlaylist.isEnabled = true
                     renderTime(mediaState.timeValue)
                     myBinding.btPlay.setImageResource(R.drawable.bt_play_lm)
+
                 }
 
                 is PlayerMediaState.Paused -> {
@@ -76,6 +84,9 @@ class PlayerFragment : Fragment() {
         }
         myBinding.btBack.setOnClickListener {
             findNavController().navigateUp()
+        }
+        myBinding.btLike.setOnClickListener {
+            myViewModel.likeClick()
         }
     }
 

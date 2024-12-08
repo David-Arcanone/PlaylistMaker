@@ -73,6 +73,9 @@ class SearchViewModel(val mySearchInteractor: SearchInteractor) : ViewModel() {
                 isClickOnTrackAllowed = true
             }
             mySearchInteractor.updateHistoryWithNewTrack(newTrack)
+            if (searchLiveData.value is SearchState.ReadyAndHistory) searchLiveData.postValue(//надо зафиксировать изменение истории в стейт
+                SearchState.ReadyAndHistory(mySearchInteractor.getSavedTrackHistory())
+            )
             fragmentOpener()
         }
     }

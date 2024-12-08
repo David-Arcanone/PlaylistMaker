@@ -5,6 +5,7 @@ import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.medialibrary.domain.db.FavoritesHistoryInteractor
 import com.practicum.playlistmaker.player.domain.models.PlayerInitializationState
 import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
 import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
@@ -14,13 +15,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewModel() {
+class PlayerViewModel(
+    private val myPlayerInteractor: PlayerInteractor,
+    private val myFavoritesHistoryInteractor: FavoritesHistoryInteractor
+) : ViewModel() {
     private var timerUpdateJob: Job? = null
 
     //трек на экране
     private var playerInitLiveData =
         MutableLiveData<PlayerInitializationState>(PlayerInitializationState.NotInitState)
     private var playerMediaLiveData = MutableLiveData<PlayerMediaState>(PlayerMediaState.Default)
+    private lateinit var currentTrack: Track
 
     init {
         myPlayerInteractor.getSavedTrack(
@@ -29,7 +34,8 @@ class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewMo
                     //подготовка плеера имеет смысл если у нас есть трек, иначе закроется
                     //в iTunes превью музыка есть только у треков.
                     if (foundSavedTrack.previewUrl != null) {
-                        initPlayer(foundSavedTrack)
+                        currentTrack = foundSavedTrack
+                        startInit(foundSavedTrack)
                     } else {
                         playerInitLiveData.postValue(PlayerInitializationState.NoSaveFound)//добавлял в запросе фильтрацию по типу музыка, значит должна быть, иначе ошибка, а значит надо закрыть
                     }
@@ -79,22 +85,44 @@ class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewMo
         playerInitLiveData.postValue(PlayerInitializationState.NotInitState)
     }
 
-    private fun initPlayer(foundSavedTrack: Track) {
-        val myUrl = foundSavedTrack.previewUrl ?: "" //проверка наличия url перед вызовом была
-        myPlayerInteractor.preparePlayer(myUrl,
-            onPlayerPreparedFunction = {
-                playerInitLiveData.postValue(
-                    PlayerInitializationState.DoneInitState(foundSavedTrack)
-                )
-                playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
-            },
-            onPlayerCompletedFunction = {
-                playerMediaLiveData.postValue(
-                    PlayerMediaState.Prepared(
-                        ZERO_TIME
+    private fun startInit(foundSavedTrack: Track) {
+        viewModelScope.launch {
+            myFavoritesHistoryInteractor.getListOfLikedId().collect { foundLikedId ->
+                processMediaInit(foundLikedId, foundSavedTrack)
+            }
+        }
+    }
+
+    private fun checkIfLiked(likedIds: List<Int>, currentId: Int): Boolean {
+        var likedFlag = false
+        likedIds.forEach { if (it == currentId) likedFlag = true }
+        return likedFlag
+    }
+
+    private fun processMediaInit(foundLikedId:List<Int>,foundSavedTrack: Track) {
+        val myUrl = foundSavedTrack.previewUrl ?: ""
+        if (myUrl.isNotEmpty()) {
+            myPlayerInteractor.preparePlayer(myUrl,
+                onPlayerPreparedFunction = {
+                    if(checkIfLiked(foundLikedId,foundSavedTrack.trackId)){
+                        playerInitLiveData.postValue(
+                            PlayerInitializationState.DoneInitStateLiked(foundSavedTrack)
+                        )
+                    }else{
+                        playerInitLiveData.postValue(
+                            PlayerInitializationState.DoneInitState(foundSavedTrack)
+                        )
+                    }
+                    playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
+                },
+                onPlayerCompletedFunction = {
+                    playerMediaLiveData.postValue(
+                        PlayerMediaState.Prepared(
+                            ZERO_TIME
+                        )
                     )
-                )
-            })
+                })
+        }
     }
 
     private fun getTimerValue(): String {
@@ -112,6 +140,29 @@ class PlayerViewModel(private val myPlayerInteractor: PlayerInteractor) : ViewMo
                 )
                 delay(REFRESH_TIMER_DELAY_MILLIS)
             }
+        }
+    }
+
+    fun likeClick() {
+        if (playerInitLiveData.value is PlayerInitializationState.DoneInitState || playerInitLiveData.value is PlayerInitializationState.DoneInitStateLiked) {//проверяем, что есть данные трека
+            viewModelScope.launch {
+                if (playerInitLiveData.value is PlayerInitializationState.DoneInitStateLiked) {
+                    myFavoritesHistoryInteractor.deleteLike(currentTrack)
+
+                } else {
+                    myFavoritesHistoryInteractor.addLike(currentTrack)
+                }
+            }
+            processLike()
+        }
+    }
+
+    private fun processLike() {
+        val previousValue=playerInitLiveData.value
+        if (previousValue is PlayerInitializationState.DoneInitStateLiked) {
+            playerInitLiveData.postValue(PlayerInitializationState.DoneInitState(previousValue.currentTrack))
+        } else  {
+            playerInitLiveData.postValue(PlayerInitializationState.DoneInitStateLiked((previousValue as PlayerInitializationState.DoneInitState).currentTrack))
         }
     }
 

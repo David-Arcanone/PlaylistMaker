@@ -4,7 +4,7 @@ import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
 import com.practicum.playlistmaker.search.domain.models.Track
 
 interface PlayerInteractor {
-    fun getSavedTrack(consumer: TracksConsumer<Track>, doIfNoMatch:()->Unit)
+    fun getSavedTrack(consumer: TracksConsumer<Track>, doIfNoMatch: () -> Unit)
     fun pausePlayer()
     fun startPlayer()
     fun preparePlayer(
@@ -12,6 +12,7 @@ interface PlayerInteractor {
         onPlayerPreparedFunction: () -> Unit,
         onPlayerCompletedFunction: () -> Unit
     )
+
     fun finishPlayer()
     fun getCurrentMediaPosition(): Int
 }

@@ -1,6 +1,9 @@
 package com.practicum.playlistmaker.di
 
 import android.media.MediaPlayer
+import com.practicum.playlistmaker.medialibrary.data.converters.MusicFavoriteDbConvertor
+import com.practicum.playlistmaker.medialibrary.data.repository.FavoritesHistoryRepositoryImpl
+import com.practicum.playlistmaker.medialibrary.domain.db.FavoritesHistoryRepository
 import com.practicum.playlistmaker.player.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.api.PlayerRepository
 import com.practicum.playlistmaker.search.data.repository.SearchRepositoryImpl
@@ -14,10 +17,14 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     factory<PlayerRepository> {
-        PlayerRepositoryImpl(sharedPref = get(), mediaPlayer = get (), myGson = get())
+        PlayerRepositoryImpl(
+            sharedPref = get(),
+            mediaPlayer = get(),
+            myGson = get(),
+        )
     }
 
-    factory <MediaPlayer> {
+    factory<MediaPlayer> {
         MediaPlayer()
     }
 
@@ -32,4 +39,8 @@ val repositoryModule = module {
     single<SettingsRepository> { SettingsRepositoryImpl(context = get(), sharedPref = get()) }
 
     single<SharingRepository> { SharingRepositoryImpl(context = get()) }
+
+    factory { MusicFavoriteDbConvertor() }
+
+    single<FavoritesHistoryRepository> { FavoritesHistoryRepositoryImpl(get(), get()) }
 }

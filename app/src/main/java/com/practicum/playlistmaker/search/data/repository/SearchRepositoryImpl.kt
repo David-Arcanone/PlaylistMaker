@@ -19,15 +19,10 @@ class SearchRepositoryImpl(
     private val myGson: Gson
 ) :
     SearchRepository {
-    companion object {
-        private const val PLAYLIST_CURRENT_TRACK = "playlist_current_track"
-        private const val SEARCH_HISTORY_KEY = "key_for_search_history"
-    }
-
-    override fun searchTracks(expression: String): Flow<SearchedTracks> = flow{
+    override fun searchTracks(expression: String): Flow<SearchedTracks> = flow {
         val response = networkClient.doRequest(ITunesSearchRequest(expression))
-        when(response.resultCode){
-            in 200..299 ->{
+        when (response.resultCode) {
+            in 200..299 -> {
                 val foundTracks = (response as ITunesSearchResponse).results
                 if (foundTracks.isNotEmpty()) {//есть совпадения
                     emit(SearchedTracks(foundTracks.map {
@@ -50,6 +45,7 @@ class SearchRepositoryImpl(
                     emit(SearchedTracks(emptyList(), isSucceded = true))
                 }
             }
+
             else -> {
                 emit(SearchedTracks(emptyList(), isSucceded = false))
             }
@@ -80,5 +76,10 @@ class SearchRepositoryImpl(
         sharedPref.edit()
             .putString(PLAYLIST_CURRENT_TRACK, json)
             .apply()
+    }
+
+    companion object {
+        private const val PLAYLIST_CURRENT_TRACK = "playlist_current_track"
+        private const val SEARCH_HISTORY_KEY = "key_for_search_history"
     }
 }

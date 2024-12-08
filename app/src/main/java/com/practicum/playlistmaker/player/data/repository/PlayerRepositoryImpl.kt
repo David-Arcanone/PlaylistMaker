@@ -10,7 +10,7 @@ import com.practicum.playlistmaker.search.domain.models.Track
 class PlayerRepositoryImpl(
     private val sharedPref: SharedPreferences,
     private val myGson: Gson,
-    private val mediaPlayer: MediaPlayer
+    private val mediaPlayer: MediaPlayer,
 ) : PlayerRepository {
     override fun getSavedTrack(): Track? {
         val trackType = object : TypeToken<Track>() {}
@@ -23,7 +23,7 @@ class PlayerRepositoryImpl(
         onPlayerPreparedFunction: () -> Unit,
         onPlayerCompletedFunction: () -> Unit
     ) {
-        //mediaPlayer.reset()
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(urlSong)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener { onPlayerPreparedFunction() }
