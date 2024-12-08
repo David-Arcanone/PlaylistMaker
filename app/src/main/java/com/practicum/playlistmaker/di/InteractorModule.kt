@@ -16,10 +16,10 @@ val interactorModule = module {
     factory<PlayerInteractor> {
         PlayerInteractorImpl(get())
     }
-    single<SearchInteractor> { SearchInteractorImpl(get()) }
+    factory<SearchInteractor> { SearchInteractorImpl(get()) }
 
-    single<SettingsInteractor> { SettingsInteractorImpl(get()) }
+    factory<SettingsInteractor> { SettingsInteractorImpl(get()) }
 
-    single<SharingInteractor> { SharingInteractorImpl(get()) }
-    single<FavoritesHistoryInteractor> { FavoritesHistoryInteractorImpl(get()) }
+    factory<SharingInteractor> { SharingInteractorImpl(get()) }
+    factory<FavoritesHistoryInteractor> { FavoritesHistoryInteractorImpl(get()) }
 }
