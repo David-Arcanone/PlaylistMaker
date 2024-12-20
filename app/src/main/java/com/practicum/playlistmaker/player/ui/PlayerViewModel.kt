@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.medialibrary.domain.db.FavoritesHistoryInteractor
+import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistInteractor
+import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
 import com.practicum.playlistmaker.player.domain.models.PlayerInitializationState
 import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
 import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
@@ -13,11 +15,13 @@ import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.AndroidUtilities
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val myPlayerInteractor: PlayerInteractor,
-    private val myFavoritesHistoryInteractor: FavoritesHistoryInteractor
+    private val myFavoritesHistoryInteractor: FavoritesHistoryInteractor,
+    private val myNewPlaylistInteractor: NewPlaylistInteractor
 ) : ViewModel() {
     private var timerUpdateJob: Job? = null
 
@@ -99,20 +103,17 @@ class PlayerViewModel(
         return likedFlag
     }
 
-    private fun processMediaInit(foundLikedId:List<Int>,foundSavedTrack: Track) {
+    private fun processMediaInit(foundLikedId: List<Int>, foundSavedTrack: Track) {
         val myUrl = foundSavedTrack.previewUrl ?: ""
         if (myUrl.isNotEmpty()) {
             myPlayerInteractor.preparePlayer(myUrl,
                 onPlayerPreparedFunction = {
-                    if(checkIfLiked(foundLikedId,foundSavedTrack.trackId)){
-                        playerInitLiveData.postValue(
-                            PlayerInitializationState.DoneInitStateLiked(foundSavedTrack)
+                    playerInitLiveData.postValue(
+                        PlayerInitializationState.DoneInitState(
+                            foundSavedTrack,
+                            checkIfLiked(foundLikedId, foundSavedTrack.trackId)
                         )
-                    }else{
-                        playerInitLiveData.postValue(
-                            PlayerInitializationState.DoneInitState(foundSavedTrack)
-                        )
-                    }
+                    )
                     playerMediaLiveData.postValue(PlayerMediaState.Prepared(ZERO_TIME))
                 },
                 onPlayerCompletedFunction = {
@@ -144,26 +145,78 @@ class PlayerViewModel(
     }
 
     fun likeClick() {
-        if (playerInitLiveData.value is PlayerInitializationState.DoneInitState || playerInitLiveData.value is PlayerInitializationState.DoneInitStateLiked) {//проверяем, что есть данные трека
+        val prevInitState = playerInitLiveData.value
+        if (prevInitState is PlayerInitializationState.DoneInitState) {//проверяем, что есть данные трека
             viewModelScope.launch {
-                if (playerInitLiveData.value is PlayerInitializationState.DoneInitStateLiked) {
+                if (prevInitState.isLiked) {
                     myFavoritesHistoryInteractor.deleteLike(currentTrack)
 
                 } else {
                     myFavoritesHistoryInteractor.addLike(currentTrack)
                 }
+                playerInitLiveData.postValue(
+                    PlayerInitializationState.DoneInitState(
+                        prevInitState.currentTrack,
+                        !prevInitState.isLiked
+                    )
+                )
             }
-            processLike()
         }
     }
 
-    private fun processLike() {
-        val previousValue=playerInitLiveData.value
-        if (previousValue is PlayerInitializationState.DoneInitStateLiked) {
-            playerInitLiveData.postValue(PlayerInitializationState.DoneInitState(previousValue.currentTrack))
-        } else  {
-            playerInitLiveData.postValue(PlayerInitializationState.DoneInitStateLiked((previousValue as PlayerInitializationState.DoneInitState).currentTrack))
+    fun openBottomSheetAddToPlaylistButtonClick() {
+        val prevInitState = playerInitLiveData.value
+        viewModelScope.launch {
+            myNewPlaylistInteractor.getAllSavedPlaylists().collect { listOfPlaylists ->
+                if (prevInitState is PlayerInitializationState.DoneInitState) {
+                    playerInitLiveData.postValue(
+                        PlayerInitializationState.DoneInitStateBottomSheet(
+                            prevInitState.currentTrack,
+                            prevInitState.isLiked,
+                            listOfPlaylists
+                        )
+                    )
+                }
+            }
+            /*if (prevInitState is PlayerInitializationState.DoneInitState) {
+                playerInitLiveData.postValue(
+                    PlayerInitializationState.DoneInitStateBottomSheet(
+                        prevInitState.currentTrack,
+                        prevInitState.isLiked
+                    )
+                )
+            }*/
         }
+
+    }
+
+    fun addToThisPlaylist(pickedPlaylist:Playlist, onAddingCallback:(messagePlaylist:String)->Unit, onDupliucationCallback:(s:String)->Unit){
+        if(pickedPlaylist.listOfTracks.any{track -> track.trackId ==currentTrack.trackId}){
+            onDupliucationCallback(pickedPlaylist.playlistName)
+        }else{
+            val newList:MutableList<Track> = mutableListOf()
+            newList.addAll(pickedPlaylist.listOfTracks)
+            if(currentTrack!=null) newList.add(currentTrack)
+            viewModelScope.launch {
+
+
+                myNewPlaylistInteractor.updatePlaylist(pickedPlaylist.playlistName,pickedPlaylist.playlistDescription,pickedPlaylist.imgSrc,newList)
+                onAddingCallback(pickedPlaylist.playlistName)
+            }
+        }
+    }
+
+    fun closeBottomSheetAddToPlaylistButtonClick() {
+        val prevInitState = playerInitLiveData.value
+        if (prevInitState is PlayerInitializationState.DoneInitStateBottomSheet) {
+            playerInitLiveData.postValue(
+                PlayerInitializationState.DoneInitState(
+                    prevInitState.currentTrack,
+                    prevInitState.isLiked
+                )
+            )
+        }
+
     }
 
     companion object {

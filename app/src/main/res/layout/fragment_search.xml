@@ -25,6 +25,7 @@
             style="@style/EditText"
             android:drawableLeft="@drawable/ic_search_small_lm"
             android:hint="@string/search"
+            android:inputType="text"
             android:imeOptions="actionDone"
             android:lines="@integer/search_edit_text_max_line"
             android:maxLength="@integer/search_edit_text_max_symbols"

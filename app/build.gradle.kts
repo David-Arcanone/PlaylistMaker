@@ -67,4 +67,9 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     annotationProcessor ("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+
+    implementation ("androidx.fragment:fragment:$fragmentVersion")
+    //implementation ("androidx.fragment:fragment-ktx:1.8.5")
+    implementation ("androidx.activity:activity:1.6.3")
+    //implementation ("androidx.activity:activity-ktx:1.9.3")
 }

@@ -73,10 +73,6 @@
         <item name="android:layout_marginBottom">@dimen/settings_first_margin</item>
         <item name="iconSize">@dimen/zero_value</item>
         <item name="iconTint">@color/transparent</item>
-        <!--<item name="iconGravity">textStart</item>
-        <item name="iconTint">?attr/colorOnPrimary</item>
-        <item name="icon">@drawable/ic_back_lm</item>
-        <item name="iconPadding">@dimen/settings_first_margin</item>-->
         <item name="android:textSize">@dimen/primary_title_size</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
@@ -105,6 +101,10 @@
         <item name="android:textFontWeight">400</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">@integer/search_edit_text_max_line</item>
+    </style>
+    <style name="SmallTextStyleGrid" parent="SmallTextStyle">
+        <item name="android:textSize">@dimen/_12sp_text</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="TypicalView">
@@ -247,4 +247,76 @@
         <item name="itemTextAppearanceActive">@style/MenuTextStyle</item>
         <item name="itemActiveIndicatorStyle">@style/myCustomIndicator</item>
     </style>
+
+    <style name="editHelpDescription" parent="PlayerTitleNameStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/_12sp_text</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:padding">@dimen/zero_value</item>
+        <item name="android:paddingHorizontal">@dimen/top_screen_padding</item>
+        <item name="android:paddingVertical">@dimen/zero_value</item>
+        <item name="android:paddingStart">@dimen/top_screen_padding</item>
+        <item name="android:paddingEnd">@dimen/top_screen_padding</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
+    <style name="editNewPlaylist">
+        <item name="android:layout_width">@dimen/zero_value</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/_18dp</item>
+        <item name="android:paddingStart">@dimen/horizontal_screen_padding</item>
+        <item name="android:paddingEnd">@dimen/horizontal_screen_padding</item>
+        <item name="android:paddingTop">@dimen/_18dp</item>
+        <item name="android:paddingBottom">@dimen/_18dp</item>
+        <item name="android:background">@drawable/edit_border</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColorHint">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:inputType">text</item>
+        <item name="colorControlActivated">@color/blue</item>
+    </style>
+
+    <style name="CreateButtonStyle" >
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:layout_marginTop">@dimen/settings_first_margin</item>
+        <item name="android:layout_width">@dimen/zero_value</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/small_icon_padding</item>
+        <item name="android:paddingLeft">@dimen/icon_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/background_bt_create_playlist</item>
+        <item name="iconPadding">@dimen/zero_value</item>
+        <item name="iconSize">@dimen/zero_value</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:insetTop">@dimen/zero_value</item>
+        <item name="android:insetBottom">@dimen/zero_value</item>
+        <item name="android:enabled">false</item>
+        <item name="android:minHeight">@dimen/progress_bar</item>
+    </style>
+
+    <style name="CreatePlaylist_imageShowcase_empty">
+        <item name="android:layout_width">@dimen/zero_value</item>
+        <item name="android:layout_height">@dimen/zero_value</item>
+        <item name="android:background">@drawable/borders_for_new_picture</item>
+        <item name="android:src">@drawable/ic_add_photo</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="CreatePlaylist_imageShowcase_loaded" parent="CreatePlaylist_imageShowcase_empty">
+        <item name="android:background">@drawable/borders_for_new_picture_loaded</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    <style name="BottomSheetText" parent="ErrorText">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
 </resources>

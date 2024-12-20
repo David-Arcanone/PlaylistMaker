@@ -36,6 +36,22 @@
     <string name="empty_media">Ваша медиатека пуста</string>
     <string name="favorite_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
+    <string name="playlist">"Плейлист "</string>
+    <string name="created">" создан"</string>
+    <string name="new_name">Название*</string>
+    <string name="description">Описание</string>
+    <string name="create">Создать</string>
+    <string name="track">" трек"</string>
+    <string name="tracks">" треков"</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="added_to_playlist">Добавлено в плейлист </string>
+    <string name="track_is_already_present_in_a_playlist">Трек уже добавлен в плейлист </string>
+    <string name="finalize_playlist_creation">Завершить создание плейлиста?</string>
+    <string name="all_unsaved_data_will_be_lost">Все несохраненные данные будут потеряны</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="you_didnt_pick_file">Вы не выбрали файл</string>
+    <string name="playlist_with_such_name_already_exists">Плейлист с таким именем уже существует</string>
 </resources>
 
 

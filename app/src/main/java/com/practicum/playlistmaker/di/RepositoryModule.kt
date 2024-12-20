@@ -4,6 +4,9 @@ import android.media.MediaPlayer
 import com.practicum.playlistmaker.medialibrary.data.converters.MusicFavoriteDbConvertor
 import com.practicum.playlistmaker.medialibrary.data.repository.FavoritesHistoryRepositoryImpl
 import com.practicum.playlistmaker.medialibrary.domain.db.FavoritesHistoryRepository
+import com.practicum.playlistmaker.newPlaylist.data.converters.PlaylistsDbConvertor
+import com.practicum.playlistmaker.newPlaylist.data.repository.NewPlaylistRepositoryImpl
+import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistRepository
 import com.practicum.playlistmaker.player.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.api.PlayerRepository
 import com.practicum.playlistmaker.search.data.repository.SearchRepositoryImpl
@@ -41,6 +44,8 @@ val repositoryModule = module {
     single<SharingRepository> { SharingRepositoryImpl(context = get()) }
 
     factory { MusicFavoriteDbConvertor() }
+    factory { PlaylistsDbConvertor(get()) }
 
     single<FavoritesHistoryRepository> { FavoritesHistoryRepositoryImpl(get(), get()) }
+    single<NewPlaylistRepository> { NewPlaylistRepositoryImpl(get(), get(),get()) }
 }

@@ -8,7 +8,6 @@ import com.practicum.playlistmaker.medialibrary.domain.db.FavoritesHistoryIntera
 import com.practicum.playlistmaker.medialibrary.domain.models.MediaFavoritesState
 import com.practicum.playlistmaker.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.search.ui.SearchViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -57,7 +56,7 @@ class MediaFavoritesFragmentViewModel(
             isClickOnTrackAllowed = false
             //по условиям запрет на активацию по первому нажатию на трек и отменять старый Job не нужно
             clickDebounceJob = viewModelScope.launch {
-                delay(SearchViewModel.SEARCH_DEBOUNCE_DELAY)
+                delay(DEBOUNCE_DELAY)
                 isClickOnTrackAllowed = true
             }
             mySearchInteractor.updateHistoryWithNewTrack(newTrack)//нужно в история поиска добавить посещение из залайканных
@@ -66,4 +65,7 @@ class MediaFavoritesFragmentViewModel(
     }
 
     fun getMediaFavoritesLiveData(): LiveData<MediaFavoritesState> = mediaFavoritesLiveData
+    companion object{
+        const val DEBOUNCE_DELAY= 2000L
+    }
 }
