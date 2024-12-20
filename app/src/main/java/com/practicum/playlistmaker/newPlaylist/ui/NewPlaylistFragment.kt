@@ -2,15 +2,11 @@ package com.practicum.playlistmaker.newPlaylist.ui
 
 import android.Manifest
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,11 +27,9 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.practicum.playlistmaker.newPlaylist.domain.models.NewPlaylistState
 import com.practicum.playlistmaker.utils.AndroidUtilities
-import com.practicum.playlistmaker.utils.Utilities
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
+
 
 class NewPlaylistFragment : Fragment() {
     private var numberOfBlocks: Int = 0

@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.newPlaylist.domain.db
 
-import android.graphics.Bitmap
 import android.net.Uri
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
 import kotlinx.coroutines.flow.Flow

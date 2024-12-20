@@ -4,15 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.medialibrary.domain.models.MediaFavoritesState
 import com.practicum.playlistmaker.medialibrary.domain.models.MediaPlaylistsState
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistInteractor
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
-import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.search.ui.SearchViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MediaPlaylistsFragmentViewModel(private val myPlaylistInteractor: NewPlaylistInteractor) : ViewModel() {

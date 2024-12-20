@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.newPlaylist.domain.impl
 
-import android.graphics.Bitmap
 import android.net.Uri
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistInteractor
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistRepository

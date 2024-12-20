@@ -2,7 +2,6 @@ package com.practicum.playlistmaker.di
 
 import com.practicum.playlistmaker.medialibrary.domain.db.FavoritesHistoryInteractor
 import com.practicum.playlistmaker.medialibrary.domain.impl.FavoritesHistoryInteractorImpl
-import com.practicum.playlistmaker.newPlaylist.data.repository.NewPlaylistRepositoryImpl
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistInteractor
 import com.practicum.playlistmaker.newPlaylist.domain.impl.NewPlaylistInteractorImpl
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor

@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.newPlaylist.ui
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -46,7 +45,7 @@ class NewPlaylistViewModel(
                     onConflictCallback()
                 } else {
                     val uriOfImgToSave = if (prevState?.pictureUri != null) {
-                        Log.d("MY_URI","из стейта " + prevState?.pictureUri.toString() +"")//todo-
+                        Log.d("MY_URI","из стейта " + prevState.pictureUri.toString() +"")//todo-
 
                         myPlaylistInteractor.savePictureToStorage(prevState.pictureUri, name)
                         myPlaylistInteractor.getUriOfPictureFromStorage(name)
