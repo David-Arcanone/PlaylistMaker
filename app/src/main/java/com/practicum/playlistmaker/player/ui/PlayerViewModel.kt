@@ -23,7 +23,6 @@ class PlayerViewModel(
     private val myNewPlaylistInteractor: NewPlaylistInteractor
 ) : ViewModel() {
     private var timerUpdateJob: Job? = null
-
     //трек на экране
     private var playerInitLiveData =
         MutableLiveData<PlayerInitializationState>(PlayerInitializationState.NotInitState)
@@ -177,29 +176,26 @@ class PlayerViewModel(
                     )
                 }
             }
-            /*if (prevInitState is PlayerInitializationState.DoneInitState) {
-                playerInitLiveData.postValue(
-                    PlayerInitializationState.DoneInitStateBottomSheet(
-                        prevInitState.currentTrack,
-                        prevInitState.isLiked
-                    )
-                )
-            }*/
         }
 
     }
 
     fun addToThisPlaylist(pickedPlaylist:Playlist, onAddingCallback:(messagePlaylist:String)->Unit, onDupliucationCallback:(s:String)->Unit){
-        if(pickedPlaylist.listOfTracks.any{track -> track.trackId ==currentTrack.trackId}){
+        if(pickedPlaylist.listOfTracks.any{trackId -> trackId ==currentTrack.trackId}){
             onDupliucationCallback(pickedPlaylist.playlistName)
         }else{
-            val newList:MutableList<Track> = mutableListOf()
+            val newList:MutableList<Int> = mutableListOf()
             newList.addAll(pickedPlaylist.listOfTracks)
-            if(currentTrack!=null) newList.add(currentTrack)
+            if(currentTrack!=null) newList.add(currentTrack.trackId)
             viewModelScope.launch {
-
-
-                myNewPlaylistInteractor.updatePlaylist(pickedPlaylist.playlistName,pickedPlaylist.playlistDescription,pickedPlaylist.imgSrc,newList)
+                myNewPlaylistInteractor.updatePlaylist(
+                    Playlist(id=pickedPlaylist.id,
+                        playlistName = pickedPlaylist.playlistName,
+                        playlistDescription = pickedPlaylist.playlistDescription,
+                        imgSrc = pickedPlaylist.imgSrc,
+                        newList
+                    ))
+                //todo -- подготовил отдельную таблицу чтоб доставать данные треков для плейлистов сдесь будет вызов на запись в спринте 22 пока не нужно
                 onAddingCallback(pickedPlaylist.playlistName)
             }
         }

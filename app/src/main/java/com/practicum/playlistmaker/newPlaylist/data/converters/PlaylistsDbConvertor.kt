@@ -10,20 +10,25 @@ import com.practicum.playlistmaker.search.domain.models.Track
 class PlaylistsDbConvertor(private val myGson: Gson) {
     fun map(playlist: Playlist): PlaylistEntity {
         return PlaylistEntity(
+            id=playlist.id,
             playlistName = playlist.playlistName,
             playlistDescription = playlist.playlistDescription,
             playlistPicture = playlist.imgSrc.toString(),
-            listOfTracks = myGson.toJson(playlist.listOfTracks),
+            listOfTracks = map(playlist.listOfTracks),
         )
     }
     fun map(playlist: PlaylistEntity): Playlist {
-        val listType = object : TypeToken<List<Track>>() {}.type
         val picUri:Uri?=if(playlist.playlistPicture!="")Uri.parse(playlist.playlistPicture) else null
+        val listType = object : TypeToken<List<Int>>() {}.type
         return Playlist(
+            id = playlist.id,
             playlistName = playlist.playlistName,
             playlistDescription = playlist.playlistDescription ?:"",
             imgSrc=picUri,
             listOfTracks = myGson.fromJson(playlist.listOfTracks,listType),
         )
+    }
+    fun map(listOfTracks:List<Int>):String{
+        return myGson.toJson(listOfTracks)
     }
 }

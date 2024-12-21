@@ -4,17 +4,16 @@ import android.net.Uri
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistInteractor
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistRepository
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
-import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class NewPlaylistInteractorImpl(private val myRepository: NewPlaylistRepository) :
     NewPlaylistInteractor {
-    override suspend fun getListOfPlaylistsName(): Flow<List<String>> {
-        return myRepository.getListOfPlaylistsNames()
+    override suspend fun getListOfPlaylistsIds(): Flow<List<Int>> {
+        return myRepository.getListOfPlaylistsIds()
     }
 
-    override suspend fun getPlaylist(name: String): Flow<Playlist?> {
-        return myRepository.getPlaylist(name)
+    override suspend fun getPlaylist(id: Int): Flow<Playlist?> {
+        return myRepository.getPlaylist(id)
     }
 
     override fun getAllSavedPlaylists(): Flow<List<Playlist>> {
@@ -25,20 +24,12 @@ class NewPlaylistInteractorImpl(private val myRepository: NewPlaylistRepository)
         newName: String,
         newDescription: String?,
         newPicture: Uri?,
-        listOfTracks: List<Track>,
     ) {
-        val newUri = if (newPicture != null) {
-            myRepository.saveImgToPrivateStorage(newPicture, newName)
-        } else {
-            null
-        }
         myRepository.addPlaylist(
-            Playlist(
-                newName,
-                newDescription,
-                newUri,
-                emptyList()
-            )
+            newName=newName,
+            newDescription=newDescription,
+            newPic=newPicture,
+            listOfTracks = emptyList()
         )
     }
 
@@ -46,17 +37,10 @@ class NewPlaylistInteractorImpl(private val myRepository: NewPlaylistRepository)
         return myRepository.saveImgToPrivateStorage(newUri,newName)
     }
 
-    override fun getUriOfPictureFromStorage(name: String): Uri? {
-        return myRepository.getUriOfImgFromPrivateStorage(name)
-    }
-
     override suspend fun updatePlaylist(
-        newName: String,
-        newDescription: String?,
-        newPicture: Uri?,
-        listOfTracks: List<Track>
+        newPlaylist:Playlist
     ) {
-        myRepository.updatePlaylist(Playlist(newName,newDescription,newPicture,listOfTracks))
+        myRepository.updatePlaylist(newPlaylist)
     }
 
 }

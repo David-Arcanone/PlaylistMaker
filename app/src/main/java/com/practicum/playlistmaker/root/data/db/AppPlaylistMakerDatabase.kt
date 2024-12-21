@@ -6,9 +6,12 @@ import com.practicum.playlistmaker.medialibrary.data.db.dao.FavoriteMusicDao
 import com.practicum.playlistmaker.medialibrary.data.db.entity.MusicEntity
 import com.practicum.playlistmaker.newPlaylist.data.db.dao.PlaylistsDao
 import com.practicum.playlistmaker.newPlaylist.data.db.entity.PlaylistEntity
+import com.practicum.playlistmaker.playlistOverview.data.db.dao.TrackAddedToPlaylistsDao
+import com.practicum.playlistmaker.playlistOverview.data.db.entity.TrackAddedToPlaylistEntity
 
-@Database(version = 6, entities = [MusicEntity::class, PlaylistEntity::class])
+@Database(version = 8, entities = [MusicEntity::class, PlaylistEntity::class, TrackAddedToPlaylistEntity::class])
 abstract class AppPlaylistMakerDatabase : RoomDatabase() {
     abstract fun favoritesMusicDao(): FavoriteMusicDao
     abstract fun playlistsDao(): PlaylistsDao
+    abstract fun tracksAddedToPlaylistDao(): TrackAddedToPlaylistsDao
 }

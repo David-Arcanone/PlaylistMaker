@@ -12,6 +12,7 @@ import com.practicum.playlistmaker.newPlaylist.data.converters.PlaylistsDbConver
 import com.practicum.playlistmaker.newPlaylist.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistRepository
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
+import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.Utilities
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,32 +27,43 @@ class NewPlaylistRepositoryImpl(
 ) : NewPlaylistRepository {
     val myDatabaseDao = myDatabase.playlistsDao()
     override fun getAllPlaylists(): Flow<List<Playlist>> =
-        myDatabaseDao.getAllPlaylists().map { convertFromPlaylistEntity(it) }
+        myDatabaseDao.getAllPlaylists().map {
+            convertFromPlaylistEntity(it)
+        }
 
-    override fun getListOfPlaylistsNames(): Flow<List<String>> = flow {
-        val names = myDatabaseDao.getPlaylistsNames()
-        emit(names)
+    override fun getListOfPlaylistsIds(): Flow<List<Int>> = flow {
+        val ids = myDatabaseDao.getPlaylistsIds()
+        emit(ids)
     }
 
-    override fun getPlaylist(name: String): Flow<Playlist?> = flow {
-        val playlist = convertFromPlaylistEntity(myDatabaseDao.getPlaylist(name))
+    override fun getPlaylist(chousenId:Int): Flow<Playlist?> = flow {
+        val playlist = convertFromPlaylistEntity(myDatabaseDao.getPlaylist(chousenId))
         if (playlist.isEmpty()) emit(null) else emit(playlist[0])
-
     }
 
-    override suspend fun addPlaylist(playlist: Playlist) {
-        myDatabaseDao.insertPlaylist(myPlaylistDbConvertor.map(playlist))
+    override suspend fun addPlaylist(
+        newName: String,
+        newDescription: String?,
+        newPic: Uri?,
+        listOfTracks: List<Int>) {
+
+        myDatabaseDao.insertPlaylist(PlaylistEntity(
+            playlistName = newName,
+            playlistDescription = newDescription,
+            playlistPicture = newPic.toString(),
+            listOfTracks = myPlaylistDbConvertor.map(listOfTracks)
+        ))
     }
 
-    override suspend fun deletePlaylist(name: String) {
-        myDatabaseDao.deleteFromPlaylists(name)
+    override suspend fun deletePlaylist(redundantId:Int) {
+        myDatabaseDao.deleteFromPlaylists(redundantId)
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {
         myDatabaseDao.updatePlaylist(myPlaylistDbConvertor.map(playlist))
     }
 
-    override fun saveImgToPrivateStorage(newUri: Uri, newName: String): Uri? {
+    override fun saveImgToPrivateStorage(newUri: Uri, newName: String): Uri {
         val filePath = File(
             myContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             Utilities.PIC_DIRECTORY
@@ -59,25 +71,20 @@ class NewPlaylistRepositoryImpl(
         if (!filePath.exists()) {
             filePath.mkdirs()
         }
-        val file = File(filePath, newName + ".jpg")
+        val salt=System.currentTimeMillis().toString()
+        val file = File(filePath, newName + salt+".jpg")
         // создаём входящий поток байтов из выбранной картинки
         val inputStream = myContext.contentResolver.openInputStream(newUri)
         // создаём исходящий поток байтов в созданный выше файл
         val outputStream = FileOutputStream(file)
         // записываем картинку с помощью BitmapFactory
-
-        Log.d("MY_BITMAP", "BITMAP_FACTORY_FLAG-1")
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-
-        Log.d("MY_BITMAP", "BITMAP_FACTORY_FLAG-2")
-
         return file.toUri()
     }
 
     override fun getUriOfImgFromPrivateStorage(name: String): Uri? {
-
         try {
             val filePath = File(
                 myContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES),

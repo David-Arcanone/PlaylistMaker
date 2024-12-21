@@ -195,13 +195,6 @@ class NewPlaylistFragment : Fragment() {
             name = myBinding.editNewName.text.toString(),
             description = myBinding.editNewDescription.text.toString(),
             onFinishCallback = { findNavController().navigateUp() },
-            onConflictCallback = {
-                Toast.makeText(
-                    context,
-                    R.string.playlist_with_such_name_already_exists,
-                    Toast.LENGTH_SHORT
-                ).show()
-            },
         )
     }
 
