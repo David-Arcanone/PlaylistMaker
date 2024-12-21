@@ -75,8 +75,4 @@ class NewPlaylistViewModel(
         super.onCleared()
     }
 
-
-    companion object {
-        private const val ZERO_TEXT = ""
-    }
 }

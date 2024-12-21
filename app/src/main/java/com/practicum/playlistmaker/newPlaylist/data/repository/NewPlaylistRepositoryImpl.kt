@@ -5,14 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
-import android.util.Log
 import androidx.core.net.toUri
 import com.practicum.playlistmaker.root.data.db.AppPlaylistMakerDatabase
 import com.practicum.playlistmaker.newPlaylist.data.converters.PlaylistsDbConvertor
 import com.practicum.playlistmaker.newPlaylist.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistRepository
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
-import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.Utilities
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -82,20 +80,6 @@ class NewPlaylistRepositoryImpl(
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         return file.toUri()
-    }
-
-    override fun getUriOfImgFromPrivateStorage(name: String): Uri? {
-        try {
-            val filePath = File(
-                myContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                Utilities.PIC_DIRECTORY
-            )
-            val uri = File(filePath, name + ".jpg").toUri()
-            return uri
-        } catch (e: Exception) {
-            return null //нет картинки
-        }
-
     }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
