@@ -9,4 +9,5 @@ data class Playlist(
     val playlistDescription:String?,
     val imgSrc: Uri?,
     val listOfTracks:List<Int>,
+    val totalSeconds:Int
     )

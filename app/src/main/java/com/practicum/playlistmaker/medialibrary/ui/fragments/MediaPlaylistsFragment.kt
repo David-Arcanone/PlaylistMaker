@@ -73,6 +73,11 @@ class MediaPlaylistsFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        myViewModel.getPlaylists()
+    }
+
     private fun renderNoMatch(isVisible: Boolean, isVisibleBt: Boolean, isVisibleRv: Boolean) {
         myBinding.btNewPlaylist.isVisible = isVisibleBt
         myBinding.emptyPlaylistsText.isVisible = isVisible

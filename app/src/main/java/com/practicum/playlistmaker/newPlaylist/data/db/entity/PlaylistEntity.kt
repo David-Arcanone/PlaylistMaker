@@ -10,4 +10,5 @@ data class PlaylistEntity(
     val playlistDescription: String?,
     val playlistPicture: String,
     val listOfTracks: String,
+    val totalSeconds:Int
 )

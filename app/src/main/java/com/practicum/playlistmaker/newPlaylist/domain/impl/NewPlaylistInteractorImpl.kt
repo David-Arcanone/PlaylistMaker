@@ -16,7 +16,7 @@ class NewPlaylistInteractorImpl(private val myRepository: NewPlaylistRepository)
         return myRepository.getPlaylist(id)
     }
 
-    override fun getAllSavedPlaylists(): Flow<List<Playlist>> {
+    override suspend fun getAllSavedPlaylists(): Flow<List<Playlist>> {
         return myRepository.getAllPlaylists()
     }
 

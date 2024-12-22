@@ -333,5 +333,31 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textFontWeight">500</item>
     </style>
+    <style name="MyCustomDialogStyle" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/MyDialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/MyDialogButtonStyle</item>
+        <item name="buttonBarNeutralButtonStyle">@style/MyDialogButtonStyle</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MyCustomDialogBodyTextStyle</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MyCustomDialogTitleTextStyle</item>
 
+        <item name="android:textColor">@color/black</item>
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+    <style name="MyDialogButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blue</item>
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="icon">@color/transparent</item>
+    </style>
+    <style name="MyCustomDialogBodyTextStyle" parent="@style/MaterialAlertDialog.Material3.Body.Text">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">@dimen/refresh_button</item>
+    </style>
+    <style name="MyCustomDialogTitleTextStyle" parent="@style/MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+    </style>
 </resources>

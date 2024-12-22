@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player.ui
+package com.practicum.playlistmaker.playlistOverview.ui
 
 import android.content.res.Resources
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -14,30 +15,33 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
+import com.practicum.playlistmaker.databinding.FragmentPlaylistOverviewBinding
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
-import com.practicum.playlistmaker.newPlaylist.ui.PlaylistSmallAdapter
 import com.practicum.playlistmaker.player.domain.models.PlayerInitializationState
 import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
 import com.practicum.playlistmaker.search.domain.models.Track
+import com.practicum.playlistmaker.search.ui.TrackAdapter
 import com.practicum.playlistmaker.utils.AndroidUtilities
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerFragment : Fragment() {
-    private lateinit var myBinding: FragmentPlayerBinding
-    private val myViewModel by viewModel<PlayerViewModel>()
-    private val myBottomSheetListOfPlaylists = mutableListOf<Playlist>()
-    private val myBottomSheetPlaylistsTrackAdapter = PlaylistSmallAdapter()
+class PlaylistOverviewFragment : Fragment() {
+    private lateinit var myBinding: FragmentPlaylistOverviewBinding
+    private val myViewModel by viewModel<PlaylistOverviewViewModel>()
+    private val myBottomSheetListOfTracks = mutableListOf<Track>()
+    private val myBottomSheetPlaylistsTrackAdapter = TrackAdapter()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        myBinding = FragmentPlayerBinding.inflate(inflater, container, false)
+        val currentId = requireArguments().getInt(ARGS_PLAYLIST_ID)
+        myBinding = FragmentPlaylistOverviewBinding.inflate(inflater, container, false)
         return myBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        /*
         BottomSheetBehavior.from(myBinding.addToPlaylistBottomSheet).peekHeight = Resources.getSystem().getDisplayMetrics().heightPixels*2/3
         val myBottomSheetBehaviour =
             BottomSheetBehavior.from(myBinding.addToPlaylistBottomSheet).apply {
@@ -147,61 +151,23 @@ class PlayerFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 })
-        }
+        }*/
     }
 
-    override fun onPause() {
-        myViewModel.pausePlayer()
-        super.onPause()
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
-    override fun onResume() {
-        super.onResume()
-        myViewModel.checkForUpdates()
-    }
 
-    private fun renderTrackInfo(foundTrack: Track) {
-        //постер
-        Glide.with(this.requireContext())
-            .load(foundTrack.coverImg)
-            .placeholder(R.drawable.placeholder)
-            .fitCenter()
-            .transform(RoundedCorners(AndroidUtilities.dpToPx(8f, this.requireContext())))
-            .into(myBinding.imageViewAlbum)
 
-        //текст
-        myBinding.titleName.setText(foundTrack.trackName)
-        myBinding.titleAuthor.setText(foundTrack.artistName)
-        myBinding.trackDuration.setText(foundTrack.trackLengthText)
-        myBinding.trackCountry.setText(foundTrack.country)
-        myBinding.trackGenre.setText(foundTrack.primaryGenreName)
-        myBinding.trackYear.setText(foundTrack.releaseYear)
-        //по условию альбома может и не быть у песни
-        if (foundTrack.collectionName?.isNotEmpty() == true) {
-            myBinding.albumGroup.isVisible = true
-            myBinding.trackAlbum.setText(foundTrack.collectionName)
-        } else {
-            myBinding.albumGroup.isVisible = false
-        }
-    }
 
-    private fun renderBottomSheet(listOfPlaylists: List<Playlist>) {
-        myBottomSheetListOfPlaylists.clear()
-        myBottomSheetListOfPlaylists.addAll(listOfPlaylists)
-        myBottomSheetPlaylistsTrackAdapter.notifyDataSetChanged()
-        showBottomSheet(true)
-    }
 
     private fun showBottomSheet(isVisable: Boolean) {
         myBinding.bottomSheetCurtain.isVisible = isVisable
     }
 
-    private fun renderTime(newTime: String) {
-        myBinding.titleTime.setText(newTime)
+    companion object {
+        private const val ARGS_PLAYLIST_ID = "playlist_id"
+        fun createArgs(playlistId: Int): Bundle =
+            bundleOf(ARGS_PLAYLIST_ID to playlistId)
     }
 
 }

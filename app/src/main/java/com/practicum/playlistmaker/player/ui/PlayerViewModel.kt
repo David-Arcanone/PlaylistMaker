@@ -13,6 +13,7 @@ import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
 import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.AndroidUtilities
+import com.practicum.playlistmaker.utils.Utilities
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class PlayerViewModel(
     private val myNewPlaylistInteractor: NewPlaylistInteractor
 ) : ViewModel() {
     private var timerUpdateJob: Job? = null
+
     //трек на экране
     private var playerInitLiveData =
         MutableLiveData<PlayerInitializationState>(PlayerInitializationState.NotInitState)
@@ -177,26 +179,35 @@ class PlayerViewModel(
                 }
             }
         }
-
     }
 
-    fun addToThisPlaylist(pickedPlaylist:Playlist, onAddingCallback:(messagePlaylist:String)->Unit, onDupliucationCallback:(s:String)->Unit){
-        if(pickedPlaylist.listOfTracks.any{trackId -> trackId ==currentTrack.trackId}){
+    fun addToThisPlaylist(
+        pickedPlaylist: Playlist,
+        onAddingCallback: (messagePlaylist: String) -> Unit,
+        onDupliucationCallback: (s: String) -> Unit
+    ) {
+        if (pickedPlaylist.listOfTracks.any { trackId -> trackId == currentTrack.trackId }) {
             onDupliucationCallback(pickedPlaylist.playlistName)
-        }else{
-            val newList:MutableList<Int> = mutableListOf()
+        } else {
+            val newList: MutableList<Int> = mutableListOf()
             newList.addAll(pickedPlaylist.listOfTracks)
-            if(currentTrack!=null) newList.add(currentTrack.trackId)
+            if (currentTrack != null) newList.add(currentTrack.trackId)
             viewModelScope.launch {
                 myNewPlaylistInteractor.updatePlaylist(
-                    Playlist(id=pickedPlaylist.id,
+                    Playlist(
+                        id = pickedPlaylist.id,
                         playlistName = pickedPlaylist.playlistName,
                         playlistDescription = pickedPlaylist.playlistDescription,
                         imgSrc = pickedPlaylist.imgSrc,
-                        newList
-                    ))
+                        listOfTracks = newList,
+                        totalSeconds = pickedPlaylist.totalSeconds + Utilities.getSecondsFromText_mm_ss(
+                            currentTrack?.trackLengthText ?: "00:00"
+                        )
+                    )
+                )
                 //todo -- подготовил отдельную таблицу чтоб доставать данные треков для плейлистов сдесь будет вызов на запись в спринте 22 пока не нужно
                 onAddingCallback(pickedPlaylist.playlistName)
+                closeBottomSheetAddToPlaylistButtonClick()
             }
         }
     }
@@ -212,6 +223,24 @@ class PlayerViewModel(
             )
         }
 
+    }
+
+    fun checkForUpdates() {
+        val prevInitState = playerInitLiveData.value
+        if (prevInitState is PlayerInitializationState.DoneInitStateBottomSheet) {
+            viewModelScope.launch {
+                myNewPlaylistInteractor.getAllSavedPlaylists().collect { listOfPlaylists ->
+                    playerInitLiveData.postValue(
+                        PlayerInitializationState.DoneInitStateBottomSheet(
+                            prevInitState.currentTrack,
+                            prevInitState.isLiked,
+                            listOfPlaylists
+                        )
+                    )
+
+                }
+            }
+        }
     }
 
     companion object {

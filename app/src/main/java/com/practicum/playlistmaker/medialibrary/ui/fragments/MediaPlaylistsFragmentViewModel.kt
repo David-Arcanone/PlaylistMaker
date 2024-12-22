@@ -20,7 +20,7 @@ class MediaPlaylistsFragmentViewModel(private val myPlaylistInteractor: NewPlayl
     init {
         getPlaylists()
     }
-    private fun getPlaylists(){
+    fun getPlaylists(){
         viewModelScope.launch {
             myPlaylistInteractor.getAllSavedPlaylists().collect{
                 foundList -> processPlaylists(foundList)

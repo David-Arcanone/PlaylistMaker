@@ -78,15 +78,31 @@
             style="@style/PlaylistOverviewTextStyle"
             android:text="Loading"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
-            app:layout_constraintBottom_toTopOf="@id/title_time_and_tracks_number"
+            app:layout_constraintBottom_toTopOf="@id/title_time"
             android:layout_marginBottom="@dimen/icon_padding"/>
 
         <TextView
-            android:id="@+id/title_time_and_tracks_number"
+            android:id="@+id/title_time"
             style="@style/PlaylistOverviewTextStyle"
             android:text="Loading"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
             app:layout_constraintBottom_toTopOf="@id/bt_open_settings1"
+            android:layout_marginBottom="@dimen/horizontal_screen_padding"/>
+        <ImageView
+            android:id="@+id/title_point"
+            app:layout_constraintStart_toEndOf="@id/title_time"
+            app:layout_constraintBottom_toBottomOf="@id/title_time"
+            app:layout_constraintTop_toTopOf="@id/title_time"
+            android:layout_width="@dimen/point_size"
+            android:layout_height="@dimen/point_size"
+            android:background="@drawable/ic_point"
+            android:backgroundTint="@color/black" />
+        <TextView
+            android:id="@+id/title_number_of_tracks"
+            style="@style/PlaylistOverviewTextStyle"
+            android:text="Loading"
+            app:layout_constraintBaseline_toBaselineOf="@id/title_time"
+            app:layout_constraintStart_toEndOf="@id/title_point"
             android:layout_marginBottom="@dimen/horizontal_screen_padding"/>
         <View
             android:id="@+id/bt_open_settings1"
@@ -121,7 +137,7 @@
 
     <LinearLayout
         android:id="@+id/add_to_playlist_bottom_sheet"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rounded_bottom_sheet"

@@ -24,10 +24,13 @@ class NewPlaylistRepositoryImpl(
     private val myContext: Context
 ) : NewPlaylistRepository {
     val myDatabaseDao = myDatabase.playlistsDao()
-    override fun getAllPlaylists(): Flow<List<Playlist>> =
-        myDatabaseDao.getAllPlaylists().map {
-            convertFromPlaylistEntity(it)
+    override fun getAllPlaylists(): Flow<List<Playlist>> = flow{
+        val playlists=myDatabaseDao.getAllPlaylists().map {
+                currentPlaylist -> myPlaylistDbConvertor.map(currentPlaylist)
         }
+        emit(playlists)
+    }
+
 
     override fun getListOfPlaylistsIds(): Flow<List<Int>> = flow {
         val ids = myDatabaseDao.getPlaylistsIds()
@@ -49,7 +52,8 @@ class NewPlaylistRepositoryImpl(
             playlistName = newName,
             playlistDescription = newDescription,
             playlistPicture = newPic.toString(),
-            listOfTracks = myPlaylistDbConvertor.map(listOfTracks)
+            listOfTracks = myPlaylistDbConvertor.map(listOfTracks),
+            totalSeconds = 0
         ))
     }
 

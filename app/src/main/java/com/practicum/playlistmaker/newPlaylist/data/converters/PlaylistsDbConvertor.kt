@@ -14,6 +14,7 @@ class PlaylistsDbConvertor(private val myGson: Gson) {
             playlistDescription = playlist.playlistDescription,
             playlistPicture = playlist.imgSrc.toString(),
             listOfTracks = map(playlist.listOfTracks),
+            totalSeconds = playlist.totalSeconds
         )
     }
     fun map(playlist: PlaylistEntity): Playlist {
@@ -25,6 +26,7 @@ class PlaylistsDbConvertor(private val myGson: Gson) {
             playlistDescription = playlist.playlistDescription ?:"",
             imgSrc=picUri,
             listOfTracks = myGson.fromJson(playlist.listOfTracks,listType),
+            totalSeconds = playlist.totalSeconds
         )
     }
     fun map(listOfTracks:List<Int>):String{

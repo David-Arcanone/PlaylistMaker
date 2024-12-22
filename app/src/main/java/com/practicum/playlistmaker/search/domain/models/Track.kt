@@ -15,6 +15,5 @@ data class Track(
     @SerializedName("coverImg") val coverImg: String,
     @SerializedName("releaseYear") val releaseYear: String?,
     @SerializedName("trackLengthText") val trackLengthText: String?,
-    //@SerializedName("isLiked") val isLiked: Boolean=false
 )
 

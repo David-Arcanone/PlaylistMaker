@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.newPlaylist.ui
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -112,7 +113,8 @@ class NewPlaylistFragment : Fragment() {
                     .isNotEmpty() || myBinding.editNewDescription.text.toString()
                     .isNotEmpty() || customPicFlag
             ) {
-                MaterialAlertDialogBuilder(currentContext).setTitle(R.string.finalize_playlist_creation)
+                MaterialAlertDialogBuilder(currentContext,R.style.MyCustomDialogStyle)
+                .setTitle(R.string.finalize_playlist_creation).setMessage(R.string.all_unsaved_data_will_be_lost)
                     .setNegativeButton(R.string.no) { dialog, which -> // «Нет»
                         //ничего не предпринимать
                     }
