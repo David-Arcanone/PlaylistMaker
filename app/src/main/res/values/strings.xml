@@ -12,6 +12,7 @@
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="user_agreement_url" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="share_application">Поделиться приложением</string>
+    <string name="share">Поделиться</string>
     <string name="track_info">Подробнее</string>
     <string name="search_error_not_found">Ничего не нашлось</string>
     <string name="search_error_connection">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
@@ -29,7 +30,7 @@
     <string name="player_like">Лайк</string>
     <string name="player_add_to_playlist">Добавить в Плейлист</string>
     <string name="back">Назад</string>
-    <string name="track_img">Плакат трека</string>
+    <string name="track_img">Плакат</string>
     <string name="not_track_error">Вы открыли не трек, отсутсвует превью аудио</string>
     <string name="new_playlist">Новый плейлист</string>
     <string name="no_playlists_found">Вы не создали\nни одного плейлиста</string>
@@ -52,6 +53,8 @@
     <string name="no">Нет</string>
     <string name="you_didnt_pick_file">Вы не выбрали файл</string>
     <string name="playlist_with_such_name_already_exists">Плейлист с таким именем уже существует</string>
+    <string name="edit_info">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 </resources>
 
 

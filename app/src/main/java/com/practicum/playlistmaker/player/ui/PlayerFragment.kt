@@ -43,6 +43,22 @@ class PlayerFragment : Fragment() {
             BottomSheetBehavior.from(myBinding.addToPlaylistBottomSheet).apply {
                 state = BottomSheetBehavior.STATE_HIDDEN
             }
+        myBottomSheetBehaviour.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        myViewModel.closeBottomSheetAddToPlaylistButtonClick()
+                    }
+                    else -> {
+                        // Остальные состояния не обрабатываем
+                    }
+                }
+            }
+        }
+        )
+
         myViewModel.getInitStateLiveData().observe(viewLifecycleOwner) { initState ->
             when (initState) {
                 is PlayerInitializationState.DoneInitState -> {
@@ -95,7 +111,6 @@ class PlayerFragment : Fragment() {
             }
         }
         //активность кнопок
-
         myBinding.btPlay.setOnClickListener {
             myViewModel.playbackControl()
         }

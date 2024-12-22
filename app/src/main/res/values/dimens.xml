@@ -32,7 +32,7 @@
     <dimen name="settings_switch_bottom">22dp</dimen>
     <dimen name="buttons_gap">16dp</dimen>
     <dimen name="settings_first_margin">24dp</dimen>
-    <dimen name="_26dp">24dp</dimen>
+    <dimen name="_26dp">26dp</dimen>
     <dimen name="settings_screen_bottom_padding">28dp</dimen>
     <dimen name="player_button_margins">28dp</dimen>
     <dimen name="player_img_top_margins">30dp</dimen>
