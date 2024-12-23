@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    tools:context=".player.ui.PlayerFragment">
+
+    <Button
+        android:id="@+id/bt_back"
+        style="@style/BackButtonStyle"
+        android:layout_marginStart="@dimen/horizontal_screen_padding"
+        android:layout_marginTop="@dimen/top_screen_padding"
+        android:contentDescription="@string/back"
+        android:text="@string/new_playlist"
+        app:icon="@drawable/ic_back_lm"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/settings_first_margin"
+        app:iconTint="?attr/colorOnPrimary"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/horizontal_screen_padding" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/horizontal_screen_padding" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalTitleBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4925" />
+    <!-- 394/800 = 49,25% -->
+    <ImageView
+        android:id="@+id/imageViewPlaylist"
+        style="@style/CreatePlaylist_imageShowcase_empty"
+        android:layout_marginHorizontal="@dimen/icon_padding"
+        android:layout_marginTop="@dimen/player_img_top_margins"
+        android:layout_marginBottom="@dimen/zero_value"
+        android:contentDescription="@string/new_playlist"
+        app:layout_constraintBottom_toTopOf="@id/horizontalTitleBorder"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/bt_back" />
+
+    <EditText
+        android:id="@+id/edit_new_name"
+        style="@style/editNewPlaylist"
+        android:layout_marginTop="@dimen/_33dp"
+        android:hint="@string/new_name"
+        android:inputType="text"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toTopOf="@id/horizontalTitleBorder" />
+
+    <EditText
+        android:id="@+id/edit_new_description"
+        style="@style/editNewPlaylist"
+        android:layout_marginTop="@dimen/_17dp"
+        android:hint="@string/description"
+        android:inputType="text"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/edit_new_name" />
+
+    <TextView
+        android:id="@+id/help_new_name"
+        android:visibility="gone"
+        style="@style/editHelpDescription"
+        android:layout_marginStart="@dimen/settings_padding"
+        android:layout_marginTop="@dimen/_minus7dp"
+        android:paddingStart="@dimen/top_screen_padding"
+        android:paddingEnd="@dimen/top_screen_padding"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toTopOf="@id/edit_new_name"
+        android:text="@string/new_name" />
+
+    <TextView
+        android:id="@+id/new_desc_help"
+        android:visibility="gone"
+        style="@style/editHelpDescription"
+        android:layout_marginStart="@dimen/settings_padding"
+        android:layout_marginTop="@dimen/_minus7dp"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toTopOf="@id/edit_new_description"
+        android:text="@string/description" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_create"
+        style="@style/CreateButtonStyle"
+        android:layout_marginBottom="@dimen/_32dp"
+        android:enabled="false"
+        android:text="@string/create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,8 +4,14 @@ import android.media.MediaPlayer
 import com.practicum.playlistmaker.medialibrary.data.converters.MusicFavoriteDbConvertor
 import com.practicum.playlistmaker.medialibrary.data.repository.FavoritesHistoryRepositoryImpl
 import com.practicum.playlistmaker.medialibrary.domain.db.FavoritesHistoryRepository
+import com.practicum.playlistmaker.newPlaylist.data.converters.PlaylistsDbConvertor
+import com.practicum.playlistmaker.newPlaylist.data.repository.NewPlaylistRepositoryImpl
+import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistRepository
+import com.practicum.playlistmaker.playlistOverview.data.converters.TrackAddedToPlaylistsDbConvertor
 import com.practicum.playlistmaker.player.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.api.PlayerRepository
+import com.practicum.playlistmaker.playlistOverview.data.repository.PlaylistOverviewRepositoryImpl
+import com.practicum.playlistmaker.playlistOverview.domain.db.PlaylistOverviewRepository
 import com.practicum.playlistmaker.search.data.repository.SearchRepositoryImpl
 import com.practicum.playlistmaker.search.domain.api.SearchRepository
 import com.practicum.playlistmaker.settings.data.repository.SettingsRepositoryImpl
@@ -41,6 +47,10 @@ val repositoryModule = module {
     single<SharingRepository> { SharingRepositoryImpl(context = get()) }
 
     factory { MusicFavoriteDbConvertor() }
+    factory { PlaylistsDbConvertor(get()) }
+    factory { TrackAddedToPlaylistsDbConvertor(get()) }
 
     single<FavoritesHistoryRepository> { FavoritesHistoryRepositoryImpl(get(), get()) }
+    single<NewPlaylistRepository> { NewPlaylistRepositoryImpl(get(), get(), get()) }
+    single<PlaylistOverviewRepository> { PlaylistOverviewRepositoryImpl(get(), get()) }
 }

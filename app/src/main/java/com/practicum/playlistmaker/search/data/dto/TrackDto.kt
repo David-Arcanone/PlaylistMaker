@@ -13,7 +13,7 @@ data class TrackDto(
     @SerializedName("country") val country: String,
     @SerializedName("primaryGenreName") val primaryGenreName: String,
     @SerializedName("collectionName") val collectionName: String?,
-    @SerializedName("releaseDate") val releaseDate: String,
+    @SerializedName("releaseDate") val releaseDate: String?,
     @SerializedName("previewUrl") val previewUrl: String?
 ) {
     fun showTrackTime(): String {
@@ -22,5 +22,5 @@ data class TrackDto(
 
     fun getCoverImg():String = artWorkUrl100?.replaceAfterLast('/', "512x512bb.jpg") ?:""
 
-    fun getReleaseYear():String = releaseDate.take(4)//год это первые 4 цифры
+    fun getReleaseYear():String = releaseDate?.take(4) ?:""//год это первые 4 цифры
 }

@@ -20,6 +20,6 @@ interface FavoriteMusicDao {
     fun getFavorites():Flow<List<MusicEntity>>//для получения списка со всеми треками, добавленными в избранное;
 
     @Query("SELECT trackId FROM favoritesTable")
-    fun getFavoritesId(): Flow<List<Int>>
+    suspend fun getFavoritesId(): List<Int>
 
 }

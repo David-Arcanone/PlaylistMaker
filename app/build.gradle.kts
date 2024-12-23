@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.practicum.playlistmaker"
-        minSdk = 29
+        minSdk = 33
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -67,4 +67,9 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     annotationProcessor ("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+
+    implementation ("androidx.fragment:fragment:$fragmentVersion")
+    //implementation ("androidx.fragment:fragment-ktx:1.8.5")
+    implementation ("androidx.activity:activity:1.6.3")
+    //implementation ("androidx.activity:activity-ktx:1.9.3")
 }

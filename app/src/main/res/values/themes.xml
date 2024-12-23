@@ -17,5 +17,6 @@
         <item name="icon">@color/dark_grey</item>
         <item name="switchPadding">6dp</item>
         <item name="customBoolean">false</item>
+        <item name="customBottomSheetNodBgColor">@color/light_grey</item>
     </style>
 </resources>

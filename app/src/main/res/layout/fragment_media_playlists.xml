@@ -7,12 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_new_playlist"
         style="@style/RefreshButtonStyle"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/settings_first_margin"
         android:text="@string/new_playlist"
+        android:paddingStart="@dimen/top_screen_padding_title"
+        android:paddingEnd="@dimen/top_screen_padding_title"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,5 +51,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_history_playlists"
+        android:layout_height="@dimen/zero_value"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingEnd="@dimen/settings_padding"
+        android:paddingStart="@dimen/horizontal_screen_padding"
+        android:paddingTop="@dimen/horizontal_screen_padding"
+        app:layout_constraintTop_toBottomOf="@id/bt_new_playlist"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <size
+        android:width="133dp"
+        android:height="36dp"
+        />
+    <padding
+        android:top="@dimen/_10dp"
+        android:bottom="@dimen/_10dp"
+        android:left="@dimen/top_screen_padding_title"
+        android:right="@dimen/top_screen_padding_title"/>
+    <solid android:color="?attr/colorOnPrimary" />
+    <corners android:radius="@dimen/clear_history_button_radius" />
+</shape>
