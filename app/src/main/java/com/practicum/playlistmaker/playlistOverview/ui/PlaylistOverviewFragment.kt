@@ -126,10 +126,10 @@ class PlaylistOverviewFragment : Fragment() {
             MaterialAlertDialogBuilder(currentContext, R.style.MyCustomDialogStyle)
                 .setTitle(R.string.delete_playlist)
                 .setMessage(R.string.delete_playlist2)
-                .setNegativeButton(R.string.cancel) { dialog, which -> // «Нет»
+                .setNegativeButton(R.string.no) { dialog, which -> // «Нет»
                     myBinding.bottomSheetCurtainForMessage.isVisible = false
                 }
-                .setPositiveButton(R.string.delete) { dialog, which -> // «Да»
+                .setPositiveButton(R.string.yes) { dialog, which -> // «Да»
                     myBinding.bottomSheetCurtainForMessage.isVisible = false
                     myViewModel.deletePlaylist()
                     findNavController().navigateUp()
