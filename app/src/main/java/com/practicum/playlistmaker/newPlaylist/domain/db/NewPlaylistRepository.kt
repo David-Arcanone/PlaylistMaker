@@ -12,4 +12,5 @@ interface NewPlaylistRepository {
     suspend fun addPlaylist(newName:String, newDescription:String?, newPic:Uri?, listOfTracks:List<Int>)
     suspend fun updatePlaylist(playlist:Playlist)
     fun saveImgToPrivateStorage(newUri:Uri,newName: String):Uri
+    fun deleteImgFromPrivateStorage(oldUri:Uri)
 }

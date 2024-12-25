@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/all_layout"
@@ -64,17 +65,16 @@
 
         <!-- 266/800 = 33% -->
 
-
         <TextView
             android:id="@+id/title_name"
             style="@style/PlaylistOverviewTitleTextStyle"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
-            app:layout_constraintBottom_toTopOf="@id/title_year"
+            app:layout_constraintBottom_toTopOf="@id/title_description"
             android:layout_marginBottom="@dimen/icon_padding"
             tools:text="Loading" />
 
         <TextView
-            android:id="@+id/title_year"
+            android:id="@+id/title_description"
             style="@style/PlaylistOverviewTextStyle"
             android:text="Loading"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
@@ -86,7 +86,7 @@
             style="@style/PlaylistOverviewTextStyle"
             android:text="Loading"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
-            app:layout_constraintBottom_toTopOf="@id/bt_open_settings1"
+            app:layout_constraintBottom_toTopOf="@id/bt_title_share"
             android:layout_marginBottom="@dimen/horizontal_screen_padding"/>
         <ImageView
             android:id="@+id/title_point"
@@ -104,8 +104,9 @@
             app:layout_constraintBaseline_toBaselineOf="@id/title_time"
             app:layout_constraintStart_toEndOf="@id/title_point"
             android:layout_marginBottom="@dimen/horizontal_screen_padding"/>
-        <View
-            android:id="@+id/bt_open_settings1"
+
+        <ImageButton
+            android:id="@+id/bt_title_share"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
             app:layout_constraintBottom_toBottomOf="@id/horizontalTitleBorder"
             android:layout_marginBottom="@dimen/settings_first_margin"
@@ -113,17 +114,17 @@
             android:layout_height="24dp"
             android:background="@drawable/ic_share_lm"
             android:backgroundTint="@color/black"/>
-        <View
-            android:id="@+id/bt_open_settings2"
-            app:layout_constraintStart_toEndOf="@id/bt_open_settings1"
+        <ImageButton
+            android:id="@+id/bt_title_open_settings"
+            app:layout_constraintStart_toEndOf="@id/bt_title_share"
             app:layout_constraintBottom_toBottomOf="@id/horizontalTitleBorder"
             android:layout_marginBottom="@dimen/settings_first_margin"
             android:layout_marginStart="@dimen/horizontal_screen_padding"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/ic_3_dots"></View>
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:background="@drawable/ic_3_dots"/>
         <View
-            android:id="@+id/bottom_sheet_curtain"
+            android:id="@+id/bottom_sheet_curtain_for_bottomsheet"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -136,8 +137,49 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/add_to_playlist_bottom_sheet"
-        android:visibility="gone"
+        android:id="@+id/playlist_bottom_sheet"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_bottom_sheet"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/horizontal_screen_padding"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="auto"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:layout_width="@dimen/_50dp"
+            android:layout_height="@dimen/top_screen_padding"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/icon_padding"
+            android:background="@drawable/background_bottom_sheet_nod" />
+        <TextView
+            android:id="@+id/empty_message"
+            android:visibility="gone"
+            android:textColor="?attr/colorOnPrimary"
+            android:paddingTop="@dimen/settings_padding"
+            style="@style/PlaylistOverviewTitleTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_tracks"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_playlist"
+            style="@style/RecyclerViewStyle"
+            android:layout_height="@dimen/zero_value"
+            android:layout_marginTop="@dimen/settings_padding"
+            android:layout_weight="1"
+            android:visibility="visible"
+            tools:itemCount="@integer/temp_recycler_history_int"
+            tools:listitem="@layout/playlist_small_showcase" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/settings_bottom_sheet"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rounded_bottom_sheet"
@@ -154,15 +196,6 @@
             android:layout_marginTop="@dimen/icon_padding"
             android:background="@drawable/background_bottom_sheet_nod" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_playlists"
-            style="@style/RecyclerViewStyle"
-            android:layout_height="@dimen/zero_value"
-            android:layout_marginTop="@dimen/settings_padding"
-            android:layout_weight="1"
-            android:visibility="gone"
-            tools:itemCount="@integer/temp_recycler_history_int"
-            tools:listitem="@layout/playlist_small_showcase" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_marginTop="@dimen/settings_padding"
             android:id="@+id/small_info_plate"
@@ -200,16 +233,6 @@
                 android:ellipsize="end"
                 android:textAlignment="textStart"
                 tools:text="Loading" />
-            <TextView
-                android:id="@+id/tracks_pronounce_small"
-                style="@style/VerySmallTextStyle"
-                app:layout_constraintTop_toBottomOf="@id/playlist_name_small"
-                app:layout_constraintStart_toEndOf="@id/tracks_number_small"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="@dimen/top_screen_padding_title"
-                android:ellipsize="end"
-                android:textAlignment="textStart"
-                tools:text="Loading" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <Button
@@ -229,8 +252,17 @@
             android:text="@string/delete_playlist"
             app:icon="@color/transparent" />
 
-
     </LinearLayout>
+    <View
+        android:id="@+id/bottom_sheet_curtain_for_message"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_half_transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -38,9 +38,10 @@ class PlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        BottomSheetBehavior.from(myBinding.addToPlaylistBottomSheet).peekHeight = Resources.getSystem().getDisplayMetrics().heightPixels*2/3
         val myBottomSheetBehaviour =
-            BottomSheetBehavior.from(myBinding.addToPlaylistBottomSheet).apply {
+            BottomSheetBehavior.from(myBinding.addToPlaylistBottomSheet)
+        myBottomSheetBehaviour.peekHeight = Resources.getSystem().getDisplayMetrics().heightPixels*2/3
+        myBottomSheetBehaviour.apply {
                 state = BottomSheetBehavior.STATE_HIDDEN
             }
         myBottomSheetBehaviour.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){

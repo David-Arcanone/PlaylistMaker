@@ -4,10 +4,11 @@ import com.practicum.playlistmaker.playlistOverview.domain.models.TrackAddedToPl
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-interface PlaylistOverviewInteractor {/*
+interface PlaylistOverviewInteractor {
     suspend fun getTrackData(trackId: Int): Flow<TrackAddedToPlaylist?>
     fun getDataOfTracksFromListOfIds(listOfTrackIds: List<Int>): Flow<List<Track>>
+    fun getFullDataOfTracksFromListOfIds(listOfTrackIds: List<Int>): Flow<List<TrackAddedToPlaylist>>
     suspend fun saveNewTrackAddedToPlaylistData(track:Track,listOfPlaylistsIds:List<Int>)
     suspend fun updateTrackAddedToPlaylistData(newData:TrackAddedToPlaylist)
-    suspend fun deleteTrackAddedToPlaylistData(newDataId:Int)*/
+    suspend fun deleteTrackAddedToPlaylistData(redundantDataId:Int)
 }

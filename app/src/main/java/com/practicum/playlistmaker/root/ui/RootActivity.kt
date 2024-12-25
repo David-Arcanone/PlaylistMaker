@@ -23,7 +23,7 @@ class RootActivity : AppCompatActivity() {
         myBottomNavigationView.setupWithNavController(myNavController)
         myNavController.addOnDestinationChangedListener{_,destination,_ ->
             when(destination.id){
-                R.id.playerFragment , R.id.newPlaylistFragment ->{
+                R.id.playerFragment , R.id.newPlaylistFragment, R.id.playlistOverviewFragment ->{
                     myBinding.bottomNavigationView.isVisible=false
                     myBinding.navSeparator.isVisible=false
                 }

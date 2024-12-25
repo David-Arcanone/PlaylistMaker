@@ -9,7 +9,7 @@ import com.practicum.playlistmaker.newPlaylist.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.playlistOverview.data.db.dao.TrackAddedToPlaylistsDao
 import com.practicum.playlistmaker.playlistOverview.data.db.entity.TrackAddedToPlaylistEntity
 
-@Database(version = 9, entities = [MusicEntity::class, PlaylistEntity::class, TrackAddedToPlaylistEntity::class])
+@Database(version = 12, entities = [MusicEntity::class, PlaylistEntity::class, TrackAddedToPlaylistEntity::class])
 abstract class AppPlaylistMakerDatabase : RoomDatabase() {
     abstract fun favoritesMusicDao(): FavoriteMusicDao
     abstract fun playlistsDao(): PlaylistsDao

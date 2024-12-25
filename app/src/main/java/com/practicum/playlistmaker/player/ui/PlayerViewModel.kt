@@ -10,6 +10,8 @@ import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistInteractor
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
 import com.practicum.playlistmaker.player.domain.models.PlayerInitializationState
 import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
+import com.practicum.playlistmaker.playlistOverview.domain.db.PlaylistOverviewInteractor
+import com.practicum.playlistmaker.playlistOverview.domain.models.TrackAddedToPlaylist
 import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.AndroidUtilities
@@ -21,7 +23,8 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val myPlayerInteractor: PlayerInteractor,
     private val myFavoritesHistoryInteractor: FavoritesHistoryInteractor,
-    private val myNewPlaylistInteractor: NewPlaylistInteractor
+    private val myNewPlaylistInteractor: NewPlaylistInteractor,
+    private val myPlaylistOverviewInteractor: PlaylistOverviewInteractor
 ) : ViewModel() {
     private var timerUpdateJob: Job? = null
 
@@ -193,6 +196,21 @@ class PlayerViewModel(
             newList.addAll(pickedPlaylist.listOfTracks)
             if (currentTrack != null) newList.add(currentTrack.trackId)
             viewModelScope.launch {
+                myPlaylistOverviewInteractor.getTrackData(currentTrack.trackId).collect{
+                    trackAddedToPlaylist->
+                    if (trackAddedToPlaylist!=null){//в базе данных сохранены данные трека
+                        val newList= mutableListOf<Int>()
+                        newList.addAll(trackAddedToPlaylist.listOfPlaylistsIds)
+                        if (!newList.contains(pickedPlaylist.id))newList.add(pickedPlaylist.id)
+                        myPlaylistOverviewInteractor.updateTrackAddedToPlaylistData(
+                            TrackAddedToPlaylist(currentTrack.trackId,currentTrack,newList)
+                        )
+                    }else{//в базе данных нет инфо о треке
+                        myPlaylistOverviewInteractor.saveNewTrackAddedToPlaylistData(currentTrack,
+                            listOf(pickedPlaylist.id)
+                        )
+                    }
+                }
                 myNewPlaylistInteractor.updatePlaylist(
                     Playlist(
                         id = pickedPlaylist.id,
@@ -205,7 +223,6 @@ class PlayerViewModel(
                         )
                     )
                 )
-                //todo -- подготовил отдельную таблицу чтоб доставать данные треков для плейлистов сдесь будет вызов на запись в спринте 22 пока не нужно
                 onAddingCallback(pickedPlaylist.playlistName)
                 closeBottomSheetAddToPlaylistButtonClick()
             }

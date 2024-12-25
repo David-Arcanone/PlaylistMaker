@@ -4,4 +4,5 @@ interface SharingRepository {
     fun openSupport()
     fun openShare()
     fun openUserAgreement()
+    fun openSharePlaylist(playlistText:String,title: String, number: Int)
 }

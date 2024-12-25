@@ -14,7 +14,6 @@ import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
 import com.practicum.playlistmaker.utils.Utilities
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import java.io.File
 import java.io.FileOutputStream
 
@@ -84,6 +83,22 @@ class NewPlaylistRepositoryImpl(
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         return file.toUri()
+    }
+    override fun deleteImgFromPrivateStorage(oldUri: Uri) {
+        val filePath = File(
+            myContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            Utilities.PIC_DIRECTORY
+        )
+        if (!filePath.exists()) {
+            filePath.mkdirs()
+        }
+        val fileToUpdate=File(oldUri.toString())
+        val results=fileToUpdate.delete()
+        if(results){
+            //Log.d("MY_DEL","SUCCEDED")//успешное удаление
+        }else{
+            //Log.d("MY_DEL","FAILED")//неуспешное удаление
+        }
     }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
