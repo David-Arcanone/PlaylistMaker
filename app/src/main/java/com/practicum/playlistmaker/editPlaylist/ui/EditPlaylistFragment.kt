@@ -25,7 +25,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.practicum.playlistmaker.editPlaylist.domain.models.EditPlaylistState
-import com.practicum.playlistmaker.root.ui.RootActivity
+import com.practicum.playlistmaker.root.domain.models.IMessageForwardInterface
 import com.practicum.playlistmaker.utils.AndroidUtilities
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,7 +43,7 @@ class EditPlaylistFragment : Fragment() {
             if (uri != null) {
                 myViewModel.newPicture(uri)
             } else {
-                (activity as RootActivity).makeMessage(getString(R.string.you_didnt_pick_file))
+                (activity as IMessageForwardInterface).makeMessage(getString(R.string.you_didnt_pick_file))
             }
         }
     private val requestPermissionLauncherMediaPick =

@@ -20,7 +20,7 @@ import com.practicum.playlistmaker.databinding.FragmentPlaylistOverviewBinding
 import com.practicum.playlistmaker.editPlaylist.ui.EditPlaylistFragment
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
 import com.practicum.playlistmaker.playlistOverview.domain.models.PlaylistOverviewInitializationState
-import com.practicum.playlistmaker.root.ui.RootActivity
+import com.practicum.playlistmaker.root.domain.models.IMessageForwardInterface
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.TrackAdapter
 import com.practicum.playlistmaker.utils.AndroidUtilities
@@ -212,7 +212,7 @@ class PlaylistOverviewFragment : Fragment() {
         myBinding.tracksNumberSmall.setText(number)
     }
     private fun showNoList(){
-        (activity as RootActivity).makeMessage(getString(R.string.no_tracks))
+        (activity as IMessageForwardInterface).makeMessage(getString(R.string.no_tracks))
     }
 
     override fun onResume() {

@@ -17,7 +17,7 @@ import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
 import com.practicum.playlistmaker.newPlaylist.ui.PlaylistSmallAdapter
 import com.practicum.playlistmaker.player.domain.models.PlayerInitializationState
 import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
-import com.practicum.playlistmaker.root.ui.RootActivity
+import com.practicum.playlistmaker.root.domain.models.IMessageForwardInterface
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.AndroidUtilities
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -136,9 +136,9 @@ class PlayerFragment : Fragment() {
         myBottomSheetPlaylistsTrackAdapter.setOnClickListener {
             myViewModel.addToThisPlaylist(it,
                 { it ->
-                    (activity as RootActivity).makeMessage( getString(R.string.added_to_playlist) +" "+ it)
+                    (activity as IMessageForwardInterface).makeMessage( getString(R.string.added_to_playlist) +" "+ it)
                 }, onDupliucationCallback = {
-                    (activity as RootActivity).makeMessage( getString(R.string.track_is_already_present_in_a_playlist) +" "+ it)
+                    (activity as IMessageForwardInterface).makeMessage( getString(R.string.track_is_already_present_in_a_playlist) +" "+ it)
                 })
         }
     }

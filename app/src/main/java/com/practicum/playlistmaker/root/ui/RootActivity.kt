@@ -8,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityRootBinding
+import com.practicum.playlistmaker.root.domain.models.IMessageForwardInterface
 import com.practicum.playlistmaker.search.ui.SearchViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.scope.activityScope
 import org.koin.androidx.scope.scope
 
-class RootActivity : AppCompatActivity() {
+class RootActivity : AppCompatActivity(),IMessageForwardInterface {
 
     private lateinit var myBinding: ActivityRootBinding
     private var messageJob: Job? = null
@@ -43,7 +44,7 @@ class RootActivity : AppCompatActivity() {
         }
 
     }
-    public fun makeMessage(myMessage: String){
+    override fun makeMessage(myMessage: String){
         myBinding.messageGlobal.setText(myMessage)
         myBinding.messageGlobal.isVisible=true
         messageJob?.cancel()
