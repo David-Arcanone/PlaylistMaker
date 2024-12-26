@@ -44,6 +44,20 @@ class PlaylistOverviewViewModel(
             }
         }
     }
+    private fun postList(playlist: Playlist,listOfTracksFound:List<Track>){
+        val listInOrder= mutableListOf<Track>()
+        for (i in 0..playlist.listOfTracks.size-1){//проверка поярдка
+            for (j in 0..listOfTracksFound.size-1){//проверка по результатам
+                if(playlist.listOfTracks[i]==listOfTracksFound[j].trackId)
+                listInOrder.add(listOfTracksFound[j])
+            }}
+        overviewLiveData.postValue(
+            PlaylistOverviewInitializationState.DoneInitStateTracksSheet(
+                playlist,
+                listInOrder.reversed()
+            )
+        )
+    }
 
     private suspend fun processInit(playlist: Playlist?) {
         if (playlist != null) {
@@ -52,12 +66,7 @@ class PlaylistOverviewViewModel(
                     val prevLiveData = overviewLiveData.value
                     when (prevLiveData) {
                         is PlaylistOverviewInitializationState.DoneInitStateTracksSheet -> {
-                            overviewLiveData.postValue(
-                                PlaylistOverviewInitializationState.DoneInitStateTracksSheet(
-                                    playlist,
-                                    listOfTracks
-                                )
-                            )
+                            postList(playlist,listOfTracks)
                         }
 
                         is PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet -> {
@@ -69,12 +78,7 @@ class PlaylistOverviewViewModel(
                         }
 
                         else -> {//PlaylistOverviewInitializationState.NotInitState,PlaylistOverviewInitializationState.NoSaveFound,PlaylistOverviewInitializationState.DoneInitState
-                            overviewLiveData.postValue(
-                                PlaylistOverviewInitializationState.DoneInitStateTracksSheet(
-                                    playlist,
-                                    listOfTracks
-                                )
-                            )
+                            postList(playlist,listOfTracks)
                         }
                     }
                 }
@@ -104,24 +108,14 @@ class PlaylistOverviewViewModel(
                 is PlaylistOverviewInitializationState.DoneInitStateTracksSheet -> {
                     myNewPlaylistOverviewInteractor.getDataOfTracksFromListOfIds(prevState.currentPlaylist.listOfTracks)
                         .collect { listOfTracks ->
-                            overviewLiveData.postValue(
-                                PlaylistOverviewInitializationState.DoneInitStateTracksSheet(
-                                    prevState.currentPlaylist,
-                                    listOfTracks
-                                )
-                            )
+                            postList(prevState.currentPlaylist,listOfTracks)
                         }
                 }
 
                 is PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet -> {
                     myNewPlaylistOverviewInteractor.getDataOfTracksFromListOfIds(prevState.currentPlaylist.listOfTracks)
                         .collect { listOfTracks ->
-                            overviewLiveData.postValue(
-                                PlaylistOverviewInitializationState.DoneInitStateTracksSheet(
-                                    prevState.currentPlaylist,
-                                    listOfTracks
-                                )
-                            )
+                            postList(prevState.currentPlaylist,listOfTracks)
                         }
                 }
 
@@ -151,9 +145,7 @@ class PlaylistOverviewViewModel(
         viewModelScope.launch {
             val prevState = overviewLiveData.value
             if (prevState is PlaylistOverviewInitializationState.DoneInitStateTracksSheet) {
-                Log.d("MY_DELETE","1-RIGHT_STATE")
                 myPlaylistInteractor.getPlaylist(myPlaylistId).collect { playlist ->
-                    Log.d("MY_DELETE","2-GOT_PLAYLIST_FROM_STORAGE")
                     if (playlist != null) {
                         val newList = playlist.listOfTracks.filter { it!=track.trackId }
                         myPlaylistInteractor.updatePlaylist(
@@ -226,7 +218,7 @@ class PlaylistOverviewViewModel(
         mySharingInteractor.openSharePlaylist(name,description,listOfTracks)
     }
 
-    fun deletePlaylist() {
+    fun deletePlaylist(onComplete:()->Unit) {
         viewModelScope.launch {
             myPlaylistInteractor.getPlaylist(myPlaylistId)
                 .collect { playlist ->
@@ -252,6 +244,7 @@ class PlaylistOverviewViewModel(
                                 }
                             }
                         myPlaylistInteractor.deletePlaylist(myPlaylistId)
+                        onComplete()
                     }
                 }
         }

@@ -119,19 +119,15 @@ class EditPlaylistFragment : Fragment() {
         //активность кнопок
         //копка назад
         val currentContext = this.requireActivity()
-        fun showExitPromt() {
-            myViewModel.clearAll()
-            findNavController().navigateUp()
-        }
         currentContext.onBackPressedDispatcher.addCallback(
             currentContext,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    showExitPromt()
+                    findNavController().navigateUp()
                 }
             })
         myBinding.btBack.setOnClickListener {
-            showExitPromt()
+            findNavController().navigateUp()
         }
         //выбрать картинку
         myBinding.imageViewPlaylist.setOnClickListener {

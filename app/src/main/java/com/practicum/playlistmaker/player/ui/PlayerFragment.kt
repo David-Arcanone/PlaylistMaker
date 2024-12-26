@@ -138,13 +138,13 @@ class PlayerFragment : Fragment() {
                 { it ->
                     Toast.makeText(
                         context,
-                        getString(R.string.added_to_playlist) + it,
+                        getString(R.string.added_to_playlist) +" "+ it,
                         Toast.LENGTH_SHORT
                     ).show()
                 }, onDupliucationCallback = {
                     Toast.makeText(
                         context,
-                        getString(R.string.track_is_already_present_in_a_playlist) + it,
+                        getString(R.string.track_is_already_present_in_a_playlist) + " "+ it,
                         Toast.LENGTH_SHORT
                     ).show()
                 })

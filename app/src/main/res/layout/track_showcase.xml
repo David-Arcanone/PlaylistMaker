@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/min_height_button"
@@ -13,6 +14,7 @@
         android:layout_marginRight="@dimen/icon_padding" />
 
     <LinearLayout
+        android:id="@+id/info_box"
         android:layout_width="@dimen/zero_value"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -44,7 +46,7 @@
                 android:layout_width="@dimen/point_size"
                 android:layout_height="@dimen/point_size"
                 android:background="@drawable/ic_point"
-                android:backgroundTint="?attr/iconTint" />
+                android:backgroundTint="?attr/icon" />
 
             <TextView
                 android:id="@+id/track_time"
@@ -52,7 +54,9 @@
                 android:ellipsize="end"
                 android:textAlignment="textStart"
                 tools:text="Loading" />
+
         </LinearLayout>
+
     </LinearLayout>
 
     <ImageButton
@@ -62,4 +66,5 @@
         android:contentDescription="@string/track_info"
         android:paddingLeft="@dimen/icon_padding"
         android:src="@drawable/ic_more_lm" />
+
 </LinearLayout>

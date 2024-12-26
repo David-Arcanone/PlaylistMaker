@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -110,6 +111,13 @@ class PlaylistOverviewFragment : Fragment() {
         //активность кнопок
         myBinding.bottomSheetCurtainForBottomsheet.setOnClickListener { myViewModel.openBottomSheetTracksClick() }
         myBinding.btBack.setOnClickListener { findNavController().navigateUp() }
+        this.requireActivity().onBackPressedDispatcher.addCallback(
+            this.requireActivity(),
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().navigateUp()
+                }
+            })
         myBinding.btTitleOpenSettings.setOnClickListener { myViewModel.openBottomSheetPropertiesButtonClick() }
         myBinding.btTitleShare.setOnClickListener { myViewModel.shareClick{showNoList()} }
         myBinding.btShare.setOnClickListener { myViewModel.shareClick{showNoList()} }
@@ -131,8 +139,7 @@ class PlaylistOverviewFragment : Fragment() {
                 }
                 .setPositiveButton(R.string.yes) { dialog, which -> // «Да»
                     myBinding.bottomSheetCurtainForMessage.isVisible = false
-                    myViewModel.deletePlaylist()
-                    findNavController().navigateUp()
+                    myViewModel.deletePlaylist(onComplete = {findNavController().navigateUp()})
                 }
                 .show()
         }
@@ -172,7 +179,7 @@ class PlaylistOverviewFragment : Fragment() {
             2, 3, 4 -> R.string.minutes234
             else -> R.string.minutes0
         }
-        myBinding.titleTime.setText(minutes.toString() + getString(minProunounce))
+        myBinding.titleTime.setText(minutes.toString()+ " " + getString(minProunounce))
         val numberOfTracks = playlist.listOfTracks.size.toString()
         val tracksPronounce =if (playlist.listOfTracks.size == 1) numberOfTracks+getString(R.string.track) else numberOfTracks+getString(R.string.tracks)
 
