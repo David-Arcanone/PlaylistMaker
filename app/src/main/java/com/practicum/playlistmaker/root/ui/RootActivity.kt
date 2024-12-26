@@ -3,14 +3,22 @@ package com.practicum.playlistmaker.root.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityRootBinding
+import com.practicum.playlistmaker.search.ui.SearchViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.koin.androidx.scope.activityScope
+import org.koin.androidx.scope.scope
 
 class RootActivity : AppCompatActivity() {
 
     private lateinit var myBinding: ActivityRootBinding
+    private var messageJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +43,17 @@ class RootActivity : AppCompatActivity() {
         }
 
     }
+    public fun makeMessage(myMessage: String){
+        myBinding.messageGlobal.setText(myMessage)
+        myBinding.messageGlobal.isVisible=true
+        messageJob?.cancel()
+        messageJob=lifecycleScope.launch {
+            delay(MESSAGE_TIME)
+            myBinding.messageGlobal.isVisible=false
+        }
+    }
 
-
+    companion object{
+        const val MESSAGE_TIME=3000L
+    }
 }

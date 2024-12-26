@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +25,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.practicum.playlistmaker.editPlaylist.domain.models.EditPlaylistState
+import com.practicum.playlistmaker.root.ui.RootActivity
 import com.practicum.playlistmaker.utils.AndroidUtilities
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,7 +43,7 @@ class EditPlaylistFragment : Fragment() {
             if (uri != null) {
                 myViewModel.newPicture(uri)
             } else {
-                Toast.makeText(context, R.string.you_didnt_pick_file, Toast.LENGTH_SHORT).show()
+                (activity as RootActivity).makeMessage(getString(R.string.you_didnt_pick_file))
             }
         }
     private val requestPermissionLauncherMediaPick =
