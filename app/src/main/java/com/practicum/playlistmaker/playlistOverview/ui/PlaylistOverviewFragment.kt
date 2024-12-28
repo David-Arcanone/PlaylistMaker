@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -111,13 +110,6 @@ class PlaylistOverviewFragment : Fragment() {
         //активность кнопок
         myBinding.bottomSheetCurtainForBottomsheet.setOnClickListener { myViewModel.openBottomSheetTracksClick() }
         myBinding.btBack.setOnClickListener { findNavController().navigateUp() }
-        this.requireActivity().onBackPressedDispatcher.addCallback(
-            this.requireActivity(),
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    findNavController().navigateUp()
-                }
-            })
         myBinding.btTitleOpenSettings.setOnClickListener { myViewModel.openBottomSheetPropertiesButtonClick() }
         myBinding.btTitleShare.setOnClickListener { myViewModel.shareClick{showNoList()} }
         myBinding.btShare.setOnClickListener { myViewModel.shareClick{showNoList()} }

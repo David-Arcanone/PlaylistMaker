@@ -64,8 +64,10 @@ class MediaPlaylistsFragment : Fragment() {
         myPlaylistsAdapter.myPlaylists = myPlaylists
         myPlaylistsAdapter.setOnClickListener { playlist: Playlist ->
             myViewModel.showClickOnPlaylist(currentPlaylist = playlist, fragmentOpener = {
-                findNavController().navigate(R.id.action_mediaLibraryFragment_to_playlistOverviewFragment,PlaylistOverviewFragment.createArgs(playlist.id))
-                //здесь будет вызов навигации на новый фрагмент плейлиста (если такое задение появится)
+                findNavController().navigate(
+                    R.id.action_mediaLibraryFragment_to_playlistOverviewFragment,
+                    PlaylistOverviewFragment.createArgs(playlist.id)
+                )
             })
         }
         myBinding.rvHistoryPlaylists.adapter = myPlaylistsAdapter

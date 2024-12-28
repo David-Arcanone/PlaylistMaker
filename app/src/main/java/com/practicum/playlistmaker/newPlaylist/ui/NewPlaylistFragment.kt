@@ -62,6 +62,7 @@ class NewPlaylistFragment : Fragment() {
                 doIfNotHavePermission()
             }
         }
+    private var backPressedCallback: OnBackPressedCallback? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,6 +75,32 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fun showExitPromt() {
+            if (myBinding.editNewName.text.toString()
+                    .isNotEmpty() || myBinding.editNewDescription.text.toString()
+                    .isNotEmpty() || customPicFlag
+            ) {
+                MaterialAlertDialogBuilder(this.requireActivity(), R.style.MyCustomDialogStyle)
+                    .setTitle(R.string.finalize_playlist_creation)
+                    .setMessage(R.string.all_unsaved_data_will_be_lost)
+                    .setNegativeButton(R.string.no) { dialog, which -> // «Нет»
+                        //ничего не предпринимать
+                    }
+                    .setPositiveButton(R.string.yes) { dialog, which -> // «Да»
+                        myViewModel.clearAll()
+                        findNavController().navigateUp()
+                    }
+                    .show()
+            } else {
+                myViewModel.clearAll()
+                findNavController().navigateUp()
+            }
+        }
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitPromt()
+            }
+        }
 
         myViewModel.getStateLiveData().observe(viewLifecycleOwner) { initState ->
             when (initState) {
@@ -107,33 +134,10 @@ class NewPlaylistFragment : Fragment() {
         //активность кнопок
         //копка назад
         val currentContext = this.requireActivity()
-        fun showExitPromt() {
-            if (myBinding.editNewName.text.toString()
-                    .isNotEmpty() || myBinding.editNewDescription.text.toString()
-                    .isNotEmpty() || customPicFlag
-            ) {
-                MaterialAlertDialogBuilder(currentContext,R.style.MyCustomDialogStyle)
-                .setTitle(R.string.finalize_playlist_creation).setMessage(R.string.all_unsaved_data_will_be_lost)
-                    .setNegativeButton(R.string.no) { dialog, which -> // «Нет»
-                        //ничего не предпринимать
-                    }
-                    .setPositiveButton(R.string.yes) { dialog, which -> // «Да»
-                        myViewModel.clearAll()
-                        findNavController().navigateUp()
-                    }
-                    .show()
-            } else {
-                myViewModel.clearAll()
-                findNavController().navigateUp()
-            }
-        }
         currentContext.onBackPressedDispatcher.addCallback(
-            currentContext,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    showExitPromt()
-                }
-            })
+            viewLifecycleOwner,
+            backPressedCallback!!
+        )
         myBinding.btBack.setOnClickListener {
             showExitPromt()
         }
@@ -147,6 +151,11 @@ class NewPlaylistFragment : Fragment() {
         myBinding.btCreate.setOnClickListener {
             requestPermissionLauncherSave.launch(Manifest.permission.READ_MEDIA_IMAGES)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        backPressedCallback?.remove()
     }
 
     fun makeCustomTextWatcher(callback: (s: String) -> Unit): TextWatcher {
@@ -195,7 +204,9 @@ class NewPlaylistFragment : Fragment() {
         myViewModel.createNewPlaylistClick(
             name = myBinding.editNewName.text.toString(),
             description = myBinding.editNewDescription.text.toString(),
-            onFinishCallback = { findNavController().navigateUp() },
+            onFinishCallback = {
+                findNavController().navigateUp()
+            },
         )
     }
 

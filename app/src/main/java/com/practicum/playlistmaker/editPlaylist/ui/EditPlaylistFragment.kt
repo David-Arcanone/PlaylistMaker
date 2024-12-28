@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
@@ -118,14 +117,6 @@ class EditPlaylistFragment : Fragment() {
         myBinding.editNewDescription.addTextChangedListener(myNewDescriptionTextWatcher)
         //активность кнопок
         //копка назад
-        val currentContext = this.requireActivity()
-        currentContext.onBackPressedDispatcher.addCallback(
-            currentContext,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    findNavController().navigateUp()
-                }
-            })
         myBinding.btBack.setOnClickListener {
             findNavController().navigateUp()
         }

@@ -66,14 +66,18 @@
             android:id="@+id/title_name"
             style="@style/PlayerTitleNameStyle"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
+            app:layout_constraintEnd_toEndOf="@id/rightBorder"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toTopOf="@id/horizontalTitleBorder"
             tools:text="Loading Title" />
 
         <TextView
             android:id="@+id/title_author"
             style="@style/PlayerTitleAuthorStyle"
+            app:layout_constraintHorizontal_bias="0"
             android:layout_marginTop="@dimen/settings_padding"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
+            app:layout_constraintEnd_toStartOf="@id/rightBorder"
             app:layout_constraintTop_toBottomOf="@id/title_name"
             tools:text="Loading author" />
 
@@ -257,7 +261,7 @@
 
     <LinearLayout
         android:id="@+id/add_to_playlist_bottom_sheet"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rounded_bottom_sheet"
