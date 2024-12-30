@@ -37,10 +37,21 @@ class NewPlaylistInteractorImpl(private val myRepository: NewPlaylistRepository)
         return myRepository.saveImgToPrivateStorage(newUri,newName)
     }
 
-    override suspend fun updatePlaylist(
-        newPlaylist:Playlist
-    ) {
+    override fun deletePictureFromStorage(badUri: Uri) {
+        myRepository.deleteImgFromPrivateStorage(badUri)
+    }
+
+    override suspend fun updatePlaylist(newPlaylist:Playlist) {
         myRepository.updatePlaylist(newPlaylist)
+    }
+
+    override suspend fun deletePlaylist(badId: Int) {
+        myRepository.getPlaylist(badId).collect{
+            if(it?.imgSrc!=null){
+                myRepository.deleteImgFromPrivateStorage(it.imgSrc)
+            }
+            myRepository.deletePlaylist(badId)
+        }
     }
 
 }

@@ -49,4 +49,15 @@
     <string name="share">Share</string>
     <string name="edit_info">Edit info</string>
     <string name="delete_playlist">Delete playlist</string>
+    <string name="minutes0">" min"</string>
+    <string name="minutes1">" min"</string>
+    <string name="minutes234">" min"</string>
+    <string name="do_you_wish_to_delete1">Do you wish to delete playlist «</string>
+    <string name="do_you_wish_to_delete_track">Delete track</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="do_you_wish_to_delete_track2">Are you sure you\'d like to delete this tarck from playlist?</string>
+    <string name="delete_playlist2">Are you sure you\'d like to delete this playlist?</string>
+    <string name="no_tracks">No tracks in this playlist</string>
 </resources>

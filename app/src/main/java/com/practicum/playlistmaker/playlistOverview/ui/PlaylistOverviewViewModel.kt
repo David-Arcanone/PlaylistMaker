@@ -1,88 +1,98 @@
 package com.practicum.playlistmaker.playlistOverview.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.medialibrary.domain.db.FavoritesHistoryInteractor
 import com.practicum.playlistmaker.newPlaylist.domain.db.NewPlaylistInteractor
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
-import com.practicum.playlistmaker.player.domain.models.PlayerInitializationState
-import com.practicum.playlistmaker.player.domain.models.PlayerMediaState
 import com.practicum.playlistmaker.playlistOverview.domain.db.PlaylistOverviewInteractor
 import com.practicum.playlistmaker.playlistOverview.domain.models.PlaylistOverviewInitializationState
-import com.practicum.playlistmaker.search.domain.consumer.TracksConsumer
+import com.practicum.playlistmaker.playlistOverview.domain.models.TrackAddedToPlaylist
+import com.practicum.playlistmaker.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.utils.AndroidUtilities
+import com.practicum.playlistmaker.search.ui.SearchViewModel
+import com.practicum.playlistmaker.sharing.domain.api.SharingInteractor
 import com.practicum.playlistmaker.utils.Utilities
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlaylistOverviewViewModel(
     private val myNewPlaylistOverviewInteractor: PlaylistOverviewInteractor,
-    private val myPlaylistInteractor: NewPlaylistInteractor
+    private val myPlaylistInteractor: NewPlaylistInteractor,
+    private val mySearchInteractor: SearchInteractor,
+    private val mySharingInteractor: SharingInteractor,
+    private val myPlaylistId: Int
 ) : ViewModel() {
-    private var timerUpdateJob: Job? = null
+    private var isClickOnTrackAllowed = true
+    private var clickDebounceJob: Job? = null
 
     //трек на экране
-    private var playlistLiveData =
+    private var overviewLiveData =
         MutableLiveData<PlaylistOverviewInitializationState>(PlaylistOverviewInitializationState.NotInitState)
-    private lateinit var currentPlaylist: Playlist
 
-    init {/*
-        myPlayerInteractor.getSavedTrack(
-            consumer = object : TracksConsumer<Track> {
-                override fun consume(foundSavedTrack: Track) {
-                    //подготовка плеера имеет смысл если у нас есть трек, иначе закроется
-                    //в iTunes превью музыка есть только у треков.
-                    if (foundSavedTrack.previewUrl != null) {
-                        currentTrack = foundSavedTrack
-                        startInit(foundSavedTrack)
-                    } else {
-                        playerInitLiveData.postValue(PlayerInitializationState.NoSaveFound)//добавлял в запросе фильтрацию по типу музыка, значит должна быть, иначе ошибка, а значит надо закрыть
-                    }
-                }
-            },
-            doIfNoMatch = fun() { playerInitLiveData.postValue(PlayerInitializationState.NoSaveFound) })*/
+    init {
+        checkValues()
     }
 
-    fun getPlaylistOverviewStateLiveData(): LiveData<PlaylistOverviewInitializationState> =
-        playlistLiveData
-
-    override fun onCleared() {
-        super.onCleared()
-    }
-
-    private fun startInit(id: Int) {
+    fun checkValues() {
         viewModelScope.launch {
-            myPlaylistInteractor.getPlaylist(id).collect { playlist ->
+            myPlaylistInteractor.getPlaylist(myPlaylistId).collect { playlist ->
                 processInit(playlist)
             }
         }
     }
+    private fun postList(playlist: Playlist,listOfTracksFound:List<Track>){
+        val listInOrder= mutableListOf<Track>()
+        for (i in 0..playlist.listOfTracks.size-1){//проверка поярдка
+            for (j in 0..listOfTracksFound.size-1){//проверка по результатам
+                if(playlist.listOfTracks[i]==listOfTracksFound[j].trackId)
+                listInOrder.add(listOfTracksFound[j])
+            }}
+        overviewLiveData.postValue(
+            PlaylistOverviewInitializationState.DoneInitStateTracksSheet(
+                playlist,
+                listInOrder.reversed()
+            )
+        )
+    }
 
-    private fun processInit(playlist: Playlist?) {
+    private suspend fun processInit(playlist: Playlist?) {
         if (playlist != null) {
+            myNewPlaylistOverviewInteractor.getDataOfTracksFromListOfIds(playlist.listOfTracks)
+                .collect { listOfTracks ->
+                    val prevLiveData = overviewLiveData.value
+                    when (prevLiveData) {
+                        is PlaylistOverviewInitializationState.DoneInitStateTracksSheet -> {
+                            postList(playlist,listOfTracks)
+                        }
 
+                        is PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet -> {
+                            overviewLiveData.postValue(
+                                PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet(
+                                    playlist
+                                )
+                            )
+                        }
+
+                        else -> {//PlaylistOverviewInitializationState.NotInitState,PlaylistOverviewInitializationState.NoSaveFound,PlaylistOverviewInitializationState.DoneInitState
+                            postList(playlist,listOfTracks)
+                        }
+                    }
+                }
         } else {
-
+            overviewLiveData.postValue(PlaylistOverviewInitializationState.NoSaveFound)
         }
     }
+
 
     fun openBottomSheetPropertiesButtonClick() {
-        val prevInitState = playlistLiveData.value
+        val prevInitState = overviewLiveData.value
         when (prevInitState) {
-            is PlaylistOverviewInitializationState.DoneInitState -> {
-                playlistLiveData.postValue(
-                    PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet(prevInitState.currentPlaylist)
-                )
-            }
-
             is PlaylistOverviewInitializationState.DoneInitStateTracksSheet -> {
-                playlistLiveData.postValue(
+                overviewLiveData.postValue(
                     PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet(prevInitState.currentPlaylist)
                 )
             }
@@ -91,47 +101,156 @@ class PlaylistOverviewViewModel(
         }
     }
 
-    fun openBottomSheetTracksButtonClick() {
-        val prevInitState = playlistLiveData.value
-        when (prevInitState) {
-            is PlaylistOverviewInitializationState.DoneInitState -> {
-                PlaylistOverviewInitializationState.DoneInitStateTracksSheet(
-                    prevInitState.currentPlaylist,
-                    listOfTracks = emptyList()//todo
-                )
-            }
+    fun openBottomSheetTracksClick() {
+        viewModelScope.launch {
+            val prevState = overviewLiveData.value
+            when (prevState) {
+                is PlaylistOverviewInitializationState.DoneInitStateTracksSheet -> {
+                    myNewPlaylistOverviewInteractor.getDataOfTracksFromListOfIds(prevState.currentPlaylist.listOfTracks)
+                        .collect { listOfTracks ->
+                            postList(prevState.currentPlaylist,listOfTracks)
+                        }
+                }
 
-            is PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet -> {
-                PlaylistOverviewInitializationState.DoneInitStateTracksSheet(
-                    prevInitState.currentPlaylist,
-                    listOfTracks = emptyList()//todo
-                )
-            }
+                is PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet -> {
+                    myNewPlaylistOverviewInteractor.getDataOfTracksFromListOfIds(prevState.currentPlaylist.listOfTracks)
+                        .collect { listOfTracks ->
+                            postList(prevState.currentPlaylist,listOfTracks)
+                        }
+                }
 
-            else -> {}
+                else -> {
+                    myPlaylistInteractor.getPlaylist(myPlaylistId).collect { playlist ->
+                        processInit(playlist)
+                    }
+                }
+            }
         }
     }
 
-
-    fun closeBottomSheetAddToPlaylistButtonClick() {
-        val prevInitState = playlistLiveData.value
-        when (prevInitState) {
-            is PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet -> {
-                playlistLiveData.postValue(
-                    PlaylistOverviewInitializationState.DoneInitState(prevInitState.currentPlaylist)
-                )
+    fun trackWasClicked(track: Track, fragmentOpener: () -> Unit) {
+        if (isClickOnTrackAllowed) {//клик разрешен аналогично с дебоунсом
+            isClickOnTrackAllowed = false
+            //по условиям запрет на активацию по первому нажатию на трек и отменять старый Job не нужно
+            clickDebounceJob = viewModelScope.launch {
+                delay(SearchViewModel.SEARCH_DEBOUNCE_DELAY)
+                isClickOnTrackAllowed = true
             }
-
-            is PlaylistOverviewInitializationState.DoneInitStateTracksSheet -> {
-                playlistLiveData.postValue(
-                    PlaylistOverviewInitializationState.DoneInitState(prevInitState.currentPlaylist)
-                )
-            }
-
-            else -> {}
+            mySearchInteractor.updateHistoryWithNewTrack(track)//чтобы в истории обновился список
+            fragmentOpener()
         }
     }
 
-    companion object {
+    fun trackDelete(track: Track) {
+        viewModelScope.launch {
+            val prevState = overviewLiveData.value
+            if (prevState is PlaylistOverviewInitializationState.DoneInitStateTracksSheet) {
+                myPlaylistInteractor.getPlaylist(myPlaylistId).collect { playlist ->
+                    if (playlist != null) {
+                        val newList = playlist.listOfTracks.filter { it!=track.trackId }
+                        myPlaylistInteractor.updatePlaylist(
+                            Playlist(
+                                id = playlist.id,
+                                playlistName = playlist.playlistName,
+                                playlistDescription = playlist.playlistDescription,
+                                imgSrc = playlist.imgSrc,
+                                listOfTracks = newList,
+                                totalSeconds = playlist.totalSeconds - Utilities.getSecondsFromText_mm_ss(
+                                    track.trackLengthText ?: "00:00"
+                                )
+                            )
+                        )
+                        processDeleteForTrackData(playlist.id, track.trackId)
+                    }
+                }
+            }
+            checkValues()
+        }
     }
+
+    private suspend fun processDeleteForTrackData(playlistId: Int, trackId: Int) {
+        myNewPlaylistOverviewInteractor.getTrackData(trackId).collect { trackData ->
+            if (trackData != null) {
+                val newList = trackData.listOfPlaylistsIds.filter { it != playlistId }
+                if (newList.size > 0) {
+                    myNewPlaylistOverviewInteractor.updateTrackAddedToPlaylistData(
+                        TrackAddedToPlaylist(
+                            trackId = trackData.trackId,
+                            track = trackData.track,
+                            listOfPlaylistsIds = newList
+                        )
+                    )
+                }
+                else{
+                    myNewPlaylistOverviewInteractor.deleteTrackAddedToPlaylistData(trackData.trackId)
+                }
+            }
+        }
+    }
+
+    fun shareClick(messageIfEmpty:()->Unit) {
+        viewModelScope.launch {
+            val previousState=overviewLiveData.value
+            when(previousState){
+                is PlaylistOverviewInitializationState.DoneInitStatePropertiesSheet->{
+                    myNewPlaylistOverviewInteractor.getDataOfTracksFromListOfIds(previousState.currentPlaylist.listOfTracks).collect{
+                        if(it.size>0)
+                        shareClickProcess(
+                            name = previousState.currentPlaylist.playlistName,
+                            description = previousState.currentPlaylist.playlistDescription ?:"",
+                            listOfTracks = it)
+                        else messageIfEmpty()
+                    }
+                }
+                is PlaylistOverviewInitializationState.DoneInitStateTracksSheet->{//не надо искать треки
+                    if(previousState.listOfTracks.size>0)
+                    shareClickProcess(
+                        name = previousState.currentPlaylist.playlistName,
+                        description = previousState.currentPlaylist.playlistDescription ?:"",
+                        listOfTracks = previousState.listOfTracks)
+                    else messageIfEmpty()
+                }
+                else->{}
+            }
+        }
+    }
+    private fun shareClickProcess(name:String,description:String,listOfTracks:List<Track>){
+        mySharingInteractor.openSharePlaylist(name,description,listOfTracks)
+    }
+
+    fun deletePlaylist(onComplete:()->Unit) {
+        viewModelScope.launch {
+            myPlaylistInteractor.getPlaylist(myPlaylistId)
+                .collect { playlist ->
+                    if (playlist != null) {
+                        myNewPlaylistOverviewInteractor.getFullDataOfTracksFromListOfIds(playlist.listOfTracks)
+                            .collect { listOfTracksData ->//удаляю упоминания этого плейлиста
+                                listOfTracksData.forEach {
+                                    val newList =
+                                        it.listOfPlaylistsIds.filter { it != myPlaylistId }
+                                    if (newList.size > 0) {
+                                        myNewPlaylistOverviewInteractor.updateTrackAddedToPlaylistData(
+                                            TrackAddedToPlaylist(
+                                                trackId = it.trackId,
+                                                track = it.track,
+                                                listOfPlaylistsIds = newList
+                                            )
+                                        )
+                                    } else {//данные трека больше не нужно хранить, тк его нет
+                                        myNewPlaylistOverviewInteractor.deleteTrackAddedToPlaylistData(
+                                            it.trackId
+                                        )
+                                    }
+                                }
+                            }
+                        myPlaylistInteractor.deletePlaylist(myPlaylistId)
+                        onComplete()
+                    }
+                }
+        }
+    }
+
+    fun getPlaylistOverviewStateLiveData(): LiveData<PlaylistOverviewInitializationState> =
+        overviewLiveData
+
 }

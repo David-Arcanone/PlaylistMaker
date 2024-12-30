@@ -26,6 +26,7 @@
     <dimen name="horizontal_screen_padding">16dp</dimen>
     <dimen name="_17dp">17dp</dimen>
     <dimen name="_18dp">18dp</dimen>
+    <dimen name="_22dp">22dp</dimen>
     <dimen name="icon_size">24dp</dimen>
     <dimen name="margin_top_rv_history">20dp</dimen>
     <dimen name="settings_switch_top">21dp</dimen>

@@ -13,6 +13,7 @@ import com.practicum.playlistmaker.databinding.FragmentMediaPlaylistsBinding
 import com.practicum.playlistmaker.medialibrary.domain.models.MediaPlaylistsState
 import com.practicum.playlistmaker.newPlaylist.domain.models.Playlist
 import com.practicum.playlistmaker.newPlaylist.ui.PlaylistGridAdapter
+import com.practicum.playlistmaker.playlistOverview.ui.PlaylistOverviewFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -63,7 +64,10 @@ class MediaPlaylistsFragment : Fragment() {
         myPlaylistsAdapter.myPlaylists = myPlaylists
         myPlaylistsAdapter.setOnClickListener { playlist: Playlist ->
             myViewModel.showClickOnPlaylist(currentPlaylist = playlist, fragmentOpener = {
-                //здесь будет вызов навигации на новый фрагмент плейлиста (если такое задение появится)
+                findNavController().navigate(
+                    R.id.action_mediaLibraryFragment_to_playlistOverviewFragment,
+                    PlaylistOverviewFragment.createArgs(playlist.id)
+                )
             })
         }
         myBinding.rvHistoryPlaylists.adapter = myPlaylistsAdapter

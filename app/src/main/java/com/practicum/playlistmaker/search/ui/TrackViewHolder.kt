@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.search.ui
 
+import android.content.res.Resources
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -11,6 +13,7 @@ import com.practicum.playlistmaker.search.domain.models.Track
 class TrackViewHolder(private val myBinding:TrackShowcaseBinding) : RecyclerView.ViewHolder(myBinding.root) {
 
     fun bind(item: Track) {
+        myBinding.trackAuthor.maxWidth=Resources.getSystem().getDisplayMetrics().widthPixels/2
         myBinding.trackAuthor.text=item.artistName
         myBinding.trackName.text=item.trackName
         myBinding.trackTime.text=item.trackLengthText
@@ -26,7 +29,7 @@ class TrackViewHolder(private val myBinding:TrackShowcaseBinding) : RecyclerView
                     )
                 )
             )
-            .into(myBinding.trackImage)//vhImage) TODO
+            .into(myBinding.trackImage)
     }
 
 }

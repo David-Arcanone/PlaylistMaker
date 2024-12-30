@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.newPlaylist.ui
+package com.practicum.playlistmaker.editPlaylist.ui
 
 import android.Manifest
 import android.content.Intent
@@ -12,30 +12,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentNewPlaylistBinding
-import com.practicum.playlistmaker.newPlaylist.domain.models.NewPlaylistState
+import com.practicum.playlistmaker.editPlaylist.domain.models.EditPlaylistState
 import com.practicum.playlistmaker.root.domain.models.IMessageForwardInterface
 import com.practicum.playlistmaker.utils.AndroidUtilities
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
-class NewPlaylistFragment : Fragment() {
+class EditPlaylistFragment : Fragment() {
     private var numberOfBlocks: Int = 0
     private lateinit var myBinding: FragmentNewPlaylistBinding
-    private val myViewModel by viewModel<NewPlaylistViewModel>()
-    private var customPicFlag = false
+    private val myViewModel by viewModel<EditPlaylistViewModel>{
+        parametersOf(requireArguments().getInt(ARGS_PLAYLIST_ID))
+    }
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
@@ -62,7 +63,6 @@ class NewPlaylistFragment : Fragment() {
                 doIfNotHavePermission()
             }
         }
-    private var backPressedCallback: OnBackPressedCallback? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,45 +75,29 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fun showExitPromt() {
-            if (myBinding.editNewName.text.toString()
-                    .isNotEmpty() || myBinding.editNewDescription.text.toString()
-                    .isNotEmpty() || customPicFlag
-            ) {
-                MaterialAlertDialogBuilder(this.requireActivity(), R.style.MyCustomDialogStyle)
-                    .setTitle(R.string.finalize_playlist_creation)
-                    .setMessage(R.string.all_unsaved_data_will_be_lost)
-                    .setNegativeButton(R.string.no) { dialog, which -> // «Нет»
-                        //ничего не предпринимать
-                    }
-                    .setPositiveButton(R.string.yes) { dialog, which -> // «Да»
-                        myViewModel.clearAll()
-                        findNavController().navigateUp()
-                    }
-                    .show()
-            } else {
-                myViewModel.clearAll()
-                findNavController().navigateUp()
-            }
-        }
-        backPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showExitPromt()
-            }
-        }
-
+        myBinding.btBack.setText(R.string.edit_info)
+        myBinding.btCreate.setText(R.string.save)
         myViewModel.getStateLiveData().observe(viewLifecycleOwner) { initState ->
             when (initState) {
-                is NewPlaylistState -> {
+                is EditPlaylistState.NotInitState->{//еще не подгрузили данные плейлиста
+                }
+                is EditPlaylistState.NoSaveFound->{//в базе нет плейлиста
+                }
+                is EditPlaylistState.DoneInitState->{//первичная инициализация для заполнения инфы
+                    if (initState.currentPlaylist.imgSrc != null) {
+                        renderNewPicture(initState.currentPlaylist.imgSrc)//картинка
+                    }
+                    myBinding.editNewName.setText(initState.currentPlaylist.playlistName)
+                    myBinding.editNewDescription.setText(initState.currentPlaylist.playlistDescription)
+                    myViewModel.requestPlaylistEditing()
+                }
+                is EditPlaylistState.DoneInitStateEditing->{
                     myBinding.btCreate.isEnabled =
                         if (initState.isVerified) true else false //разрешение на создание
                     if (initState.pictureUri != null) {
                         renderNewPicture(initState.pictureUri)//картинка
-                        customPicFlag = true
-                    } else customPicFlag = false
+                    }
                 }
-
-                else -> {}
             }
         }
         /*логика поля ввода*/
@@ -133,13 +117,8 @@ class NewPlaylistFragment : Fragment() {
         myBinding.editNewDescription.addTextChangedListener(myNewDescriptionTextWatcher)
         //активность кнопок
         //копка назад
-        val currentContext = this.requireActivity()
-        currentContext.onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            backPressedCallback!!
-        )
         myBinding.btBack.setOnClickListener {
-            showExitPromt()
+            findNavController().navigateUp()
         }
         //выбрать картинку
         myBinding.imageViewPlaylist.setOnClickListener {
@@ -151,11 +130,6 @@ class NewPlaylistFragment : Fragment() {
         myBinding.btCreate.setOnClickListener {
             requestPermissionLauncherSave.launch(Manifest.permission.READ_MEDIA_IMAGES)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        backPressedCallback?.remove()
     }
 
     fun makeCustomTextWatcher(callback: (s: String) -> Unit): TextWatcher {
@@ -201,15 +175,12 @@ class NewPlaylistFragment : Fragment() {
 
     private fun doIfHavePermissionToSave() {
         numberOfBlocks = 0
-        myViewModel.createNewPlaylistClick(
+        myViewModel.savePlaylistClick(
             name = myBinding.editNewName.text.toString(),
             description = myBinding.editNewDescription.text.toString(),
-            onFinishCallback = {
-                findNavController().navigateUp()
-            },
+            onFinishCallback = { findNavController().navigateUp() },
         )
     }
-
 
     private fun renderEditText(newValue: String, myEditText: EditText, hintView: TextView) {
         if (newValue.isNotEmpty()) {
@@ -222,9 +193,9 @@ class NewPlaylistFragment : Fragment() {
             hintView.isVisible = false
         }
     }
-
     companion object {
-
+        private const val ARGS_PLAYLIST_ID = "playlist_id"
+        fun createArgs(playlistId: Int): Bundle =
+            bundleOf(ARGS_PLAYLIST_ID to playlistId)
     }
-
 }

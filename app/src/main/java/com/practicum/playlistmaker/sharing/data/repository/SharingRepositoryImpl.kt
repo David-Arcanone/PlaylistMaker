@@ -11,7 +11,16 @@ class SharingRepositoryImpl(private val context: Context):SharingRepository {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
         shareIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_application_message))
-        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)//без этого выскакивала ошибка
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(shareIntent)
+    }
+
+    override fun openSharePlaylist(playlistText: String, title: String, number: Int) {
+        val newText=title+number+if(number==1)context.getString(R.string.track)else context.getString(R.string.tracks)+":"+playlistText
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, newText)
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(shareIntent)
     }
 

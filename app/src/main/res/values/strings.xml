@@ -55,6 +55,18 @@
     <string name="playlist_with_such_name_already_exists">Плейлист с таким именем уже существует</string>
     <string name="edit_info">Редактировать информацию</string>
     <string name="delete_playlist">Удалить плейлист</string>
+    <string name="delete_playlist2">Вы уверены, что хотите удалить этот плейлист?</string>
+    <string name="minutes0"> минут</string>
+    <string name="minutes1"> минута</string>
+    <string name="minutes234"> минуты</string>
+    <string name="do_you_wish_to_delete1">Хотите удалить плейлист «</string>
+    <string name="do_you_wish_to_delete2" translatable="false">»?</string>
+    <string name="do_you_wish_to_delete_track">Удалить трек</string>
+    <string name="do_you_wish_to_delete_track2">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="no_tracks">В плейлисте отсутсвуют треки</string>
 </resources>
 
 

@@ -6,12 +6,16 @@ import com.practicum.playlistmaker.playlistOverview.domain.models.TrackAddedToPl
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 class PlaylistOverviewInteractorImpl(private val myRepository: PlaylistOverviewRepository) :
-    PlaylistOverviewInteractor {/*
+    PlaylistOverviewInteractor {
     override suspend fun getTrackData(trackId: Int): Flow<TrackAddedToPlaylist?> {
         return myRepository.getTrackOverview(trackId)
     }
     override fun getDataOfTracksFromListOfIds(listOfTrackIds: List<Int>): Flow<List<Track>>{
         return myRepository.getDataOfTracksFromListOfIds(listOfTrackIds)
+    }
+
+    override fun getFullDataOfTracksFromListOfIds(listOfTrackIds: List<Int>): Flow<List<TrackAddedToPlaylist>> {
+        return myRepository.getAllDataOfTracksFromListOfIds(listOfTrackIds)
     }
     override suspend fun saveNewTrackAddedToPlaylistData(
         track: Track,
@@ -30,6 +34,6 @@ class PlaylistOverviewInteractorImpl(private val myRepository: PlaylistOverviewR
 
     override suspend fun deleteTrackAddedToPlaylistData(dataId: Int) {
         myRepository.deleteTrackOverviewInStorage(dataId)
-    }*/
+    }
 
 }
