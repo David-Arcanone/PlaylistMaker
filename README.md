@@ -16,20 +16,20 @@
 - в окне плейлиста можно его редактировать
 - в окне настроек можно сменить стиль на ночной
 <table><tr><td valign="top" width="33%">
-<div align="center"><img src="./src/main/res/drawable/playlist_01.jpg" alt="поиск">
+<div align="center"><img src="./app/src/main/res/drawable/playlist_01.jpg" alt="поиск">
 </div></td><td valign="top" width="33%">
-<div align="center"><img src="./src/main/res/drawable/playlist_02.jpg" alt="плеер">
+<div align="center"><img src="./app/src/main/res/drawable/playlist_02.jpg" alt="плеер">
 </div></td><td valign="top" width="33%">
-<div align="center"><img src="./src/main/res/drawable/playlist_03.jpg" alt="избранное">
+<div align="center"><img src="./app/src/main/res/drawable/playlist_03.jpg" alt="избранное">
 </div></td></tr></table>
 <table><tr><td valign="top" width="25%">
-<div align="center"><img src="./src/main/res/drawable/playlist_04.jpg" alt="плейлисты">
+<div align="center"><img src="./app/src/main/res/drawable/playlist_04.jpg" alt="плейлисты">
 </div></td><td valign="top" width="25%">
-<div align="center"><img src="./src/main/res/drawable/playlist_06.jpg" alt="плейлист">
+<div align="center"><img src="./app/src/main/res/drawable/playlist_06.jpg" alt="плейлист">
 </div></td><td valign="top" width="25%">
-<div align="center"><img src="./src/main/res/drawable/playlist_07.jpg" alt="редактирование плейлиста">
+<div align="center"><img src="./app/src/main/res/drawable/playlist_07.jpg" alt="редактирование плейлиста">
 </div></td><td valign="top" width="25%">
-<div align="center"><img src="./src/main/res/drawable/playlist_05.jpg" alt="настройки">
+<div align="center"><img src="./app/src/main/res/drawable/playlist_05.jpg" alt="настройки">
 </div></td></tr></table>
 
 ### Технологии:
